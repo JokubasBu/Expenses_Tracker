@@ -1,0 +1,33 @@
+﻿@page "/exp"
+@page "/exp/{id:int}"
+<!--for editing a specific expense entry-->
+@inject IMonthlyExpService MonthlyExpService
+
+@if (Id == null)
+{
+	<PageTitle>Add a new expense</PageTitle>
+	<h3>Add a new expense</h3>
+}
+else
+{
+	<PageTitle>Edit @expense.Comment</PageTitle>
+	<h3>Edit @expense.Comment</h3>
+}
+@code {
+
+	[Parameter]
+	public int? Id { get; set; } // so we can use id in the route
+
+	MonthlyExp expense = new MonthlyExp {Category = new Category() };
+
+	//protected override Task OnParametersSetAsync()
+	//{	
+	//	if(Id == null){
+
+	//	}
+
+	//	else{
+
+	//	}
+	//}
+}

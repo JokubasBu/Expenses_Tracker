@@ -40,9 +40,14 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             }
         }
 
-        public Task<MonthlyExp> GetSingleExp(int id)
+        public async Task<MonthlyExp> GetSingleExp(int id)
         {
-            throw new NotImplementedException();
+            var result = await http.GetFromJsonAsync<MonthlyExp>("api/monthlyexp/{id}");
+            if (result != null)
+            {
+                return result;
+            }
+            throw new Exception("not found whoops");
         }
 
         public Task UpdateExp(MonthlyExp hero)
