@@ -26,9 +26,13 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             throw new NotImplementedException();
         }
 
-        public Task GetCategories()
+        public async Task GetCategories()
         {
-            throw new NotImplementedException();
+            var result = await http.GetFromJsonAsync<List<Category>>("api/monthlyexp/categories");
+            if (result != null)
+            {
+                Categories = result;
+            }
         }
 
         public async Task GetMonthlyExps()
@@ -42,7 +46,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task<MonthlyExp> GetSingleExp(int id)
         {
-            var result = await http.GetFromJsonAsync<MonthlyExp>("api/monthlyexp/{id}");
+            var result = await http.GetFromJsonAsync<MonthlyExp>($"api/monthlyexp/{id}");
             if (result != null)
             {
                 return result;
