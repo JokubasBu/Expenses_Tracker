@@ -12,23 +12,6 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
 
-        /*
-* was used to create and push to db
-public static List<Category> categories = new List<Category>
-{
-new Category {Id = 1, Title = "Groceries"},
-new Category {Id = 2, Title = "Transportation"},
-new Category {Id = 3, Title = "Health"},
-new Category {Id = 4, Title = "Entertainment"}
-};
-public static List<MonthlyExp> expenses = new List<MonthlyExp>
-{
-new MonthlyExp {Id = 1, Money = 435, Comment = "Chicken has become quite expensive", Category = categories[0], CategoryId = 1},
-new MonthlyExp {Id = 2, Money = 25, Comment = "Buses are slow", Category = categories[1], CategoryId = 2},
-new MonthlyExp {Id = 3, Money = 1000, Comment = "partyyy", Category = categories[3], CategoryId = 3},
-};
-*/
-
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
