@@ -1,0 +1,47 @@
+﻿@page "/monthlyexp"
+<!-- above is the route, href -->
+
+@inject IMonthlyExpService MonthlyExpService 
+<!-- so we can use the content of the file -->
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
+<h3>Monthly Expenses</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Money</th>
+            <th>Comment</th>
+            <th>Category</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expense in MonthlyExpService.MonthlyExps) 
+        {
+            <!-- reading data if foreach loop -->
+            <tr>
+                <td>@expense.Money</td>
+                <td>@expense.Comment</td>
+                <td>@expense.Category.Title</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowExp(expense.Id))"><i class="oi oi-pencil"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    protected override async Task OnInitializedAsync() // can do other things while this is happening (kinda like concurrency)
+    {
+        await MonthlyExpService.GetMonthlyExps(); // without this, the foreach doesn't get any value
+                                                  // returns monthlyexp values so we can go through all of them in the for loop
+    }
+
+    void ShowExp(int id){
+        NavigationManager.NavigateTo($"expense/{id}");
+    }
+}

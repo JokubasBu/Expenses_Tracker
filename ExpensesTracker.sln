@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpensesTracker.Server", "ExpensesTracker\Server\ExpensesTracker.Server.csproj", "{D32C2088-377B-488B-A8C1-8F3ED497B9E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesTracker.Server", "ExpensesTracker\Server\ExpensesTracker.Server.csproj", "{D32C2088-377B-488B-A8C1-8F3ED497B9E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpensesTracker.Client", "ExpensesTracker\Client\ExpensesTracker.Client.csproj", "{388FF351-ADC4-451C-BBDB-5DA7BA07A550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesTracker.Client", "ExpensesTracker\Client\ExpensesTracker.Client.csproj", "{388FF351-ADC4-451C-BBDB-5DA7BA07A550}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpensesTracker.Shared", "ExpensesTracker\Shared\ExpensesTracker.Shared.csproj", "{39D13499-D27E-482C-AA59-FEBCCE285AAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesTracker.Shared", "ExpensesTracker\Shared\ExpensesTracker.Shared.csproj", "{39D13499-D27E-482C-AA59-FEBCCE285AAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

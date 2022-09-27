@@ -1,0 +1,69 @@
+﻿@page "/expense"
+@page "/expense/{id:int}"
+<!--for editing a specific expense entry-->
+@inject IMonthlyExpService MonthlyExpService
+
+@if (Id == null)
+{
+	<PageTitle>Add a new expense</PageTitle>
+	<h3>Add a new expense</h3>
+}
+else
+{
+	<PageTitle>Edit</PageTitle>
+	<h3>Edit</h3>
+}
+
+<EditForm Model="expense" OnSubmit="SubmitButton">
+	<div>
+		<label for="money"> Money</label>
+		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
+	</div>
+	<div>
+		<label for="comment"> Comment</label>
+		<InputText id="comment" @bind-Value="expense.Comment"></InputText>
+	</div>
+	<div>
+		<label for="category"> Category</label>
+		<InputSelect @bind-Value="expense.CategoryId">
+			@foreach(var category in MonthlyExpService.Categories){
+				<option value="@category.Id">@category.Title</option>
+			}
+		</InputSelect>
+	</div>
+	<br />
+	<button type="submit" class="btn btn-primary">@buttonText</button>
+</EditForm>
+@code {
+
+	[Parameter]
+	public int? Id { get; set; } // so we can use id in the route
+
+	MonthlyExp expense = new MonthlyExp { Category = new Category() };
+
+	string buttonText = string.Empty;
+	protected override async Task OnInitializedAsync()
+	{
+		if(Id == null){
+			buttonText = "Save new entry";
+		}
+		else{
+			buttonText = "Update entry";
+		}
+		await MonthlyExpService.GetCategories();
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{	
+		if(Id == null){ // when is it null? (maybe make Id not nullable)
+		}
+		else{
+			expense = await MonthlyExpService.GetSingleExp((int)Id); 
+		}
+	}
+
+	async Task SubmitButton() // gets called when button is pressed
+	{ 
+
+	}
+}
