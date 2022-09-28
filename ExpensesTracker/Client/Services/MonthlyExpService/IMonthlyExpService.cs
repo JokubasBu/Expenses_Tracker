@@ -2,7 +2,7 @@
 {
     public interface IMonthlyExpService
     {
-        List<MonthlyExp> MonthlyExps { get; set; }
+        List<MonthlyExp> MonthlyExps { get; set; } //IEnumerable<MonthlyExp> MonthlyExps { get; set; }
         List<Category> Categories { get; set; }
         Task GetCategories();
         Task GetMonthlyExps();

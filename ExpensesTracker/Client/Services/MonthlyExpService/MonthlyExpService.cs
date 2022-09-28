@@ -13,7 +13,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             this.http = http;
             this.navigationManager = navigationManager;
         }
-        public List<MonthlyExp> MonthlyExps { get; set; } = new List<MonthlyExp>();
+        public List<MonthlyExp> MonthlyExps { get; set; } = new List<MonthlyExp>(); //public IEnumerable<MonthlyExp> MonthlyExps { get; set; } = Enumerable.Empty<MonthlyExp>();
         public List<Category> Categories { get; set; } = new List<Category>();
 
         public Task CreateExp(MonthlyExp hero)

@@ -20,8 +20,15 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much?)
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger?)
         {
-            //var expenses = await context.MonthlyExps.ToListAsync();
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+
+            //linq, could be used for filtering categories
+            // but then make MonthlyExps IEnumerable
+            //var expenseWithHealth =
+            //    from allExpense in expenses
+            //    where allExpense.CategoryId == 3
+            //    select allExpense;
+
             return Ok(expenses); // everything is okay
         }
 
