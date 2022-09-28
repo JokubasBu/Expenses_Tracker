@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpensesTracker.Server.Controllers
 {
-    [Route("api/[controller]")] // the route will be taken from MontlyExpController and it will read everything that is before controller
+    [Route("api/[controller]")] // the route will be taken from MonthlyExpController and it will read everything that is before controller
     [ApiController]
     public class MonthlyExpController : ControllerBase
     {
