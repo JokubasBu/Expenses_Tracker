@@ -33,6 +33,8 @@
         }
     </tbody>
 </table>
+<button class="btn btn-primary" @onclick="CreateNewExp">Create New Expese</button>
+<button type="button" class="btn btn-danger" @onclick="DeleteExpense">Delete Expense</button>
 
 @code {
     protected override async Task OnInitializedAsync() // can do other things while this is happening (kinda like concurrency)
@@ -43,5 +45,16 @@
 
     void ShowExp(int id){
         NavigationManager.NavigateTo($"expense/{id}");
+    }
+
+    void CreateNewExp()
+    {
+        NavigationManager.NavigateTo("/expense");
+    }
+
+
+    async Task DeleteExpense()
+    {
+        //await MonthlyExpService.DeleteExp(1);
     }
 }

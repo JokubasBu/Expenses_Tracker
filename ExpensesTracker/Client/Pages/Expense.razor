@@ -63,7 +63,10 @@ else
 	}
 
 	async Task SubmitButton() // gets called when button is pressed
-	{ 
-
+	{
+		if (Id == null)
+		{
+			//await MonthlyExpService.CreateExp(expense);
+		}
 	}
 }
