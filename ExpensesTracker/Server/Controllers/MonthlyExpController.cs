@@ -13,15 +13,15 @@ namespace ExpensesTracker.Server.Controllers
     public class MonthlyExpController : ControllerBase
     {
         private readonly DataContext context;
-        static int currentCount = 0; // amomunt of times the button was pressed
+        static int currentCount = 0; // amomunt of times the button Order was pressed
 
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
         }
 
-        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much?)
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger?)
+        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much)
+        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
@@ -35,7 +35,7 @@ namespace ExpensesTracker.Server.Controllers
 
             //for odering
             expenses.Sort(); //ascending
-            if (currentCount % 2 == 0) { //for now currenctount doesnt get sent and it is null, find a way to pass currentCount
+            if (currentCount % 2 == 0) {
                 expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
                 }
             currentCount++;

@@ -1,5 +1,4 @@
 ﻿@page "/monthlyexp"
-@*@page "/monthlyexp/{currentCount:int}"*@
 <!-- above is the route, href -->
 
 @inject IMonthlyExpService MonthlyExpService 
@@ -50,6 +49,6 @@
     async Task AscOrDesc()
     {
         await MonthlyExpService.GetOrderedMonthlyExps();
-        StateHasChanged(); // do i need this?
+        //StateHasChanged();
     }
 }
