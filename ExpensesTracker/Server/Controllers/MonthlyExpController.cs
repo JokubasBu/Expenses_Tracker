@@ -24,11 +24,12 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            //var expensesf = expenses.PickCategory(id: 2);
 
             return Ok(expenses); 
         }
 
-        [HttpGet("currentCount")] // make sure so that none of the methods share the same http method, because then it will throw error: The request matched multiple endpoints
+        [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
@@ -44,7 +45,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("categories")] 
-        public async Task<ActionResult<List<Category>>> GetCategories() // specify (more comfortable for swagger?)
+        public async Task<ActionResult<List<Category>>> GetCategories() 
         {
             var categories = await context.Categories.ToListAsync();
             return Ok(categories); // everything is okay
@@ -53,7 +54,7 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<MonthlyExp>>> GetSingleExp(int id) 
         {
-            var expense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);  // relationship tutorial
+            var expense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
 
             if (expense == null) 
             {
