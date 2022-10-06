@@ -1,8 +1,10 @@
-﻿using ExpensesTracker.Server.Data;
+﻿using ExpensesTracker.Client.Pages;
+using ExpensesTracker.Server.Data;
 using ExpensesTracker.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
 {
@@ -11,6 +13,7 @@ namespace ExpensesTracker.Server.Controllers
     public class MonthlyExpController : ControllerBase
     {
         private readonly DataContext context;
+        static int currentCount = 0; // amomunt of times the button was pressed
 
         public MonthlyExpController(DataContext context)
         {
@@ -22,14 +25,22 @@ namespace ExpensesTracker.Server.Controllers
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
-            //linq, could be used for filtering categories
-            // but then make MonthlyExps IEnumerable
-            //var expenseWithHealth =
-            //    from allExpense in expenses
-            //    where allExpense.CategoryId == 3
-            //    select allExpense;
+            return Ok(expenses); 
+        }
 
-            return Ok(expenses); // everything is okay
+        [HttpGet("currentCount")] // make sure so that none of the methods share the same http method, because then it will throw error: The request matched multiple endpoints
+        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
+        {
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+
+            //for odering
+            expenses.Sort(); //ascending
+            if (currentCount % 2 == 0) { //for now currenctount doesnt get sent and it is null, find a way to pass currentCount
+                expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                }
+            currentCount++;
+
+            return Ok(expenses);
         }
 
         [HttpGet("categories")] 
