@@ -7,9 +7,9 @@
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
 
-<EditForm Model="categoryName" OnSubmit="CategoryButton">
-        <InputSelect @bind-Value="categoryName.Id"> 
-            <option value="0" selected disabled="true">--Select Category--</option>
+<EditForm Model="chosenCategory" OnSubmit="CategoryButton">
+        <InputSelect @bind-Value="chosenCategory.Id"> 
+            @*<option value="0" selected disabled="true">--Select Category--</option>*@
             @foreach (var category in MonthlyExpService.Categories)
             {
                 <option value="@category.Id">@category.Title</option>
@@ -61,10 +61,10 @@
         await MonthlyExpService.GetOrderedMonthlyExps();
     }
 
-    Category categoryName = new Category{};
+    Category chosenCategory = new Category{};
 
     async Task CategoryButton() 
     {
-        await MonthlyExpService.ShowCategory(categoryName);
+        await MonthlyExpService.ShowCategory(chosenCategory);
     }
 }

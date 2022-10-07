@@ -2,6 +2,8 @@
 using ExpensesTracker.Server.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System.Transactions;
 using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
@@ -12,6 +14,7 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
+        static List<MonthlyExp> currentList = new List<MonthlyExp>();
 
         public MonthlyExpController(DataContext context)
         {
@@ -29,25 +32,34 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            if (!currentList.Any())
+            {
+                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+                currentList = expenses;
+            }
 
-            expenses.Sort(); //ascending
-            if (currentCount % 2 == 0) {
-                expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
-                }
+            currentList.Sort(); //ascending
+            if (currentCount % 2 == 0)
+            {
+                currentList.Reverse(); //descending (have to use sort beforehand for reverse to work)
+            }
             currentCount++;
 
-            return Ok(expenses);
+            return Ok(currentList);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<MonthlyExp>>> ShowCategory(Category category)
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            if (!currentList.Any())
+            {
+                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+                currentList = expenses;
+            }
+            var expenseC = currentList;
+            currentList = currentList.PickCategory(id: category.Id);
 
-            var expensesCategory = expenses.PickCategory(id: category.Id);
-
-            return Ok(expensesCategory);
+            return Ok(currentList);
         }
 
 

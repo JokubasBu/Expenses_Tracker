@@ -9,13 +9,23 @@ namespace ExpensesTracker.Shared
 {
     public static class Filter
     {
-        public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expenses, int id)
+        public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expensesList, int id)
         {
-            var expenseWithHealth =
-                from allExpense in expenses
-                where allExpense.CategoryId == id
-                select allExpense;
-            return expenseWithHealth.ToList();
+            //var expenseCategory =
+            //    from allExpense in expensesList
+            //    where allExpense.CategoryId == id
+            //    select allExpense;
+            //return expenseCategory.ToList();
+
+            List<MonthlyExp> expenseCategory = new List<MonthlyExp>();
+            foreach(MonthlyExp exp in expensesList)
+            {
+                if(exp.CategoryId == id)
+                {
+                    expenseCategory.Add(exp);
+                }
+            }
+            return expenseCategory;
         }
     }
 }
