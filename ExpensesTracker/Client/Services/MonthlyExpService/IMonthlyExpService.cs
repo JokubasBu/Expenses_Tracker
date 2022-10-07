@@ -2,10 +2,11 @@
 {
     public interface IMonthlyExpService
     {
-        List<MonthlyExp> MonthlyExps { get; set; }
+        List<MonthlyExp> MonthlyExps { get; set; } 
         List<Category> Categories { get; set; }
         Task GetCategories();
         Task GetMonthlyExps();
+        Task GetOrderedMonthlyExps();
         Task<MonthlyExp> GetSingleExp(int id);
         Task CreateExp(MonthlyExp hero);
         Task UpdateExp(MonthlyExp hero);

@@ -1,8 +1,10 @@
-﻿using ExpensesTracker.Server.Data;
+﻿using ExpensesTracker.Client.Pages;
+using ExpensesTracker.Server.Data;
 using ExpensesTracker.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
 {
@@ -11,18 +13,34 @@ namespace ExpensesTracker.Server.Controllers
     public class MonthlyExpController : ControllerBase
     {
         private readonly DataContext context;
+        static int currentCount = 0; // amomunt of times the button Order was pressed
 
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
         }
 
-        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much?)
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger?)
+        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much)
+        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
         {
-            //var expenses = await context.MonthlyExps.ToListAsync();
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            return Ok(expenses); // everything is okay
+
+            return Ok(expenses); 
+        }
+
+        [HttpGet("currentCount")] // make sure so that none of the methods share the same http method, because then it will throw error: The request matched multiple endpoints
+        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
+        {
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+
+            //for odering
+            expenses.Sort(); //ascending
+            if (currentCount % 2 == 0) {
+                expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                }
+            currentCount++;
+
+            return Ok(expenses);
         }
 
         [HttpGet("categories")] 

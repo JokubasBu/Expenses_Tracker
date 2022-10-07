@@ -11,6 +11,7 @@
 
 <table class="table">
     <thead>
+        <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
         <tr>
             <th>Money</th>
             <th>Comment</th>
@@ -43,5 +44,11 @@
 
     void ShowExp(int id){
         NavigationManager.NavigateTo($"expense/{id}");
+    }
+
+    async Task AscOrDesc()
+    {
+        await MonthlyExpService.GetOrderedMonthlyExps();
+        //StateHasChanged();
     }
 }
