@@ -1,9 +1,7 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
-using ExpensesTracker.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
@@ -24,7 +22,6 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            //var expensesf = expenses.PickCategory(id: 2);
 
             return Ok(expenses); 
         }
@@ -44,11 +41,22 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(expenses);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<List<MonthlyExp>>> ShowCategory(Category category)
+        {
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+
+            var expensesCategory = expenses.PickCategory(id: category.Id);
+
+            return Ok(expensesCategory);
+        }
+
+
         [HttpGet("categories")] 
         public async Task<ActionResult<List<Category>>> GetCategories() 
         {
             var categories = await context.Categories.ToListAsync();
-            return Ok(categories); // everything is okay
+            return Ok(categories); 
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
@@ -58,7 +66,7 @@ namespace ExpensesTracker.Server.Controllers
 
             if (expense == null) 
             {
-                return NotFound("no entry..."); // error handling?
+                return NotFound("no entry..."); 
             }
             return Ok(expense);
         }

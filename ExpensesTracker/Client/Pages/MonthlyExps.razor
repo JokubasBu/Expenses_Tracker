@@ -9,6 +9,19 @@
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
 
+<EditForm Model="categoryName" OnSubmit="CategoryButton">
+    <div>
+        <InputSelect @bind-Value="categoryName.Id">
+            <option selected disabled= "true"> Select Category </option>
+            @foreach (var category in MonthlyExpService.Categories)
+            {
+                <option value="@category.Id">@category.Title</option>
+            }
+        </InputSelect>
+        <button type="submit" class="btn btn-primary">Pick Category</button>
+    </div>
+</EditForm>
+
 <table class="table">
     <thead>
         <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
@@ -36,10 +49,10 @@
 </table>
 
 @code {
-    protected override async Task OnInitializedAsync() // can do other things while this is happening (kinda like concurrency)
+    protected override async Task OnInitializedAsync() 
     {
-        await MonthlyExpService.GetMonthlyExps(); // without this, the foreach doesn't get any value
-                                                  // returns monthlyexp values so we can go through all of them in the for loop
+        await MonthlyExpService.GetMonthlyExps(); 
+        await MonthlyExpService.GetCategories(); //to load data to choicebox
     }
 
     void ShowExp(int id){
@@ -49,6 +62,15 @@
     async Task AscOrDesc()
     {
         await MonthlyExpService.GetOrderedMonthlyExps();
-        //StateHasChanged();
+    }
+
+    [Parameter]
+    public int? CategoryId { get; set; } 
+
+    Category categoryName = new Category{};
+
+    async Task CategoryButton() 
+    {
+        await MonthlyExpService.ShowCategory(categoryName);
     }
 }
