@@ -1,6 +1,5 @@
 ﻿@page "/expense"
 @page "/expense/{id:int}"
-<!--for editing a specific expense entry-->
 @inject IMonthlyExpService MonthlyExpService
 
 @if (Id == null)
@@ -37,7 +36,7 @@ else
 @code {
 
 	[Parameter]
-	public int? Id { get; set; } // so we can use id in the route
+	public int? Id { get; set; }
 
 	MonthlyExp expense = new MonthlyExp { Category = new Category() };
 

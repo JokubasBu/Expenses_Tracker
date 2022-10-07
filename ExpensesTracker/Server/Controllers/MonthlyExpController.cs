@@ -31,7 +31,6 @@ namespace ExpensesTracker.Server.Controllers
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
-            //for odering
             expenses.Sort(); //ascending
             if (currentCount % 2 == 0) {
                 expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
