@@ -8,16 +8,15 @@
 <h3>Monthly Expenses</h3>
 
 <EditForm Model="categoryName" OnSubmit="CategoryButton">
-    <div>
-        <InputSelect @bind-Value="categoryName.Id">
-            <option selected disabled= "true"> Select Category </option>
+        <InputSelect @bind-Value="categoryName.Id"> 
+            <option value="0" selected disabled="true">--Select Category--</option>
             @foreach (var category in MonthlyExpService.Categories)
             {
                 <option value="@category.Id">@category.Title</option>
+                @*<option value="@category.Id" ononclick="@CategoryButton()">@category.Title</option>*@
             }
         </InputSelect>
         <button type="submit" class="btn btn-primary">Pick Category</button>
-    </div>
 </EditForm>
 
 <table class="table">
@@ -61,9 +60,6 @@
     {
         await MonthlyExpService.GetOrderedMonthlyExps();
     }
-
-    [Parameter]
-    public int? CategoryId { get; set; } 
 
     Category categoryName = new Category{};
 
