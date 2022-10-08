@@ -1,13 +1,23 @@
 ﻿@page "/monthlyexp"
-<!-- above is the route, href -->
 
 @inject IMonthlyExpService MonthlyExpService 
-<!-- so we can use the content of the file -->
 
 @inject NavigationManager NavigationManager
 
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
+
+<EditForm Model="expenseFilter" OnSubmit="FilterButton">
+    <InputSelect @bind-Value="expenseFilter.CategoryId">
+        <option value="0"> All </option>
+            @foreach (var category in MonthlyExpService.Categories)
+            {
+            <option value="@category.Id">@category.Title</option>
+            }
+        </InputSelect>
+    @*implement dropdown lists for year and month too*@
+        <button type="submit" class="btn btn-primary">Pick Category</button>
+</EditForm>
 
 <table class="table">
     <thead>
@@ -36,10 +46,10 @@
 </table>
 
 @code {
-    protected override async Task OnInitializedAsync() // can do other things while this is happening (kinda like concurrency)
+    protected override async Task OnInitializedAsync() 
     {
-        await MonthlyExpService.GetMonthlyExps(); // without this, the foreach doesn't get any value
-                                                  // returns monthlyexp values so we can go through all of them in the for loop
+        await MonthlyExpService.GetMonthlyExps(); 
+        await MonthlyExpService.GetCategories(); //to load data to choicebox
     }
 
     void ShowExp(int id){
@@ -49,6 +59,12 @@
     async Task AscOrDesc()
     {
         await MonthlyExpService.GetOrderedMonthlyExps();
-        //StateHasChanged();
+    }
+
+    MonthlyExp expenseFilter = new MonthlyExp { Category = new Category() };
+
+    async Task FilterButton()
+    {
+        await MonthlyExpService.ShowFilters(expenseFilter);
     }
 }

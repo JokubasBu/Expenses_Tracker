@@ -54,6 +54,18 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
                 MonthlyExps = result;
             }
         }
+        public async Task ShowFilters(MonthlyExp expenseFilter)
+        {
+            var result = await http.PostAsJsonAsync("api/monthlyexp", expenseFilter);
+            await SetResults(result);
+        }
+
+        private async Task SetResults(HttpResponseMessage result)
+        {
+            var response = await result.Content.ReadFromJsonAsync<List<MonthlyExp>>();
+            MonthlyExps = response;
+            //navigationManager.NavigateTo("monthlyexp");
+        }
 
         public async Task<MonthlyExp> GetSingleExp(int id)
         {

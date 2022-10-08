@@ -1,9 +1,8 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
-using ExpensesTracker.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Transactions;
 using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
@@ -14,50 +13,68 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
+        static List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
 
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
         }
 
-        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much)
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
+        [HttpGet] 
+        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
             return Ok(expenses); 
         }
 
-        [HttpGet("currentCount")] // make sure so that none of the methods share the same http method, because then it will throw error: The request matched multiple endpoints
+        [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            if (!currentExpenses.Any())
+            {
+                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+                currentExpenses = expenses;
+            }
 
-            //for odering
-            expenses.Sort(); //ascending
-            if (currentCount % 2 == 0) {
-                expenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
-                }
+            currentExpenses.Sort(); //ascending
+            if (currentCount % 2 == 0)
+            {
+                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+            }
             currentCount++;
 
-            return Ok(expenses);
+            return Ok(currentExpenses);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<List<MonthlyExp>>> ShowFilter(MonthlyExp expenseFilter)
+        {
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            currentCount = 0; //restart order
+            currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
+            
+            // call filters for year and month (date)
+
+            return Ok(currentExpenses);
+        }
+
+
         [HttpGet("categories")] 
-        public async Task<ActionResult<List<Category>>> GetCategories() // specify (more comfortable for swagger?)
+        public async Task<ActionResult<List<Category>>> GetCategories() 
         {
             var categories = await context.Categories.ToListAsync();
-            return Ok(categories); // everything is okay
+            return Ok(categories); 
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<MonthlyExp>>> GetSingleExp(int id) 
         {
-            var expense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);  // relationship tutorial
+            var expense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
 
             if (expense == null) 
             {
-                return NotFound("no entry..."); // error handling?
+                return NotFound("no entry..."); 
             }
             return Ok(expense);
         }
