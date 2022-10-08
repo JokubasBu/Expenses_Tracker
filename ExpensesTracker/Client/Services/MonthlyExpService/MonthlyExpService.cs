@@ -54,9 +54,9 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
                 MonthlyExps = result;
             }
         }
-        public async Task ShowCategory(Category category)
+        public async Task ShowFilters(MonthlyExp expenseFilter)
         {
-            var result = await http.PostAsJsonAsync("api/monthlyexp", category);
+            var result = await http.PostAsJsonAsync("api/monthlyexp", expenseFilter);
             await SetResults(result);
         }
 

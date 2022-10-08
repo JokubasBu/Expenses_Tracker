@@ -23,16 +23,9 @@ namespace ExpensesTracker.Shared
             {
                 return expensesList;
             }
-
-            //List<MonthlyExp> expenseCategory = new List<MonthlyExp>();
-            //foreach(MonthlyExp exp in expensesList)
-            //{
-            //    if(exp.CategoryId == id)
-            //    {
-            //        expenseCategory.Add(exp);
-            //    }
-            //}
-            //return expenseCategory;
         }
+
+        // implement methods for filtering by date (year and month, maybe seperately)
+
     }
 }

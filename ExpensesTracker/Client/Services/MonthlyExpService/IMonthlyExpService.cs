@@ -7,7 +7,7 @@
         Task GetCategories();
         Task GetMonthlyExps();
         Task GetOrderedMonthlyExps();
-        Task ShowCategory(Category category);
+        Task ShowFilters(MonthlyExp expenseFilter);
         Task<MonthlyExp> GetSingleExp(int id);
         Task CreateExp(MonthlyExp hero);
         Task UpdateExp(MonthlyExp hero);

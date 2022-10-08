@@ -48,11 +48,13 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<MonthlyExp>>> ShowCategory(Category category)
+        public async Task<ActionResult<List<MonthlyExp>>> ShowFilter(MonthlyExp expenseFilter)
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            currentExpenses = expenses.PickCategory(id: category.Id);
             currentCount = 0; //restart order
+            currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
+            
+            // call filters for year and month (date)
 
             return Ok(currentExpenses);
         }
