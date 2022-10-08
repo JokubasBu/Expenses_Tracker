@@ -17,7 +17,6 @@ namespace ExpensesTracker.Shared
         public int CompareTo(object? obj)
         {
             MonthlyExp incomingexpense = obj as MonthlyExp;
-
             return this.Money.CompareTo(incomingexpense.Money);
         }
     }

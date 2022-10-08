@@ -9,7 +9,7 @@
 
 <EditForm Model="chosenCategory" OnSubmit="CategoryButton">
         <InputSelect @bind-Value="chosenCategory.Id"> 
-            @*<option value="0" selected disabled="true">--Select Category--</option>*@
+            <option value="0" selected disabled="true"> </option>
             @foreach (var category in MonthlyExpService.Categories)
             {
                 <option value="@category.Id">@category.Title</option>

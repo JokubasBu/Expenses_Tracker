@@ -2,7 +2,6 @@
 using ExpensesTracker.Server.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Transactions;
 using static System.Net.WebRequestMethods;
 
@@ -14,15 +13,15 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static List<MonthlyExp> currentList = new List<MonthlyExp>();
+        static List<MonthlyExp> expensesList = new List<MonthlyExp>();
 
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
         }
 
-        [HttpGet] // for swagger (api controller knows to look for get methods, swagger not so much)
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps() // specify (more comfortable for swagger)
+        [HttpGet] 
+        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
@@ -32,34 +31,30 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            if (!currentList.Any())
+            if (!expensesList.Any())
             {
                 var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-                currentList = expenses;
+                expensesList = expenses;
             }
 
-            currentList.Sort(); //ascending
+            expensesList.Sort(); //ascending
             if (currentCount % 2 == 0)
             {
-                currentList.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                expensesList.Reverse(); //descending (have to use sort beforehand for reverse to work)
             }
             currentCount++;
 
-            return Ok(currentList);
+            return Ok(expensesList);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<MonthlyExp>>> ShowCategory(Category category)
         {
-            if (!currentList.Any())
-            {
-                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-                currentList = expenses;
-            }
-            var expenseC = currentList;
-            currentList = currentList.PickCategory(id: category.Id);
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            expensesList = expenses.PickCategory(id: category.Id);
+            currentCount = 0; //restart order
 
-            return Ok(currentList);
+            return Ok(expensesList);
         }
 
 

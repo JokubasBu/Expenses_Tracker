@@ -11,21 +11,21 @@ namespace ExpensesTracker.Shared
     {
         public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expensesList, int id)
         {
-            //var expenseCategory =
-            //    from allExpense in expensesList
-            //    where allExpense.CategoryId == id
-            //    select allExpense;
-            //return expenseCategory.ToList();
+            var expenseCategory =
+                from allExpense in expensesList
+                where allExpense.CategoryId == id
+                select allExpense;
+            return expenseCategory.ToList();
 
-            List<MonthlyExp> expenseCategory = new List<MonthlyExp>();
-            foreach(MonthlyExp exp in expensesList)
-            {
-                if(exp.CategoryId == id)
-                {
-                    expenseCategory.Add(exp);
-                }
-            }
-            return expenseCategory;
+            //List<MonthlyExp> expenseCategory = new List<MonthlyExp>();
+            //foreach(MonthlyExp exp in expensesList)
+            //{
+            //    if(exp.CategoryId == id)
+            //    {
+            //        expenseCategory.Add(exp);
+            //    }
+            //}
+            //return expenseCategory;
         }
     }
 }
