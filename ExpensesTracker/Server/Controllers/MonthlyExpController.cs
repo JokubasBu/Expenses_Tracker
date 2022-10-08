@@ -13,7 +13,7 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static List<MonthlyExp> expensesList = new List<MonthlyExp>();
+        static List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
 
         public MonthlyExpController(DataContext context)
         {
@@ -31,30 +31,30 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            if (!expensesList.Any())
+            if (!currentExpenses.Any())
             {
                 var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-                expensesList = expenses;
+                currentExpenses = expenses;
             }
 
-            expensesList.Sort(); //ascending
+            currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
             {
-                expensesList.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
             }
             currentCount++;
 
-            return Ok(expensesList);
+            return Ok(currentExpenses);
         }
 
         [HttpPost]
         public async Task<ActionResult<List<MonthlyExp>>> ShowCategory(Category category)
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            expensesList = expenses.PickCategory(id: category.Id);
+            currentExpenses = expenses.PickCategory(id: category.Id);
             currentCount = 0; //restart order
 
-            return Ok(expensesList);
+            return Ok(currentExpenses);
         }
 
 

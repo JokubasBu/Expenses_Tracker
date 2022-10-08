@@ -11,11 +11,18 @@ namespace ExpensesTracker.Shared
     {
         public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expensesList, int id)
         {
-            var expenseCategory =
-                from allExpense in expensesList
-                where allExpense.CategoryId == id
-                select allExpense;
-            return expenseCategory.ToList();
+            if (id != 0) // nothing is selected
+            {
+                var expenseCategory =
+                    from allExpense in expensesList
+                    where allExpense.CategoryId == id
+                    select allExpense;
+                return expenseCategory.ToList();
+            }
+            else
+            {
+                return expensesList;
+            }
 
             //List<MonthlyExp> expenseCategory = new List<MonthlyExp>();
             //foreach(MonthlyExp exp in expensesList)
