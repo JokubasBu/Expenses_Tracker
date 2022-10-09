@@ -30,6 +30,23 @@ else
 			}
 		</InputSelect>
 	</div>
+	<div>
+		<label> Date </label>
+	<InputSelect @bind-Value="expense.Year">
+        @*<option selected disabled="true">--Select Year--</option>*@
+        @foreach (var year in years)
+        {
+            <option value="@year">@year</option>
+        }
+    </InputSelect>
+		<InputSelect @bind-Value="expense.Month">
+			@*<option selected disabled="true">--Select Month--</option>*@
+        @foreach (var month in Enum.GetValues(typeof(Months)))
+        {
+            <option value="@((int)month)">@month</option>
+        }
+    </InputSelect>
+	</div>
 	<br />
 	<button type="submit" class="btn btn-primary">@buttonText</button>
 </EditForm>
@@ -39,6 +56,22 @@ else
 	public int? Id { get; set; }
 
 	MonthlyExp expense = new MonthlyExp { Category = new Category() };
+
+	public enum Months{
+        January = 1,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December
+    }
+    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year-1999);
 
 	string buttonText = string.Empty;
 	protected override async Task OnInitializedAsync()
