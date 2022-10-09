@@ -8,21 +8,28 @@
 <h3>Monthly Expenses</h3>
 
 <EditForm Model="expenseFilter" OnSubmit="FilterButton">
-    <InputSelect @bind-Value="expenseFilter.CategoryId">
-        <option value="0"> All </option>
-            @foreach (var category in MonthlyExpService.Categories)
-            {
-            <option value="@category.Id">@category.Title</option>
-            }
+    <InputSelect @bind-Value="expenseFilter.Year">
+        <option value="0">All Years</option>
+        @foreach (var year in years)
+        {
+            <option value="@year">@year</option>
+        }
     </InputSelect>
-    <InputSelect @bind-Value="expenseFilter.Month"> 
-        <option value="0"> All </option>
+    <InputSelect @bind-Value="expenseFilter.Month">
+        <option value="0">All Months</option>
         @foreach (var month in Enum.GetValues(typeof(Months)))
         {
             <option value="@((int)month)">@month</option>
         }
     </InputSelect>
-        <button type="submit" class="btn btn-primary">Pick Category</button>
+    <InputSelect @bind-Value="expenseFilter.CategoryId">
+        <option value="0">All Categories</option>
+            @foreach (var category in MonthlyExpService.Categories)
+            {
+            <option value="@category.Id">@category.Title</option>
+            }
+    </InputSelect>
+        <button type="submit" class="btn btn-primary">Filter</button>
 </EditForm>
 
 <table class="table">
@@ -74,6 +81,8 @@
         November,
         December
     }
+    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year-1999);
+
 
     void ShowExp(int id){
         NavigationManager.NavigateTo($"expense/{id}");

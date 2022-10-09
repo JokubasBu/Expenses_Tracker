@@ -40,6 +40,21 @@ namespace ExpensesTracker.Shared
                 return expensesList;
             }
         }
+        public static List<MonthlyExp> PickYear(this List<MonthlyExp> expensesList, int year)
+        {
+            if (year != 0) // nothing is selected
+            {
+                var expenseYear =
+                    from allExpense in expensesList
+                    where allExpense.Year == year
+                    select allExpense;
+                return expenseYear.ToList();
+            }
+            else
+            {
+                return expensesList;
+            }
+        }
 
     }
 }
