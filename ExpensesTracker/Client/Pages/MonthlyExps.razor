@@ -15,14 +15,13 @@
             <option value="@category.Id">@category.Title</option>
             }
     </InputSelect>
-    <InputSelect @bind-Value="expenseFilter.CategoryId"> @*expenseFilter.Year*@
+    <InputSelect @bind-Value="expenseFilter.Month"> 
         <option value="0"> All </option>
         @foreach (var month in Enum.GetValues(typeof(Months)))
         {
-            <option value="@month">@month</option>
+            <option value="@((int)month)">@month</option>
         }
     </InputSelect>
-    @*implement dropdown lists for year and month too*@
         <button type="submit" class="btn btn-primary">Pick Category</button>
 </EditForm>
 
@@ -30,6 +29,7 @@
     <thead>
         <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
         <tr>
+            <th>Date</th>
             <th>Money</th>
             <th>Comment</th>
             <th>Category</th>
@@ -41,6 +41,7 @@
         {
             <!-- reading data if foreach loop -->
             <tr>
+                <td>@expense.Year-@expense.Month-@expense.Day</td>
                 <td>@expense.Money</td>
                 <td>@expense.Comment</td>
                 <td>@expense.Category.Title</td>

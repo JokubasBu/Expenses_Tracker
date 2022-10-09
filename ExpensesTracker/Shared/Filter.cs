@@ -25,7 +25,21 @@ namespace ExpensesTracker.Shared
             }
         }
 
-        // implement methods for filtering by date (year and month, maybe seperately)
+        public static List<MonthlyExp> PickMonth(this List<MonthlyExp> expensesList, int monthNr)
+        {
+            if (monthNr != 0) // nothing is selected
+            {
+                var expenseMonth =
+                    from allExpense in expensesList
+                    where allExpense.Month == monthNr
+                    select allExpense;
+                return expenseMonth.ToList();
+            }
+            else
+            {
+                return expensesList;
+            }
+        }
 
     }
 }
