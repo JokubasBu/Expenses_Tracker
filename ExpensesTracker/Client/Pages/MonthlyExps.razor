@@ -14,7 +14,14 @@
             {
             <option value="@category.Id">@category.Title</option>
             }
-        </InputSelect>
+    </InputSelect>
+    <InputSelect @bind-Value="expenseFilter.CategoryId"> @*expenseFilter.Year*@
+        <option value="0"> All </option>
+        @foreach (var month in Enum.GetValues(typeof(Months)))
+        {
+            <option value="@month">@month</option>
+        }
+    </InputSelect>
     @*implement dropdown lists for year and month too*@
         <button type="submit" class="btn btn-primary">Pick Category</button>
 </EditForm>
@@ -49,7 +56,22 @@
     protected override async Task OnInitializedAsync() 
     {
         await MonthlyExpService.GetMonthlyExps(); 
-        await MonthlyExpService.GetCategories(); //to load data to choicebox
+        await MonthlyExpService.GetCategories(); 
+    }
+
+    public enum Months{
+        January = 1,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December
     }
 
     void ShowExp(int id){
