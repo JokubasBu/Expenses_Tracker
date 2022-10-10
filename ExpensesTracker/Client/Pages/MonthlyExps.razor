@@ -48,7 +48,7 @@
         {
             <!-- reading data if foreach loop -->
             <tr>
-                <td>@expense.Year-@expense.Month-@expense.Day</td>
+                <td>@expense.Year-@expense.Month.ToString("D2")-@expense.Day.ToString("D2")</td>
                 <td>@expense.Money</td>
                 <td>@expense.Comment</td>
                 <td>@expense.Category.Title</td>
