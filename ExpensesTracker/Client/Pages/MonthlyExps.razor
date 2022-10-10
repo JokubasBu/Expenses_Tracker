@@ -8,21 +8,35 @@
 <h3>Monthly Expenses</h3>
 
 <EditForm Model="expenseFilter" OnSubmit="FilterButton">
+    <InputSelect @bind-Value="expenseFilter.Year">
+        <option value="0">All Years</option>
+        @foreach (var year in years)
+        {
+            <option value="@year">@year</option>
+        }
+    </InputSelect>
+    <InputSelect @bind-Value="expenseFilter.Month">
+        <option value="0">All Months</option>
+        @foreach (var month in Enum.GetValues(typeof(Months)))
+        {
+            <option value="@((int)month)">@month</option>
+        }
+    </InputSelect>
     <InputSelect @bind-Value="expenseFilter.CategoryId">
-        <option value="0"> All </option>
+        <option value="0">All Categories</option>
             @foreach (var category in MonthlyExpService.Categories)
             {
             <option value="@category.Id">@category.Title</option>
             }
-        </InputSelect>
-    @*implement dropdown lists for year and month too*@
-        <button type="submit" class="btn btn-primary">Pick Category</button>
+    </InputSelect>
+        <button type="submit" class="btn btn-primary">Filter</button>
 </EditForm>
 
 <table class="table">
     <thead>
         <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
         <tr>
+            <th>Date</th>
             <th>Money</th>
             <th>Comment</th>
             <th>Category</th>
@@ -34,6 +48,7 @@
         {
             <!-- reading data if foreach loop -->
             <tr>
+                <td>@expense.Year-@expense.Month.ToString("D2")-@expense.Day.ToString("D2")</td>
                 <td>@expense.Money</td>
                 <td>@expense.Comment</td>
                 <td>@expense.Category.Title</td>
@@ -49,8 +64,25 @@
     protected override async Task OnInitializedAsync() 
     {
         await MonthlyExpService.GetMonthlyExps(); 
-        await MonthlyExpService.GetCategories(); //to load data to choicebox
+        await MonthlyExpService.GetCategories(); 
     }
+
+    public enum Months{
+        January = 1,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December
+    }
+    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year-1999);
+
 
     void ShowExp(int id){
         NavigationManager.NavigateTo($"expense/{id}");
