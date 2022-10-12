@@ -2,6 +2,7 @@
 using ExpensesTracker.Server.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using static System.Net.WebRequestMethods;
 
@@ -79,6 +80,25 @@ namespace ExpensesTracker.Server.Controllers
                 return NotFound("no entry..."); 
             }
             return Ok(expense);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
+        {
+            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            if (dbExpense == null)
+                return NotFound("Sorry, but no hero for you. :/");
+
+            dbExpense.Money = expense.Money;
+            dbExpense.Comment = expense.Comment;
+            dbExpense.CategoryId = expense.CategoryId;
+            dbExpense.Year = expense.Year;
+            dbExpense.Month = expense.Month;
+            dbExpense.Day = expense.Day;
+
+            await context.SaveChangesAsync();
+
+            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
         }
     }
 }

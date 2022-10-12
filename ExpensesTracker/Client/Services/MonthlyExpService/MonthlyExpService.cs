@@ -64,7 +64,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         {
             var response = await result.Content.ReadFromJsonAsync<List<MonthlyExp>>();
             MonthlyExps = response;
-            //navigationManager.NavigateTo("monthlyexp");
+            // navigationManager.NavigateTo("monthlyexp");
         }
 
         public async Task<MonthlyExp> GetSingleExp(int id)
@@ -77,9 +77,11 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             throw new Exception("not found whoops");
         }
 
-        public Task UpdateExp(MonthlyExp hero)
+        public async Task UpdateExpense(MonthlyExp expense)
         {
-            throw new NotImplementedException();
+            var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
+            await SetResults(result);
+            navigationManager.NavigateTo("monthlyexp");
         }
     }
 }
