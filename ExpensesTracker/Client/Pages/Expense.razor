@@ -1,8 +1,5 @@
 ﻿@page "/expense"
 @page "/expense/{id:int}"
-
-@using ExpensesTracker.Client.Services.DateStructureService
-
 @inject IMonthlyExpService MonthlyExpService
 
 @if (Id == null)

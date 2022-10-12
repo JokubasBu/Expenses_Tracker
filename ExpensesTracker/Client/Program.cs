@@ -1,4 +1,5 @@
 global using ExpensesTracker.Client.Services.MonthlyExpService;
+global using ExpensesTracker.Client.Services.DateStructureService;
 global using ExpensesTracker.Shared;
 using ExpensesTracker.Client;
 using Microsoft.AspNetCore.Components.Web;
