@@ -41,7 +41,7 @@ else
     </InputSelect>
 		<InputSelect @bind-Value="expense.Month">
 			@*<option selected disabled="true">--Select Month--</option>*@
-        @foreach (var month in Enum.GetValues(typeof(Months)))
+        @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
         {
             <option value="@((int)month)">@month</option>
         }
@@ -57,21 +57,7 @@ else
 
 	MonthlyExp expense = new MonthlyExp { Category = new Category() };
 
-	public enum Months{
-        January = 1,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December
-    }
-    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year-1999);
+	IEnumerable<int> years = new Dates().years;
 
 	string buttonText = string.Empty;
 	protected override async Task OnInitializedAsync()

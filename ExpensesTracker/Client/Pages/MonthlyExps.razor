@@ -1,7 +1,5 @@
 ﻿@page "/monthlyexp"
-
 @inject IMonthlyExpService MonthlyExpService 
-
 @inject NavigationManager NavigationManager
 
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
@@ -17,7 +15,7 @@
     </InputSelect>
     <InputSelect @bind-Value="expenseFilter.Month">
         <option value="0">All Months</option>
-        @foreach (var month in Enum.GetValues(typeof(Months)))
+        @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
         {
             <option value="@((int)month)">@month</option>
         }
@@ -67,21 +65,7 @@
         await MonthlyExpService.GetCategories(); 
     }
 
-    public enum Months{
-        January = 1,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December
-    }
-    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year-1999);
+    IEnumerable<int> years = new Dates().years;
 
 
     void ShowExp(int id){
