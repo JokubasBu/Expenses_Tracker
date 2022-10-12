@@ -25,6 +25,7 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            currentExpenses = expenses;
 
             return Ok(expenses); 
         }
@@ -32,12 +33,6 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            if (!currentExpenses.Any())
-            {
-                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-                currentExpenses = expenses;
-            }
-
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
             {
