@@ -1,6 +1,9 @@
 ﻿@page "/monthlyexp"
-@inject IMonthlyExpService MonthlyExpService 
+
+@inject IMonthlyExpService MonthlyExpService
+
 @inject NavigationManager NavigationManager
+@inject IFileService FileService
 
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
@@ -15,19 +18,22 @@
     </InputSelect>
     <InputSelect @bind-Value="expenseFilter.Month">
         <option value="0">All Months</option>
-        @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
+        @foreach (var month in Enum.GetValues(typeof(Months)))
         {
             <option value="@((int)month)">@month</option>
         }
     </InputSelect>
     <InputSelect @bind-Value="expenseFilter.CategoryId">
         <option value="0">All Categories</option>
-            @foreach (var category in MonthlyExpService.Categories)
-            {
+        @foreach (var category in MonthlyExpService.Categories)
+        {
             <option value="@category.Id">@category.Title</option>
-            }
+        }
     </InputSelect>
-        <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <button class="btn btn-primary" @onclick="CreateNewExp">Create New Expese</button>
+    <button type="button" class="btn btn-danger" @onclick="DeleteExpense">Delete Expense</button>
+    <FileUploading></FileUploading>
 </EditForm>
 
 <table class="table">
@@ -42,7 +48,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var expense in MonthlyExpService.MonthlyExps) 
+        @foreach (var expense in MonthlyExpService.MonthlyExps)
         {
             <!-- reading data if foreach loop -->
             <tr>
@@ -59,16 +65,32 @@
 </table>
 
 @code {
-    protected override async Task OnInitializedAsync() 
+    protected override async Task OnInitializedAsync()
     {
-        await MonthlyExpService.GetMonthlyExps(); 
-        await MonthlyExpService.GetCategories(); 
+        await MonthlyExpService.GetMonthlyExps();
+        await MonthlyExpService.GetCategories();
     }
 
-    IEnumerable<int> years = new Dates().years;
+    public enum Months
+    {
+        January = 1,
+        February,
+        March,
+        April,
+        May,
+        June,
+        July,
+        August,
+        September,
+        October,
+        November,
+        December
+    }
+    IEnumerable<int> years = Enumerable.Range(2000, DateTime.Now.Year - 1999);
 
 
-    void ShowExp(int id){
+    void ShowExp(int id)
+    {
         NavigationManager.NavigateTo($"expense/{id}");
     }
 
@@ -82,5 +104,15 @@
     async Task FilterButton()
     {
         await MonthlyExpService.ShowFilters(expenseFilter);
+    }
+
+    void CreateNewExp()
+    {
+        NavigationManager.NavigateTo("/expense");
+    }
+
+    async Task DeleteExpense()
+    {
+        //await MonthlyExpService.DeleteExp(1);
     }
 }

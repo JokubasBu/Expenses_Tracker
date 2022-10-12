@@ -1,0 +1,58 @@
+﻿@page "/fileuploading"
+
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+@using System.IO
+@using ExpensesTracker.Shared
+@using ExpensesTracker.Shared.Models
+
+<br />
+<br />
+<h3>File Uploading</h3>
+
+<form @onsubmit = "OnUploadFiles">
+    <div>
+        <label for="file-upload">Select File</label>
+        <InputFile id="file-upload" OnChange="@OnInputFileChange" multiple/>
+    </div>
+    <br />
+    <div class="form-group row">
+        <button type="submit" class="btn btn-outline-primary">Upload File(s)</button>
+    </div>
+</form>
+<br/>
+<div class="form-group row">
+    <h5>@message</h5>
+</div>
+<hr />
+
+@code {
+    private string message = "No File(s) selected";
+    IReadOnlyList<IBrowserFile> selectedFiles;
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        message = $"{selectedFiles.Count} file(s) selected";
+        this.StateHasChanged();
+    }
+
+    private async void OnUploadFiles()
+    {
+        foreach (var file in selectedFiles)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await file.OpenReadStream().CopyToAsync(ms);
+                var uploadedFile = new UploadedFile();
+                uploadedFile.FileName = file.Name;
+                uploadedFile.FileContent = ms.ToArray();
+
+                await Http.PostAsJsonAsync<UploadedFile>("api/FileUpload/PostFile", uploadedFile);
+            }
+            message = $"{selectedFiles.Count} file(s) uploaded on server";
+            this.StateHasChanged();
+        }
+    }
+}
