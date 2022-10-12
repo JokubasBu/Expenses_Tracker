@@ -47,13 +47,14 @@ else
         }
     </InputSelect>
 	<InputSelect @bind-Value="expense.Day">
-		@*unhandled exception because without submiting, the dropdown values aren't quite selected, 
+		@*Unhandled exception rendering component: Month must be between one and twelve. (Parameter 'month'). Actual value was 0
+		because without submiting, the dropdown values aren't quite selected?
 		like they are selected and it shows the currect dropdown list for days but also throws an error*@
 
-		@*@for (int day = 0; day<= DateTime.DaysInMonth(expense.Year, expense.Month); day++)
+		@for (int day = 1; day<= DateTime.DaysInMonth(expense.Year, expense.Month); day++)
 		{
 		<option value="@day">@day</option>
-		}*@
+		}
 
     </InputSelect>
 	</div>
@@ -68,7 +69,6 @@ else
 	MonthlyExp expense = new MonthlyExp { Category = new Category() };
 
 	IEnumerable<int> years = new Dates().years;
-	int daysInDate = DateTime.DaysInMonth(2008, 7);
 
 	string buttonText = string.Empty;
 	protected override async Task OnInitializedAsync()
