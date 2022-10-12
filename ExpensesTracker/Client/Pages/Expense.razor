@@ -47,13 +47,11 @@ else
         }
     </InputSelect>
 	<InputSelect @bind-Value="expense.Day">
-		@*Unhandled exception rendering component: Month must be between one and twelve. (Parameter 'month'). Actual value was 0
-		because without submiting, the dropdown values aren't quite selected?
-		like they are selected and it shows the currect dropdown list for days but also throws an error*@
-
+		@if (expense.Month != 0 || expense.Year !=0){
 		@for (int day = 1; day<= DateTime.DaysInMonth(expense.Year, expense.Month); day++)
 		{
 		<option value="@day">@day</option>
+		}
 		}
 
     </InputSelect>
