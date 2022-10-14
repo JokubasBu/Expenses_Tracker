@@ -1,11 +1,11 @@
-﻿using ExpensesTracker.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExpensesTracker.Shared.Models;
 
-namespace ExpensesTracker.Shared
+namespace ExpensesTracker.Shared.Extensions
 {
     public static class Filter
     {

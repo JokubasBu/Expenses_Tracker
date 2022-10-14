@@ -1,7 +1,10 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
+using ExpensesTracker.Shared.Extensions;
+using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 using static System.Net.WebRequestMethods;
 
@@ -24,6 +27,7 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            currentExpenses = expenses;
 
             return Ok(expenses); 
         }
@@ -31,12 +35,6 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            if (!currentExpenses.Any())
-            {
-                var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-                currentExpenses = expenses;
-            }
-
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
             {
@@ -79,6 +77,25 @@ namespace ExpensesTracker.Server.Controllers
                 return NotFound("no entry..."); 
             }
             return Ok(expense);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
+        {
+            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            if (dbExpense == null)
+                return NotFound("Sorry, but no hero for you. :/");
+
+            dbExpense.Money = expense.Money;
+            dbExpense.Comment = expense.Comment;
+            dbExpense.CategoryId = expense.CategoryId;
+            dbExpense.Year = expense.Year;
+            dbExpense.Month = expense.Month;
+            dbExpense.Day = expense.Day;
+
+            await context.SaveChangesAsync();
+
+            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
         }
     }
 }

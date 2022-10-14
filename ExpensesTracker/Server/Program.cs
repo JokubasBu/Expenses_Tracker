@@ -1,4 +1,6 @@
 global using ExpensesTracker.Shared;
+global using ExpensesTracker.Shared.Models;
+global using ExpensesTracker.Shared.Extensions;
 global using Microsoft.EntityFrameworkCore;
 using ExpensesTracker.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;

@@ -10,7 +10,7 @@
         Task ShowFilters(MonthlyExp expenseFilter);
         Task<MonthlyExp> GetSingleExp(int id);
         Task CreateExp(MonthlyExp hero);
-        Task UpdateExp(MonthlyExp hero);
+        Task UpdateExpense(MonthlyExp hero);
         Task DeleteExp(int id);
     }
 }
