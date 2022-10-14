@@ -21,7 +21,7 @@ namespace ExpensesTracker.Shared
             get => _year;
             set
             {
-                if ((value > 2000) && ( value < 2024))
+                if ((value > 1999) && ( value < 2024))
                 {
                     _year = value;
                 }

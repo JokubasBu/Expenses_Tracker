@@ -19,12 +19,17 @@
             December
         }
 
-        public IEnumerable<int> years;
-
-        public Dates()
-        {
-            years = Enumerable.Range(2000, DateTime.Now.Year - 1999);
+        private IEnumerable<int> _years;
+        
+        public IEnumerable<int> Years
+        { 
+            get{
+                return _years;
+            }
+            set
+            {
+                _years = Enumerable.Range(2000, DateTime.Now.Year - 1999);
+            }
         }
-
     }
 }
