@@ -8,7 +8,7 @@
 <EditForm Model="expenseFilter" OnSubmit="FilterButton">
     <InputSelect @bind-Value="expenseFilter.Year">
         <option value="0">All Years</option>
-        @foreach (var year in years)
+        @foreach (var year in Dates.Years)
         {
             <option value="@year">@year</option>
         }
@@ -64,9 +64,6 @@
         await MonthlyExpService.GetMonthlyExps(); 
         await MonthlyExpService.GetCategories(); 
     }
-
-    IEnumerable<int> years = new Dates.Years;
-
 
     void ShowExp(int id){
         NavigationManager.NavigateTo($"expense/{id}");

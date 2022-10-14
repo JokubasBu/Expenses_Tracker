@@ -34,7 +34,7 @@ else
 		<label> Date </label>
 	<InputSelect @bind-Value="expense.Year">
         @*<option selected disabled="true">--Select Year--</option>*@
-        @foreach (var year in years)
+        @foreach (var year in Dates.Years)
         {
             <option value="@year">@year</option>
         }
@@ -65,8 +65,6 @@ else
 	public int? Id { get; set; }
 
 	MonthlyExp expense = new MonthlyExp { Category = new Category() };
-
-	IEnumerable<int> years = new Dates.Years;
 
 	string buttonText = string.Empty;
 	protected override async Task OnInitializedAsync()

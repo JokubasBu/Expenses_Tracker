@@ -17,18 +17,11 @@
             October,
             November,
             December
-        }
-
-        private IEnumerable<int> _years;
-        
-        public IEnumerable<int> Years
+        }       
+        public static IEnumerable<int> Years
         { 
             get{
-                return _years;
-            }
-            set
-            {
-                _years = Enumerable.Range(2000, DateTime.Now.Year - 1999);
+                return Enumerable.Range(2000, DateTime.Now.Year - 1999);
             }
         }
     }
