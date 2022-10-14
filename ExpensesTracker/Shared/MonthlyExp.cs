@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExpensesTracker.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace ExpensesTracker.Shared
             get => _year;
             set
             {
-                if ((value > 1999) && ( value < 2024))
+                if ((value > 1999) && ( value < (Dates.Years.Max() + 1)))
                 {
                     _year = value;
                 }

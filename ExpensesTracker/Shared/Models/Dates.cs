@@ -1,4 +1,4 @@
-﻿namespace ExpensesTracker.Client.Services.DateStructureService
+﻿namespace ExpensesTracker.Shared.Models
 
 {
     public struct Dates
@@ -17,10 +17,11 @@
             October,
             November,
             December
-        }       
+        }
         public static IEnumerable<int> Years
-        { 
-            get{
+        {
+            get
+            {
                 return Enumerable.Range(2000, DateTime.Now.Year - 1999);
             }
         }
