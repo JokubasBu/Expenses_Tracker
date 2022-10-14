@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpensesTracker.Shared
+namespace ExpensesTracker.Shared.Models
 {
     public class Category
     {

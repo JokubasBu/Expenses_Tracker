@@ -1,11 +1,10 @@
-﻿using ExpensesTracker.Shared.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExpensesTracker.Shared
+namespace ExpensesTracker.Shared.Models
 {
     public class MonthlyExp : IComparable
     {
@@ -22,7 +21,7 @@ namespace ExpensesTracker.Shared
             get => _year;
             set
             {
-                if ((value > 1999) && ( value < (Dates.Years.Max() + 1)))
+                if (value > 1999 && value < Dates.Years.Max() + 1)
                 {
                     _year = value;
                 }
@@ -33,7 +32,7 @@ namespace ExpensesTracker.Shared
             get => _month;
             set
             {
-                if ((value > 0) && (value < 13))
+                if (value > 0 && value < 13)
                 {
                     _month = value;
                 }
@@ -44,17 +43,17 @@ namespace ExpensesTracker.Shared
             get => _day;
             set
             {
-                if ((value > 0) && (value< 32))
+                if (value > 0 && value < 32)
                 {
                     _day = value;
                 }
-}
+            }
         }
 
         public int CompareTo(object? obj)
         {
             MonthlyExp incomingexpense = obj as MonthlyExp;
-            return this.Money.CompareTo(incomingexpense.Money);
+            return Money.CompareTo(incomingexpense.Money);
         }
     }
 }

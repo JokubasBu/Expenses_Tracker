@@ -1,4 +1,6 @@
-﻿namespace ExpensesTracker.Server.Data
+﻿using ExpensesTracker.Shared.Models;
+
+namespace ExpensesTracker.Server.Data
 {
     public class DataContext : DbContext // DbContext - used to query from a database and group together changes
     {

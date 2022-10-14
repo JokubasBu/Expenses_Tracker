@@ -1,5 +1,7 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
+using ExpensesTracker.Shared.Extensions;
+using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
