@@ -18,16 +18,6 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         public List<MonthlyExp> MonthlyExps { get; set; } = new List<MonthlyExp>(); 
         public List<Category> Categories { get; set; } = new List<Category>();
 
-        public Task CreateExp(MonthlyExp hero)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteExp(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task GetCategories()
         {
             var result = await http.GetFromJsonAsync<List<Category>>("api/monthlyexp/categories");
@@ -63,8 +53,11 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         private async Task SetResults(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<List<MonthlyExp>>();
-            MonthlyExps = response;
-            // navigationManager.NavigateTo("monthlyexp");
+            if (response != null)
+            {
+                MonthlyExps = response; 
+            }     
+            navigationManager.NavigateTo("/monthlyexp");
         }
 
         public async Task<MonthlyExp> GetSingleExp(int id)
@@ -81,7 +74,18 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         {
             var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
             await SetResults(result);
-            navigationManager.NavigateTo("monthlyexp");
+        }
+
+        public async Task CreateExpense(MonthlyExp expense)
+        {
+            var result = await http.PostAsJsonAsync("/api/monthlyexp", expense);
+            await SetResults(result);
+        }
+
+        public async Task DeleteExpense(int id)
+        {
+            var result = await http.DeleteAsync($"api/monthlyexp/{id}");
+            await SetResults(result);
         }
     }
 }

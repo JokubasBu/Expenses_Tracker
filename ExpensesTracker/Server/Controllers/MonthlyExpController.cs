@@ -82,7 +82,7 @@ namespace ExpensesTracker.Server.Controllers
         {
             var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
-                return NotFound("Sorry, but no hero for you. :/");
+                return NotFound("Expense not found :/");
 
             dbExpense.Money = expense.Money;
             dbExpense.Comment = expense.Comment;
@@ -93,7 +93,34 @@ namespace ExpensesTracker.Server.Controllers
 
             await context.SaveChangesAsync();
 
-            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
+            return Ok(await GetDbExpenses());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<List<MonthlyExp>>> CreateExp(MonthlyExp exp)
+        {
+            exp.Category = null;
+            context.MonthlyExps.Add(exp);
+            await context.SaveChangesAsync();
+            return Ok(await GetDbExpenses());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<MonthlyExp>>> DelteExpense(int id)
+        {
+            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            if (dbExpense == null)
+                return NotFound("There is no such expense :/");
+
+            context.MonthlyExps.Remove(dbExpense);
+            await context.SaveChangesAsync();
+
+            return Ok(await GetDbExpenses());
+        }
+
+         async Task<List<MonthlyExp>> GetDbExpenses()
+        {
+            return await context.MonthlyExps.Include(sh => sh.Category).ToListAsync();
         }
     }
 }
