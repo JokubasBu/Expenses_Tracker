@@ -32,7 +32,6 @@ namespace ExpensesTracker.Server.Controllers
 
             context.MonthlyExps.Remove(dbExpense);
             await context.SaveChangesAsync();
-            await context.SaveChangesAsync();
 
             return Ok(await GetDbExpenses());
         }

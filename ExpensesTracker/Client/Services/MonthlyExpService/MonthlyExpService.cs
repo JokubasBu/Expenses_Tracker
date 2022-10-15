@@ -27,6 +27,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         public async Task DeleteExpense(int id)
         {
             var result = await http.DeleteAsync($"api/ChangeData/{id}");
+            await http.GetAsync("/api/monthlyexp/SetCurrent");
             await SetResults(result);
         }
 

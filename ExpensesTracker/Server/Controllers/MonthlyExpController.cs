@@ -67,6 +67,12 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(categories); 
         }
 
+        [HttpGet("SetCurrent")]
+        public async Task SetCurrentExpenses()
+        {
+            currentExpenses = await GetDbExpenses();
+        }
+
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<MonthlyExp>>> GetSingleExp(int id) 
         {
