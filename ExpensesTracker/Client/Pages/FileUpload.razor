@@ -1,0 +1,74 @@
+﻿@inject HttpClient Http
+@inject IConfiguration Configuration
+@inject IMonthlyExpService MonthlyExpService
+@inject NavigationManager NavigationManager
+
+
+@using System.IO
+@using ExpensesTracker.Shared
+@using ExpensesTracker.Shared.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Json
+@using System.Text
+
+@page "/fileupload"
+
+<form @onsubmit="OnUploadFiles">
+    <div>
+        <br/>
+        <InputFile id="file-upload" OnChange="@OnInputFileChange"/>
+        <button type="submit" class="btn btn-outline-primary">Upload File</button>
+        <h5>@message</h5>
+    </div>
+    <br />
+</form>
+
+@code {
+    private string message = "No File selected";
+    IReadOnlyList<IBrowserFile> selectedFiles;
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        message = "File selected";
+        this.StateHasChanged();
+    }
+
+    private async void OnUploadFiles()
+    {
+        foreach (var file in selectedFiles)
+        {
+            var stream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(stream);
+            string fullList = ConvertBytesToString(stream.ToArray());
+
+
+            List<string> lines = new List<string>();
+            lines = fullList.Split('\n').ToList<string>();
+
+            foreach (string line in lines)
+            {
+                string[] arr = new string[6];
+                arr = line.Split(',');
+                MonthlyExp expense = new MonthlyExp { Money = Double.Parse(arr[0]), Comment = arr[1], CategoryId = Int32.Parse(arr[2]), Year = Int32.Parse(arr[3]), Month = Int32.Parse(arr[4]), Day = Int32.Parse(arr[5])};
+                await MonthlyExpService.CreateExpense(expense);
+            }
+
+            message = $"{file.Name} has been uploaded successfully";
+            this.StateHasChanged();
+            NavigationManager.NavigateTo("/monthlyexp", true);
+        }
+    }
+
+    public string ConvertBytesToString(byte[] bytes)
+    {
+        string output = String.Empty;
+        MemoryStream stream = new MemoryStream(bytes);
+        stream.Position = 0;
+        using (StreamReader reader = new StreamReader(stream))
+        {
+            output = reader.ReadToEnd();
+        }
+        return output;
+    }
+}
