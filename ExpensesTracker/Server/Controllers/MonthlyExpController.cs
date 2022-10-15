@@ -79,23 +79,9 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(expense);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
+        async Task<List<MonthlyExp>> GetDbExpenses()
         {
-            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
-            if (dbExpense == null)
-                return NotFound("Sorry, but no hero for you. :/");
-
-            dbExpense.Money = expense.Money;
-            dbExpense.Comment = expense.Comment;
-            dbExpense.CategoryId = expense.CategoryId;
-            dbExpense.Year = expense.Year;
-            dbExpense.Month = expense.Month;
-            dbExpense.Day = expense.Day;
-
-            await context.SaveChangesAsync();
-
-            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
+            return await context.MonthlyExps.Include(sh => sh.Category).ToListAsync();
         }
     }
 }

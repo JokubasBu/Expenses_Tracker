@@ -1,6 +1,7 @@
 ﻿@page "/expense"
 @page "/expense/{id:int}"
 @inject IMonthlyExpService MonthlyExpService
+@inject NavigationManager NavigationManager
 
 @if (Id == null)
 {
@@ -13,7 +14,7 @@ else
 	<h3>Edit</h3>
 }
 
-<EditForm Model="expense" OnSubmit="SubmitButton">
+<EditForm Model="expense">
 	<div>
 		<label for="money"> Money</label>
 		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
@@ -57,7 +58,8 @@ else
     </InputSelect>
 	</div>
 	<br />
-	<button type="submit" class="btn btn-primary">@buttonText</button>
+	<button type="submit" class="btn btn-primary" @onclick="Submit">@buttonText</button>
+	<button type="submit" class="btn btn-danger" @onclick="GoBack"> Cancel</button>
 </EditForm>
 @code {
 
@@ -80,22 +82,35 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{	
-		if(Id == null){ 
+		if(Id == null)
+		{
+			expense.Category = MonthlyExpService.Categories[0];
+			expense.CategoryId = expense.Category.Id;
+			expense.Year = 2022;
+			expense.Month = 1;
+			expense.Day = 1;
 		}
 		else{
 			expense = await MonthlyExpService.GetSingleExp((int)Id); 
 		}
 	}
 
-	async Task SubmitButton()
+	async Task Submit()
 	{ 
 		if (Id == null)
 		{
-			
+			await MonthlyExpService.CreateExpense(expense);
+			NavigationManager.NavigateTo("/monthlyexp");
 		}
 		else
 		{
 			await MonthlyExpService.UpdateExpense(expense);
 		}
 	}
+
+	public void GoBack()
+	{
+		NavigationManager.NavigateTo("/monthlyexp");
+	}
+
 }

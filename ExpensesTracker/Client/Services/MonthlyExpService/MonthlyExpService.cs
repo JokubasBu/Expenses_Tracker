@@ -18,14 +18,16 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         public List<MonthlyExp> MonthlyExps { get; set; } = new List<MonthlyExp>(); 
         public List<Category> Categories { get; set; } = new List<Category>();
 
-        public Task CreateExp(MonthlyExp hero)
+        public async Task CreateExpense(MonthlyExp expense)
         {
-            throw new NotImplementedException();
+            var result = await http.PostAsJsonAsync("/api/ChangeData", expense);
+            await SetResults(result);
         }
 
-        public Task DeleteExp(int id)
+        public async Task DeleteExpense(int id)
         {
-            throw new NotImplementedException();
+            var result = await http.DeleteAsync($"api/ChangeData/{id}");
+            await SetResults(result);
         }
 
         public async Task GetCategories()
@@ -79,7 +81,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task UpdateExpense(MonthlyExp expense)
         {
-            var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
+            var result = await http.PutAsJsonAsync($"api/ChangeData/{expense.Id}", expense);
             await SetResults(result);
             navigationManager.NavigateTo("monthlyexp");
         }
