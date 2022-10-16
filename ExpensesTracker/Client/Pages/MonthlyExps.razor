@@ -134,6 +134,7 @@
 
                     List<string> lines = new List<string>();
                     lines = fullList.Split('\n').ToList<string>();
+                    message = $"{file.Name} has been uploaded successfully";
 
                     foreach (string line in lines)
                     {
@@ -152,7 +153,6 @@
                             }
                         }
                     }
-                    message = $"{file.Name} has been uploaded successfully";
                 }
                 else
                 {
