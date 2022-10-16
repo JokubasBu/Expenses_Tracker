@@ -21,6 +21,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         public async Task CreateExpense(MonthlyExp expense)
         {
             var result = await http.PostAsJsonAsync("/api/ChangeData", expense);
+            await http.GetAsync("/api/monthlyexp/SetCurrent");
             await SetResults(result);
         }
 
