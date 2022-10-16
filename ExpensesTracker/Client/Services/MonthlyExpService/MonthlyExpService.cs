@@ -81,7 +81,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task UpdateExpense(MonthlyExp expense)
         {
-            var result = await http.PutAsJsonAsync($"api/ChangeData/{expense.Id}", expense);
+            var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
             await SetResults(result);
             navigationManager.NavigateTo("monthlyexp");
         }
