@@ -9,6 +9,35 @@ namespace ExpensesTracker.Shared.Extensions
 {
     public static class Filter
     {
+        public static List<MonthlyExp> FilterBy(this List<MonthlyExp> expensesList, int id = 0, int month = 0, int year = 0)
+        {
+            if (id != 0) // nothing is selected
+            {
+                var expenseCategory =
+                    from allExpense in expensesList
+                    where allExpense.CategoryId == id
+                    select allExpense;
+                return expenseCategory.ToList();
+            }
+            if (month != 0) // nothing is selected
+            {
+                var expenseCategory =
+                    from allExpense in expensesList
+                    where allExpense.Month == month
+                    select allExpense;
+                return expenseCategory.ToList();
+            }
+            if (year != 0) // nothing is selected
+            {
+                var expenseCategory =
+                    from allExpense in expensesList
+                    where allExpense.Year == year
+                    select allExpense;
+                return expenseCategory.ToList();
+            }
+             return expensesList;
+
+        }
         public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expensesList, int id)
         {
             if (id != 0) // nothing is selected
