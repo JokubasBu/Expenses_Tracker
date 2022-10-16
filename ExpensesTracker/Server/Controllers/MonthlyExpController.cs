@@ -26,10 +26,9 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet] 
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            currentExpenses = expenses;
+            currentExpenses = await GetAllExpenses();
 
-            return Ok(expenses); 
+            return Ok(await GetAllExpenses()); 
         }
 
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
@@ -70,7 +69,7 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("SetCurrent")]
         public async Task SetCurrentExpenses()
         {
-            currentExpenses = await GetDbExpenses();
+            currentExpenses = await GetAllExpenses();
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
@@ -93,9 +92,9 @@ namespace ExpensesTracker.Server.Controllers
             expense.Category = null;
             context.MonthlyExps.Add(expense);
             context.SaveChanges();
-            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
+            return Ok(GetAllExpenses());
         }
-
+       
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<MonthlyExp>>> DelteExpense(int id)
         {
@@ -106,14 +105,15 @@ namespace ExpensesTracker.Server.Controllers
             context.MonthlyExps.Remove(dbExpense);
             await context.SaveChangesAsync();
 
-            MonthlyExpController.currentExpenses.RemoveAll(e => e.Id == id); //Remove(dbExpense) does not work not sure why?
+            currentExpenses.RemoveAll(e => e.Id == id); //Remove(dbExpense) does not work not sure why?
 
-            return Ok(MonthlyExpController.currentExpenses);
+            return Ok(currentExpenses);
         }
 
-        async Task<List<MonthlyExp>> GetDbExpenses()
+        async Task<List<MonthlyExp>> GetAllExpenses()
         {
-            return await context.MonthlyExps.Include(sh => sh.Category).ToListAsync();
+            return await context.MonthlyExps.Include(e => e.Category).ToListAsync();
         }
+
     }
 }
