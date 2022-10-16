@@ -18,14 +18,16 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         public List<MonthlyExp> MonthlyExps { get; set; } = new List<MonthlyExp>(); 
         public List<Category> Categories { get; set; } = new List<Category>();
 
-        public Task CreateExp(MonthlyExp hero)
+        public async Task CreateExpense(MonthlyExp expense)
         {
-            throw new NotImplementedException();
+            var result = await http.PostAsJsonAsync("/api/monthlyexp/Add", expense);
+            await SetResults(result);
         }
 
-        public Task DeleteExp(int id)
+        public async Task DeleteExpense(int id)
         {
-            throw new NotImplementedException();
+            var result = await http.DeleteAsync($"api/monthlyexp/{id}");
+            await SetResults(result);
         }
 
         public async Task GetCategories()
