@@ -126,7 +126,7 @@ namespace ExpensesTracker.Server.Controllers
 
             await context.SaveChangesAsync();
 
-            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
+            return Ok(await GetAllExpenses());
         }
         async Task<List<MonthlyExp>> GetAllExpenses()
         {
