@@ -1,6 +1,7 @@
 ﻿@page "/monthlyexp"
 @inject IMonthlyExpService MonthlyExpService
 @inject NavigationManager NavigationManager
+@inject HttpClient http
 
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
@@ -34,7 +35,15 @@
 &nbsp;
 <button class="btn btn-success" @onclick="CreateExpense">Add New</button>
 &nbsp; &nbsp;
-<FileUpload />
+<form @onsubmit="OnUploadFiles">
+    <div>
+        <br />
+        <InputFile id="file-upload" OnChange="@OnInputFileChange" />
+        <button type="submit" class="btn btn-outline-primary">Upload File</button>
+        <h5>@message</h5>
+    </div>
+    <br />
+</form>
 
 <table class="table">
     <thead>
@@ -67,6 +76,9 @@
 </table>
 
 @code {
+    private string message = "No File selected";
+    IReadOnlyList<IBrowserFile>? selectedFiles;
+
     protected override async Task OnInitializedAsync()
     {
         await MonthlyExpService.GetMonthlyExps();
@@ -99,5 +111,59 @@
     {
         await MonthlyExpService.DeleteExpense(id);
         NavigationManager.NavigateTo("/monthlyexp");
+    }
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        message = "File selected";
+        this.StateHasChanged();
+    }
+
+    private async void OnUploadFiles()
+    {
+        foreach (var file in selectedFiles)
+        {
+            var stream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(stream);
+            string fullList = ConvertBytesToString(stream.ToArray());
+
+
+            List<string> lines = new List<string>();
+            lines = fullList.Split('\n').ToList<string>();
+
+            message = $"{file.Name} has been uploaded successfully";
+            foreach (string line in lines)
+            {
+                if (line.Length >= 6)
+                {
+                    try
+                    {
+                        List<string> list = new List<string>();
+                        list = line.Split(',').ToList();
+                        MonthlyExp expense = new MonthlyExp { Money = Double.Parse(list.ElementAt(0)), Comment = list.ElementAt(1), CategoryId = Int32.Parse(list.ElementAt(2)), Year = Int32.Parse(list.ElementAt(3)), Month = Int32.Parse(list.ElementAt(4)), Day = Int32.Parse(list.ElementAt(5)) };
+                        await MonthlyExpService.CreateExpense(expense);
+                    }
+                    catch (Exception e)
+                    {
+                        message = "Some expenses were written in invalid form :/";
+                    }
+                }
+            }
+            this.StateHasChanged();
+            //NavigationManager.NavigateTo("/monthlyexp");
+        }
+    }
+
+    public string ConvertBytesToString(byte[] bytes)
+    {
+        string output = String.Empty;
+        MemoryStream stream = new MemoryStream(bytes);
+        stream.Position = 0;
+        using (StreamReader reader = new StreamReader(stream))
+        {
+            output = reader.ReadToEnd();
+        }
+        return output;
     }
 }
