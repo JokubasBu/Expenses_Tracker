@@ -21,7 +21,7 @@ namespace ExpensesTracker.Shared.Models
             get => _year;
             set
             {
-                if (value > 1999 && value < Dates.Years.Max() + 1)
+                if ((value > 1999 && value < Dates.Years.Max() + 1) || (value == 0))
                 {
                     _year = value;
                 }
@@ -32,7 +32,7 @@ namespace ExpensesTracker.Shared.Models
             get => _month;
             set
             {
-                if (value > 0 && value < 13)
+                if (value > -1 && value < 13)
                 {
                     _month = value;
                 }
