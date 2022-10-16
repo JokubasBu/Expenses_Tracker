@@ -20,13 +20,13 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task CreateExpense(MonthlyExp expense)
         {
-            var result = await http.PostAsJsonAsync("/api/ChangeData", expense);
+            var result = await http.PostAsJsonAsync("/api/monthlyexp/Add", expense);
             await SetResults(result);
         }
 
         public async Task DeleteExpense(int id)
         {
-            var result = await http.DeleteAsync($"api/ChangeData/{id}");
+            var result = await http.DeleteAsync($"api/monthlyexp/{id}");
             await SetResults(result);
         }
 
