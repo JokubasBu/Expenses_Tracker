@@ -20,7 +20,7 @@ namespace ExpensesTracker.Server.Controllers
             expense.Category = null;
             context.MonthlyExps.Add(expense);
             context.SaveChanges();
-            return Ok(await context.MonthlyExps.Include(sh => sh.Category).ToListAsync());
+            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
         }
 
         [HttpDelete("{id}")]
@@ -33,32 +33,9 @@ namespace ExpensesTracker.Server.Controllers
             context.MonthlyExps.Remove(dbExpense);
             await context.SaveChangesAsync();
 
-            return Ok(await GetDbExpenses());
-        }
+            MonthlyExpController.currentExpenses.RemoveAll(e => e.Id == id); //Remove(dbExpense) does not work not sure why?
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
-        {
-            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
-            if (dbExpense == null)
-                return NotFound("Expense was not found :/");
-
-            dbExpense.Money = expense.Money;
-            dbExpense.Comment = expense.Comment;
-            dbExpense.CategoryId = expense.CategoryId;
-            dbExpense.Year = expense.Year;
-            dbExpense.Month = expense.Month;
-            dbExpense.Day = expense.Day;
-
-            await context.SaveChangesAsync();
-
-            return Ok(await context.MonthlyExps.Include(e => e.Category).ToListAsync());
-        }
-        async Task<List<MonthlyExp>> GetDbExpenses()
-        {
-            return await context.MonthlyExps.Include(sh => sh.Category).ToListAsync();
+            return Ok(MonthlyExpController.currentExpenses);
         }
     }
-
-
 }

@@ -16,7 +16,7 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
+        static public List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
 
         public MonthlyExpController(DataContext context)
         {
