@@ -2,11 +2,10 @@ global using ExpensesTracker.Client.Services.MonthlyExpService;
 global using ExpensesTracker.Shared.Models;
 global using ExpensesTracker.Shared.Extensions;
 global using ExpensesTracker.Shared;
-global using ExpensesTracker.Client.Services.FileService;
 using ExpensesTracker.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
+using ExpensesTracker.Client.Services.FileService;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

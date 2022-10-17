@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,12 +12,7 @@ namespace ExpensesTracker.Shared.Models
         private int _year;
         private int _day;
         public int Id { get; set; } // Id is always primary key by default
-        [Required]
-        [RegularExpression(@"[^-].*", ErrorMessage = "Use Non-negative Number")] 
         public double Money { get; set; }
-
-        [Required]
-        [RegularExpression(@"^(?=.{1,200}$).*", ErrorMessage = "Character limit is 200!")]
         public string Comment { get; set; } = string.Empty;
         public Category? Category { get; set; }
         public int CategoryId { get; set; }
