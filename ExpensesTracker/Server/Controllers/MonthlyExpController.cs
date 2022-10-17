@@ -90,8 +90,9 @@ namespace ExpensesTracker.Server.Controllers
             expense.Category = null;
             context.MonthlyExps.Add(expense);
             context.SaveChanges();
-            currentExpenses.Add(expense);
-            return Ok(await GetAllExpenses());
+            //currentExpenses.Add(expense);
+            
+            return Ok(currentExpenses);
         }
        
         [HttpDelete("{id}")]

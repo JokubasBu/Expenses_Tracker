@@ -14,14 +14,20 @@ else
 	<h3>Edit</h3>
 }
 
-<EditForm Model="expense">
+<EditForm Model="expense" OnValidSubmit="Submit">
+
+	<DataAnnotationsValidator />
+
+
 	<div>
 		<label for="money"> Money</label>
 		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
+		<ValidationMessage For="@(()=> expense.Money)" />
 	</div>
 	<div>
 		<label for="comment"> Comment</label>
 		<InputText id="comment" @bind-Value="expense.Comment"></InputText>
+		<ValidationMessage For="@(()=> expense.Comment)" />
 	</div>
 	<div>
 		<label for="category"> Category</label>
@@ -58,7 +64,7 @@ else
     </InputSelect>
 	</div>
 	<br />
-	<button type="submit" class="btn btn-primary" @onclick="Submit">@buttonText</button>
+	<button type="submit" class="btn btn-primary">Submit</button>
 	<button type="submit" class="btn btn-danger" @onclick="GoBack"> Cancel</button>
 </EditForm>
 @code {
