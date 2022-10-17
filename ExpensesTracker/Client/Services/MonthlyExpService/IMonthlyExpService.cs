@@ -1,4 +1,6 @@
-﻿namespace ExpensesTracker.Client.Services.MonthlyExpService
+﻿using Microsoft.AspNetCore.Components.Forms;
+
+namespace ExpensesTracker.Client.Services.MonthlyExpService
 {
     public interface IMonthlyExpService
     {
