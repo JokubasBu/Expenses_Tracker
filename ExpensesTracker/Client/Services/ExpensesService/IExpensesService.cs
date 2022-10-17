@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 
-namespace ExpensesTracker.Client.Services.MonthlyExpService
+namespace ExpensesTracker.Client.Services.ExpensesService
 {
-    public interface IMonthlyExpService
+    public interface IExpensesService
     {
         List<Expense> AllExpenses { get; set; } 
         List<Category> Categories { get; set; }

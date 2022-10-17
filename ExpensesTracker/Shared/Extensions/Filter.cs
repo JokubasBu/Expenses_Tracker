@@ -11,7 +11,7 @@ namespace ExpensesTracker.Shared.Extensions
     {
         public static List<Expense> PickCategory(this List<Expense> expensesList, int id)
         {
-            if (id != 0) // nothing is selected
+            if (id != 0) 
             {
                 var expenseCategory =
                     from allExpense in expensesList
@@ -27,7 +27,7 @@ namespace ExpensesTracker.Shared.Extensions
 
         public static List<Expense> PickMonth(this List<Expense> expensesList, int monthNr)
         {
-            if (monthNr != 0) // nothing is selected
+            if (monthNr != 0)
             {
                 var expenseMonth =
                     from allExpense in expensesList
@@ -42,7 +42,7 @@ namespace ExpensesTracker.Shared.Extensions
         }
         public static List<Expense> PickYear(this List<Expense> expensesList, int year)
         {
-            if (year != 0) // nothing is selected
+            if (year != 0)
             {
                 var expenseYear =
                     from allExpense in expensesList

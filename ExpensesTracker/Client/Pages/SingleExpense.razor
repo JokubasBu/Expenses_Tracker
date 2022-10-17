@@ -1,6 +1,6 @@
 ﻿@page "/expense"
 @page "/expense/{id:int}"
-@inject IMonthlyExpService MonthlyExpService
+@inject IExpensesService ExpensesService
 @inject NavigationManager NavigationManager
 
 @if (Id == null)
@@ -26,7 +26,7 @@ else
 	<div>
 		<label for="category"> Category</label>
 		<InputSelect @bind-Value="expense.CategoryId">
-			@foreach(var category in MonthlyExpService.Categories){
+			@foreach(var category in ExpensesService.Categories){
 				<option value="@category.Id">@category.Title</option>
 			}
 		</InputSelect>
@@ -77,21 +77,21 @@ else
 		else{
 			buttonText = "Update entry";
 		}
-		await MonthlyExpService.GetCategories();
+		await ExpensesService.GetCategories();
 	}
 
 	protected override async Task OnParametersSetAsync()
 	{	
 		if(Id == null)
 		{
-			expense.Category = MonthlyExpService.Categories[0];
+			expense.Category = ExpensesService.Categories[0];
 			expense.CategoryId = expense.Category.Id;
 			expense.Year = 2022;
 			expense.Month = 1;
 			expense.Day = 1;
 		}
 		else{
-			expense = await MonthlyExpService.GetSingleExpense((int)Id); 
+			expense = await ExpensesService.GetSingleExpense((int)Id);
 		}
 	}
 
@@ -99,18 +99,18 @@ else
 	{ 
 		if (Id == null)
 		{
-			await MonthlyExpService.CreateExpense(expense);
-			NavigationManager.NavigateTo("/monthlyexp");
+			await ExpensesService.CreateExpense(expense);
+			NavigationManager.NavigateTo("/expenses");
 		}
 		else
 		{
-			await MonthlyExpService.UpdateExpense(expense);
+			await ExpensesService.UpdateExpense(expense);
 		}
 	}
 
 	public void GoBack()
 	{
-		NavigationManager.NavigateTo("/monthlyexp");
+		NavigationManager.NavigateTo("/expenses");
 	}
 
 }

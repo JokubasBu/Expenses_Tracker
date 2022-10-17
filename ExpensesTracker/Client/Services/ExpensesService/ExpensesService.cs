@@ -6,14 +6,14 @@ using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
 
-namespace ExpensesTracker.Client.Services.MonthlyExpService
+namespace ExpensesTracker.Client.Services.ExpensesService
 {
-    public class MonthlyExpService : IMonthlyExpService
+    public class ExpensesService : IExpensesService
     {
         private readonly HttpClient http;
         private readonly NavigationManager navigationManager;
 
-        public MonthlyExpService(HttpClient http, NavigationManager navigationManager)
+        public ExpensesService(HttpClient http, NavigationManager navigationManager)
         {
             this.http = http;
             this.navigationManager = navigationManager;
@@ -23,19 +23,19 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task CreateExpense(Expense expense)
         {
-            var result = await http.PostAsJsonAsync("/api/monthlyexp/Add", expense);
+            var result = await http.PostAsJsonAsync("/api/expenses/Add", expense);
             await SetResults(result);
         }
 
         public async Task DeleteExpense(int id)
         {
-            var result = await http.DeleteAsync($"api/monthlyexp/{id}");
+            var result = await http.DeleteAsync($"api/expenses/{id}");
             await SetResults(result);
         }
 
         public async Task GetCategories()
         {
-            var result = await http.GetFromJsonAsync<List<Category>>("api/monthlyexp/categories");
+            var result = await http.GetFromJsonAsync<List<Category>>("api/expenses/categories");
             if (result != null)
             {
                 Categories = result;
@@ -44,7 +44,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task GetExpenses()
         {
-            var result = await http.GetFromJsonAsync<List<Expense>>("api/monthlyexp");
+            var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses");
             if (result != null)
             {
                 AllExpenses = result;
@@ -53,7 +53,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task GetOrderedExpenses()
         {
-            var result = await http.GetFromJsonAsync<List<Expense>>("api/monthlyexp/currentCount");
+            var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses/currentCount");
             if (result != null)
             {
                 AllExpenses = result;
@@ -61,7 +61,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
         }
         public async Task ShowFilters(Expense expenseFilter)
         {
-            var result = await http.PostAsJsonAsync("api/monthlyexp", expenseFilter);
+            var result = await http.PostAsJsonAsync("api/expenses", expenseFilter);
             await SetResults(result);
         }
 
@@ -74,7 +74,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task<Expense> GetSingleExpense(int id)
         {
-            var result = await http.GetFromJsonAsync<Expense>($"api/monthlyexp/{id}");
+            var result = await http.GetFromJsonAsync<Expense>($"api/expenses/{id}");
             if (result != null)
             {
                 return result;
@@ -84,9 +84,9 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task UpdateExpense(Expense expense)
         {
-            var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
+            var result = await http.PutAsJsonAsync($"api/expenses/{expense.Id}", expense);
             await SetResults(result);
-            navigationManager.NavigateTo("monthlyexp");
+            navigationManager.NavigateTo("expenses");
         }
     }
 }

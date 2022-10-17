@@ -10,15 +10,15 @@ using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
 {
-    [Route("api/[controller]")] // the route will be taken from MonthlyExpController and it will read everything that is before controller
+    [Route("api/[controller]")] // the route will be taken from ExpensesController and it will read everything that is before controller
     [ApiController]
-    public class MonthlyExpController : ControllerBase
+    public class ExpensesController : ControllerBase
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
         static public List<Expense> currentExpenses = new List<Expense>();
 
-        public MonthlyExpController(DataContext context)
+        public ExpensesController(DataContext context)
         {
             this.context = context;
         }
@@ -52,8 +52,6 @@ namespace ExpensesTracker.Server.Controllers
             currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
             currentExpenses = currentExpenses.PickMonth(monthNr: expenseFilter.Month);
             currentExpenses = currentExpenses.PickYear(year: expenseFilter.Year);
-
-            // call filters for year and month (date)
 
             return Ok(currentExpenses);
         }

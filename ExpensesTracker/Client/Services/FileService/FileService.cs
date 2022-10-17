@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using ExpensesTracker.Client.Services.MonthlyExpService;
+using ExpensesTracker.Client.Services.ExpensesService;
 
 namespace ExpensesTracker.Client.Services.FileService
 {
     public class FileService : IFileService
     {
-        private readonly IMonthlyExpService monthlyExpService;
+        private readonly IExpensesService expensesService;
 
-        public FileService(IMonthlyExpService monthlyExpService)
+        public FileService(IExpensesService expensesService)
         {
-            this.monthlyExpService = monthlyExpService;
+            this.expensesService = expensesService;
         }
 
         public async Task<string> ReadFiles(IReadOnlyList<IBrowserFile> selectedFiles, string? message)
@@ -41,7 +41,7 @@ namespace ExpensesTracker.Client.Services.FileService
                                     Month = Int32.Parse(list.ElementAt(4)), 
                                     Day = Int32.Parse(list.ElementAt(5)) };
 
-                                await monthlyExpService.CreateExpense(expense);
+                                await expensesService.CreateExpense(expense);
 
                             }
                             catch (Exception e)
