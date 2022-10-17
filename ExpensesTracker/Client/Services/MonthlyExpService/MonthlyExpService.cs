@@ -42,7 +42,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             }
         }
 
-        public async Task GetMonthlyExps()
+        public async Task GetExpenses()
         {
             var result = await http.GetFromJsonAsync<List<MonthlyExp>>("api/monthlyexp");
             if (result != null)
@@ -51,7 +51,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             }
         }
 
-        public async Task GetOrderedMonthlyExps()
+        public async Task GetOrderedExpenses()
         {
             var result = await http.GetFromJsonAsync<List<MonthlyExp>>("api/monthlyexp/currentCount");
             if (result != null)
@@ -72,7 +72,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             // navigationManager.NavigateTo("monthlyexp");
         }
 
-        public async Task<MonthlyExp> GetSingleExp(int id)
+        public async Task<MonthlyExp> GetSingleExpense(int id)
         {
             var result = await http.GetFromJsonAsync<MonthlyExp>($"api/monthlyexp/{id}");
             if (result != null)

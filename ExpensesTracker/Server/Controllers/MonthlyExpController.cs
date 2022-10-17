@@ -24,7 +24,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet] 
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
+        public async Task<ActionResult<List<MonthlyExp>>> GetExpenses()
         {
             currentExpenses = await GetAllExpenses();
 
@@ -32,7 +32,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
-        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
+        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedExpenses()
         {
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
@@ -73,7 +73,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<MonthlyExp>>> GetSingleExp(int id) 
+        public async Task<ActionResult<List<MonthlyExp>>> GetSingleExpense(int id) 
         {
             var expense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
 
@@ -85,7 +85,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<List<MonthlyExp>>> CreateExp(MonthlyExp expense)
+        public async Task<ActionResult<List<MonthlyExp>>> CreateExpemse(MonthlyExp expense)
         {
             expense.Category = null;
             context.AllExpenses.Add(expense);
@@ -95,7 +95,7 @@ namespace ExpensesTracker.Server.Controllers
         }
        
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> DelteExpense(int id)
+        public async Task<ActionResult<List<MonthlyExp>>> DeleteExpense(int id)
         {
             var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)

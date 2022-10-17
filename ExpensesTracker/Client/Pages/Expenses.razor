@@ -83,7 +83,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await MonthlyExpService.GetMonthlyExps();
+        await MonthlyExpService.GetExpenses();
         await MonthlyExpService.GetCategories();
     }
 
@@ -94,7 +94,7 @@
 
     async Task AscOrDesc()
     {
-        await MonthlyExpService.GetOrderedMonthlyExps();
+        await MonthlyExpService.GetOrderedExpenses();
     }
 
     MonthlyExp expenseFilter = new MonthlyExp { Category = new Category() };
