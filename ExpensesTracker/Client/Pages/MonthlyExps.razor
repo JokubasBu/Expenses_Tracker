@@ -1,6 +1,8 @@
 ﻿@page "/monthlyexp"
-@inject IMonthlyExpService MonthlyExpService 
+@inject IMonthlyExpService MonthlyExpService
 @inject NavigationManager NavigationManager
+@inject HttpClient http
+@inject IFileService FileService
 
 <PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
 <h3>Monthly Expenses</h3>
@@ -22,19 +24,31 @@
     </InputSelect>
     <InputSelect @bind-Value="expenseFilter.CategoryId">
         <option value="0">All Categories</option>
-            @foreach (var category in MonthlyExpService.Categories)
-            {
+        @foreach (var category in MonthlyExpService.Categories)
+        {
             <option value="@category.Id">@category.Title</option>
-            }
+        }
     </InputSelect>
-        <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-primary">Filter</button>
 </EditForm>
+
+<button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
+&nbsp;
+<button class="btn btn-success" @onclick="CreateExpense">Add New</button>
+&nbsp; &nbsp;
+<form @onsubmit="OnUploadFiles">
+    <div>
+        <br />
+        <InputFile id="file-upload" OnChange="@OnInputFileChange" />
+        <button type="submit" class="btn btn-outline-primary">Upload File</button>
+        &nbsp;
+        <text>@message</text>
+    </div>
+    <br />
+</form>
 
 <table class="table">
     <thead>
-        <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
-        &nbsp;
-        <button class="btn btn-success" @onclick="CreateExpense">Add New</button>
         <tr>
             <th>Date</th>
             <th>Money</th>
@@ -43,8 +57,9 @@
             <th></th>
         </tr>
     </thead>
+
     <tbody>
-        @foreach (var expense in MonthlyExpService.MonthlyExps) 
+        @foreach (var expense in MonthlyExpService.MonthlyExps)
         {
             <!-- reading data if foreach loop -->
             <tr>
@@ -54,7 +69,7 @@
                 <td>@expense.Category.Title</td>
                 <td>
                     <button class="btn btn-primary" @onclick="(() => ShowExp(expense.Id))"><i class="oi oi-pencil"></i></button>
-                     &nbsp;
+                    &nbsp;
                     <button class="btn btn-danger" @onclick="(() => DeleteExp(expense.Id))">Delete</button>
                 </td>
             </tr>
@@ -63,13 +78,17 @@
 </table>
 
 @code {
-    protected override async Task OnInitializedAsync() 
+    private string? message = null;
+    IReadOnlyList<IBrowserFile>? selectedFiles;
+
+    protected override async Task OnInitializedAsync()
     {
-        await MonthlyExpService.GetMonthlyExps(); 
-        await MonthlyExpService.GetCategories(); 
+        await MonthlyExpService.GetMonthlyExps();
+        await MonthlyExpService.GetCategories();
     }
 
-    void ShowExp(int id){
+    void ShowExp(int id)
+    {
         NavigationManager.NavigateTo($"expense/{id}");
     }
 
@@ -94,5 +113,21 @@
     {
         await MonthlyExpService.DeleteExpense(id);
         NavigationManager.NavigateTo("/monthlyexp");
+    }
+
+    private void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        message = null;
+        this.StateHasChanged();
+    }
+
+    private async void OnUploadFiles()
+    {
+        if (selectedFiles != null)
+        {
+            message = await FileService.ReadFiles(selectedFiles, message);
+        }
+        this.StateHasChanged();
     }
 }
