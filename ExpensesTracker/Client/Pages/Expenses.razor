@@ -4,8 +4,8 @@
 @inject HttpClient http
 @inject IFileService FileService
 
-<PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
-<h3>Monthly Expenses</h3>
+<PageTitle>Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
+<h3>Expenses</h3>
 
 <EditForm Model="expenseFilter" OnSubmit="FilterButton">
     <InputSelect @bind-Value="expenseFilter.Year">
