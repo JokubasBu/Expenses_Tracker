@@ -18,6 +18,10 @@ namespace ExpensesTracker.Server.Controllers
         static int currentCount = 0; // amomunt of times the button Order was pressed
         static public List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
 
+        private static int _year;
+        private static int _month;
+        private static int _categoryId;
+
         public MonthlyExpController(DataContext context)
         {
             this.context = context;
@@ -26,9 +30,7 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet] 
         public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
         {
-            currentExpenses = await GetAllExpenses();
-
-            return Ok(await GetAllExpenses()); 
+            return Ok(await GetFilteredExpenses()); 
         }
 
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
@@ -47,15 +49,11 @@ namespace ExpensesTracker.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<List<MonthlyExp>>> ShowFilter(MonthlyExp expenseFilter)
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
-            currentCount = 0; //restart order
-            currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
-            currentExpenses = currentExpenses.PickMonth(monthNr: expenseFilter.Month);
-            currentExpenses = currentExpenses.PickYear(year: expenseFilter.Year);
+            _categoryId = expenseFilter.CategoryId;
+            _month =expenseFilter.Month;
+            _year =expenseFilter.Year;
 
-            // call filters for year and month (date)
-
-            return Ok(currentExpenses);
+            return Ok(await GetFilteredExpenses());
         }
 
 
@@ -90,8 +88,7 @@ namespace ExpensesTracker.Server.Controllers
             expense.Category = null;
             context.MonthlyExps.Add(expense);
             context.SaveChanges();
-            currentExpenses.Add(expense);
-            return Ok(await GetAllExpenses());
+            return Ok(await GetFilteredExpenses());
         }
        
         [HttpDelete("{id}")]
@@ -104,9 +101,7 @@ namespace ExpensesTracker.Server.Controllers
             context.MonthlyExps.Remove(dbExpense);
             await context.SaveChangesAsync();
 
-            currentExpenses.RemoveAll(e => e.Id == id); //Remove(dbExpense) does not work not sure why?
-
-            return Ok(currentExpenses);
+            return Ok(await GetFilteredExpenses());
         }
 
         [HttpPut("{id}")]
@@ -125,11 +120,33 @@ namespace ExpensesTracker.Server.Controllers
 
             await context.SaveChangesAsync();
 
-            return Ok(await GetAllExpenses());
+            return Ok(await GetFilteredExpenses());
         }
         async Task<List<MonthlyExp>> GetAllExpenses()
         {
             return await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+        }
+
+        async Task<List<MonthlyExp>> GetFilteredExpenses()
+        {      
+
+            if (currentExpenses.Count == 0 && _categoryId == 0 && _month == 0 && _year == 0)
+            {
+                _categoryId = 0;
+                _month = 0;
+                _year = 0;
+                return await GetAllExpenses();
+            }
+
+            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+
+            currentExpenses = expenses.PickCategory(id: _categoryId);
+            currentExpenses = currentExpenses.PickMonth(monthNr: _month);
+            currentExpenses = currentExpenses.PickYear(year: _year);
+
+            // call filters for year and month (date)
+
+            return currentExpenses;
         }
 
     }
