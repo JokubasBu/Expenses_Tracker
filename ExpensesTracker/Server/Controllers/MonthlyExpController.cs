@@ -88,7 +88,9 @@ namespace ExpensesTracker.Server.Controllers
             expense.Category = null;
             context.MonthlyExps.Add(expense);
             context.SaveChanges();
+            
             return Ok(await GetFilteredExpenses());
+
         }
        
         [HttpDelete("{id}")]
