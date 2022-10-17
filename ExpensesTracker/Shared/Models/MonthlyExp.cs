@@ -14,7 +14,7 @@ namespace ExpensesTracker.Shared.Models
         private int _day;
         public int Id { get; set; } // Id is always primary key by default
         [Required]
-        [RegularExpression(@"[1-9]\d*$", ErrorMessage = "Use natural numbers!")] 
+        [RegularExpression(@"[^-].*", ErrorMessage = "Use Non-negative Number")] 
         public double Money { get; set; }
 
         [Required]
