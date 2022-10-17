@@ -40,7 +40,8 @@
         <br />
         <InputFile id="file-upload" OnChange="@OnInputFileChange" />
         <button type="submit" class="btn btn-outline-primary">Upload File</button>
-        <h5>@message</h5>
+        &nbsp;
+        <text>@message</text>
     </div>
     <br />
 </form>
@@ -76,7 +77,7 @@
 </table>
 
 @code {
-    private string message = "No File selected";
+    private string? message = null;
     IReadOnlyList<IBrowserFile>? selectedFiles;
 
     protected override async Task OnInitializedAsync()
@@ -116,7 +117,7 @@
     private void OnInputFileChange(InputFileChangeEventArgs e)
     {
         selectedFiles = e.GetMultipleFiles();
-        message = "File selected";
+        message = null;
         this.StateHasChanged();
     }
 
@@ -134,7 +135,6 @@
 
                     List<string> lines = new List<string>();
                     lines = fullList.Split('\n').ToList<string>();
-                    message = $"{file.Name} has been uploaded successfully";
 
                     foreach (string line in lines)
                     {
