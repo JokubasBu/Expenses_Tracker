@@ -20,15 +20,13 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task CreateExpense(MonthlyExp expense)
         {
-            var result = await http.PostAsJsonAsync("/api/ChangeData", expense);
-            await http.GetAsync("/api/monthlyexp/SetCurrent");
+            var result = await http.PostAsJsonAsync("/api/monthlyexp/Add", expense);
             await SetResults(result);
         }
 
         public async Task DeleteExpense(int id)
         {
-            var result = await http.DeleteAsync($"api/ChangeData/{id}");
-            await http.GetAsync("/api/monthlyexp/SetCurrent");
+            var result = await http.DeleteAsync($"api/monthlyexp/{id}");
             await SetResults(result);
         }
 
@@ -83,7 +81,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task UpdateExpense(MonthlyExp expense)
         {
-            var result = await http.PutAsJsonAsync($"api/ChangeData/{expense.Id}", expense);
+            var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
             await SetResults(result);
             navigationManager.NavigateTo("monthlyexp");
         }
