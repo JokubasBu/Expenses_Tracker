@@ -18,10 +18,10 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             this.http = http;
             this.navigationManager = navigationManager;
         }
-        public List<MonthlyExp> AllExpenses { get; set; } = new List<MonthlyExp>(); 
+        public List<Expense> AllExpenses { get; set; } = new List<Expense>(); 
         public List<Category> Categories { get; set; } = new List<Category>();
 
-        public async Task CreateExpense(MonthlyExp expense)
+        public async Task CreateExpense(Expense expense)
         {
             var result = await http.PostAsJsonAsync("/api/monthlyexp/Add", expense);
             await SetResults(result);
@@ -44,7 +44,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task GetExpenses()
         {
-            var result = await http.GetFromJsonAsync<List<MonthlyExp>>("api/monthlyexp");
+            var result = await http.GetFromJsonAsync<List<Expense>>("api/monthlyexp");
             if (result != null)
             {
                 AllExpenses = result;
@@ -53,13 +53,13 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         public async Task GetOrderedExpenses()
         {
-            var result = await http.GetFromJsonAsync<List<MonthlyExp>>("api/monthlyexp/currentCount");
+            var result = await http.GetFromJsonAsync<List<Expense>>("api/monthlyexp/currentCount");
             if (result != null)
             {
                 AllExpenses = result;
             }
         }
-        public async Task ShowFilters(MonthlyExp expenseFilter)
+        public async Task ShowFilters(Expense expenseFilter)
         {
             var result = await http.PostAsJsonAsync("api/monthlyexp", expenseFilter);
             await SetResults(result);
@@ -67,14 +67,14 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
 
         private async Task SetResults(HttpResponseMessage result)
         {
-            var response = await result.Content.ReadFromJsonAsync<List<MonthlyExp>>();
+            var response = await result.Content.ReadFromJsonAsync<List<Expense>>();
             AllExpenses = response;
             // navigationManager.NavigateTo("monthlyexp");
         }
 
-        public async Task<MonthlyExp> GetSingleExpense(int id)
+        public async Task<Expense> GetSingleExpense(int id)
         {
-            var result = await http.GetFromJsonAsync<MonthlyExp>($"api/monthlyexp/{id}");
+            var result = await http.GetFromJsonAsync<Expense>($"api/monthlyexp/{id}");
             if (result != null)
             {
                 return result;
@@ -82,7 +82,7 @@ namespace ExpensesTracker.Client.Services.MonthlyExpService
             throw new Exception("not found whoops");
         }
 
-        public async Task UpdateExpense(MonthlyExp expense)
+        public async Task UpdateExpense(Expense expense)
         {
             var result = await http.PutAsJsonAsync($"api/monthlyexp/{expense.Id}", expense);
             await SetResults(result);

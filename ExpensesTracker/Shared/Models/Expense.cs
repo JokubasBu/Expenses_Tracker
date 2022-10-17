@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpensesTracker.Shared.Models
 {
-    public class MonthlyExp : IComparable
+    public class Expense : IComparable
     {
         private int _month;
         private int _year;
@@ -52,7 +52,7 @@ namespace ExpensesTracker.Shared.Models
 
         public int CompareTo(object? obj)
         {
-            MonthlyExp incomingexpense = obj as MonthlyExp;
+            Expense incomingexpense = obj as Expense;
             return Money.CompareTo(incomingexpense.Money);
         }
     }

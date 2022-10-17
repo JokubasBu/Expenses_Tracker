@@ -16,7 +16,7 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static public List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
+        static public List<Expense> currentExpenses = new List<Expense>();
 
         public MonthlyExpController(DataContext context)
         {
@@ -24,7 +24,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet] 
-        public async Task<ActionResult<List<MonthlyExp>>> GetExpenses()
+        public async Task<ActionResult<List<Expense>>> GetExpenses()
         {
             currentExpenses = await GetAllExpenses();
 
@@ -32,7 +32,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
-        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedExpenses()
+        public async Task<ActionResult<List<Expense>>> GetOrderedExpenses()
         {
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
@@ -45,7 +45,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<MonthlyExp>>> ShowFilter(MonthlyExp expenseFilter)
+        public async Task<ActionResult<List<Expense>>> ShowFilter(Expense expenseFilter)
         {
             var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
             currentCount = 0; //restart order
@@ -73,7 +73,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<MonthlyExp>>> GetSingleExpense(int id) 
+        public async Task<ActionResult<List<Expense>>> GetSingleExpense(int id) 
         {
             var expense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
 
@@ -85,7 +85,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<List<MonthlyExp>>> CreateExpemse(MonthlyExp expense)
+        public async Task<ActionResult<List<Expense>>> CreateExpemse(Expense expense)
         {
             expense.Category = null;
             context.AllExpenses.Add(expense);
@@ -95,7 +95,7 @@ namespace ExpensesTracker.Server.Controllers
         }
        
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> DeleteExpense(int id)
+        public async Task<ActionResult<List<Expense>>> DeleteExpense(int id)
         {
             var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
@@ -110,7 +110,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
+        public async Task<ActionResult<List<Expense>>> UpdateExpense(Expense expense, int id)
         {
             var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
@@ -127,7 +127,7 @@ namespace ExpensesTracker.Server.Controllers
 
             return Ok(await GetAllExpenses());
         }
-        async Task<List<MonthlyExp>> GetAllExpenses()
+        async Task<List<Expense>> GetAllExpenses()
         {
             return await context.AllExpenses.Include(e => e.Category).ToListAsync();
         }

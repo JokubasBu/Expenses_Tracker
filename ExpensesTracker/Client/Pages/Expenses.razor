@@ -97,7 +97,7 @@
         await MonthlyExpService.GetOrderedExpenses();
     }
 
-    MonthlyExp expenseFilter = new MonthlyExp { Category = new Category() };
+    Expense expenseFilter = new Expense { Category = new Category() };
 
     async Task FilterButton()
     {

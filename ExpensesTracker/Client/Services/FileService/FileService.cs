@@ -33,7 +33,7 @@ namespace ExpensesTracker.Client.Services.FileService
                             {
                                 List<string> list = new List<string>();
                                 list = line.Split(',').ToList();
-                                MonthlyExp expense = new MonthlyExp {
+                                Expense expense = new Expense {
                                     Money = Double.Parse(list.ElementAt(0)), 
                                     Comment = list.ElementAt(1), 
                                     CategoryId = Int32.Parse(list.ElementAt(2)), 

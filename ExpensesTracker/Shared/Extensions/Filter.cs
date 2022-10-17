@@ -9,7 +9,7 @@ namespace ExpensesTracker.Shared.Extensions
 {
     public static class Filter
     {
-        public static List<MonthlyExp> PickCategory(this List<MonthlyExp> expensesList, int id)
+        public static List<Expense> PickCategory(this List<Expense> expensesList, int id)
         {
             if (id != 0) // nothing is selected
             {
@@ -25,7 +25,7 @@ namespace ExpensesTracker.Shared.Extensions
             }
         }
 
-        public static List<MonthlyExp> PickMonth(this List<MonthlyExp> expensesList, int monthNr)
+        public static List<Expense> PickMonth(this List<Expense> expensesList, int monthNr)
         {
             if (monthNr != 0) // nothing is selected
             {
@@ -40,7 +40,7 @@ namespace ExpensesTracker.Shared.Extensions
                 return expensesList;
             }
         }
-        public static List<MonthlyExp> PickYear(this List<MonthlyExp> expensesList, int year)
+        public static List<Expense> PickYear(this List<Expense> expensesList, int year)
         {
             if (year != 0) // nothing is selected
             {
