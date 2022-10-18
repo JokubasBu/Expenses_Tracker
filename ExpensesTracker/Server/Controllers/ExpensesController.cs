@@ -49,9 +49,9 @@ namespace ExpensesTracker.Server.Controllers
         {
             var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
             currentCount = 0; //restart order
-            currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
-            currentExpenses = currentExpenses.PickMonth(monthNr: expenseFilter.Month);
-            currentExpenses = currentExpenses.PickYear(year: expenseFilter.Year);
+            currentExpenses = expenses.FilterBy(id: expenseFilter.CategoryId);
+            currentExpenses = currentExpenses.FilterBy(month: expenseFilter.Month);
+            currentExpenses = currentExpenses.FilterBy(year: expenseFilter.Year);
 
             return Ok(currentExpenses);
         }

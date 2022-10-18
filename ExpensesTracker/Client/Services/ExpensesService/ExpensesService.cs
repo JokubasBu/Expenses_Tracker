@@ -92,7 +92,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         {
             var summary = new List<ExpenseSummary>();
 
-            allExpenses = allExpenses.PickMonth(month);
+            allExpenses = allExpenses.FilterBy(month: month);
 
             foreach (Category category in Categories)
             {
