@@ -135,10 +135,12 @@ namespace ExpensesTracker.Server.Controllers
             currentExpenses = currentExpenses.PickMonth(monthNr: _month);
             currentExpenses = currentExpenses.PickYear(year: _year);
 
-            currentExpenses.Sort(); //ascending
+            //currentExpenses.Sort(); //ascending
+            currentExpenses = Order.OrderByAsc(currentExpenses, Money: true);
             if (currentCount % 2 == 0)
             {
-                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                //currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                currentExpenses = Order.OrderByDesc(currentExpenses, Money: true);
             }
 
             return currentExpenses;
