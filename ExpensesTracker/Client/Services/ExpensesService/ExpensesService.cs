@@ -18,7 +18,8 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             this.http = http;
             this.navigationManager = navigationManager;
         }
-        public List<Expense> AllExpenses { get; set; } = new List<Expense>(); 
+        public List<Expense> AllExpenses { get; set; } = new List<Expense>();
+        public List<Expense> everyExpense { get; set; } = new List<Expense>();
         public List<Category> Categories { get; set; } = new List<Category>();
 
         public async Task CreateExpense(Expense expense)
@@ -53,6 +54,15 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             if (result != null)
             {
                 AllExpenses = result;
+            }
+        }
+
+        public async Task GetEveryExpense()
+        {
+            var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses/allExpenses");
+            if (result != null)
+            {
+                everyExpense = result;
             }
         }
 
@@ -101,6 +111,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<ExpenseSummary> GetSummary(List<Expense> allExpenses, int month)
         {
             var summary = new List<ExpenseSummary>();
+
 
             allExpenses = allExpenses.FilterBy(month: month);
 

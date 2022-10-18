@@ -29,6 +29,11 @@ namespace ExpensesTracker.Server.Controllers
         {
             this.context = context;
         }
+        [HttpGet("allExpenses")]
+        public async Task<ActionResult<List<Expense>>> GetEveryExpense()
+        {
+            return Ok(await GetAllExpenses());
+        }
 
         [HttpGet] 
         public async Task<ActionResult<List<Expense>>> GetExpenses()
