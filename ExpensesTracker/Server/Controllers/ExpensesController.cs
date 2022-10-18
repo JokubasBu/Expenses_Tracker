@@ -46,14 +46,11 @@ namespace ExpensesTracker.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Expense>>> ShowFilter(Expense expenseFilter)
         {
-
             _categoryId = expenseFilter.CategoryId;
             _month =expenseFilter.Month;
             _year =expenseFilter.Year;
 
             return Ok(await GetFilteredExpenses());
-
-
         }
 
 
@@ -136,11 +133,11 @@ namespace ExpensesTracker.Server.Controllers
             currentExpenses = currentExpenses.PickYear(year: _year);
 
             //currentExpenses.Sort(); //ascending
-            currentExpenses = Order.OrderByAsc(currentExpenses, Money: true);
+            currentExpenses = Order.OrderList(currentExpenses);
             if (currentCount % 2 == 0)
             {
                 //currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
-                currentExpenses = Order.OrderByDesc(currentExpenses, Money: true);
+                currentExpenses = Order.OrderList(currentExpenses, Reverse: true);
             }
 
             return currentExpenses;

@@ -9,74 +9,25 @@ namespace ExpensesTracker.Shared.Extensions
 {
     public static class Order
     {
-        public static List<Expense> OrderByDesc(List<Expense> expensesList, bool Money = false, bool Date = false)
+        public static List<Expense> OrderList(List<Expense> expensesList, bool Reverse = false)
         {
             Expense[] expenses = expensesList.ToArray();
 
-            if (Money)
+            for (int i = 0; i < expenses.Length; i++)
             {
-                for (int i = 0; i < expenses.Length; i++)
+                for (int j = i + 1; j < expenses.Length; j++)
                 {
-                    for (int j = i + 1; j < expenses.Length; j++)
+                    if ((expenses[i].CompareTo(expenses[j]) > 0) && !Reverse)
                     {
-                        if (expenses[i].CompareTo(expenses[j]) > 0)
-                        {
-                            swap<Expense>(ref expenses[i], ref expenses[j]);
-                        }
+                        swap<Expense>(ref expenses[i], ref expenses[j]);
+                    }
+                    else if ((expenses[i].CompareTo(expenses[j]) <= 0) && Reverse)
+                    {
+                        swap<Expense>(ref expenses[i], ref expenses[j]);
                     }
                 }
-                return expenses.ToList();
-            }
-            if (Date)
-            {
-                for (int i = 0; i < expenses.Length; i++)
-                {
-                    for (int j = i + 1; j < expenses.Length; j++)
-                    {
-                        if (expenses[i].CompareTo(expenses[j]) > 0)
-                        {
-                            swap<Expense>(ref expenses[i], ref expenses[j]);
-                        }
-                    }
-                }
-                return expenses.ToList();
             }
             return expenses.ToList();
-        }
-
-        public static List<Expense> OrderByAsc(List<Expense> expensesList, bool Money = false, bool Date = false)
-        {
-            Expense[] expenses = expensesList.ToArray();
-
-            if (Money)
-            {
-                for (int i = 0; i < expenses.Length; i++)
-                {
-                    for (int j = i + 1; j < expenses.Length; j++)
-                    {
-                        if (expenses[i].CompareTo(expenses[j]) <= 0)
-                        {
-                            swap<Expense>(ref expenses[i], ref expenses[j]);
-                        }
-                    }
-                }
-                return expenses.ToList();
-            }
-            if (Date)
-            {
-                for (int i = 0; i < expenses.Length; i++)
-                {
-                    for (int j = i + 1; j < expenses.Length; j++)
-                    {
-                        if (expenses[i].CompareTo(expenses[j]) <= 0)
-                        {
-                            swap<Expense>(ref expenses[i], ref expenses[j]);
-                        }
-                    }
-                }
-                return expenses.ToList();
-            }
-            return expensesList;
         }
 
         static void swap<T>(ref T first, ref T second)
