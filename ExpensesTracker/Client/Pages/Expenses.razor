@@ -1,11 +1,11 @@
-﻿@page "/monthlyexp"
-@inject IMonthlyExpService MonthlyExpService
+﻿@page "/expenses"
+@inject IExpensesService ExpensesService
 @inject NavigationManager NavigationManager
 @inject HttpClient http
 @inject IFileService FileService
 
-<PageTitle>Monthly Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
-<h3>Monthly Expenses</h3>
+<PageTitle>Expenses</PageTitle> <!-- this is how we will define this file in navmenu-->
+<h3>Expenses</h3>
 
 <EditForm Model="expenseFilter" OnSubmit="FilterButton">
     <InputSelect @bind-Value="expenseFilter.Year">
@@ -24,7 +24,7 @@
     </InputSelect>
     <InputSelect @bind-Value="expenseFilter.CategoryId">
         <option value="0">All Categories</option>
-        @foreach (var category in MonthlyExpService.Categories)
+        @foreach (var category in ExpensesService.Categories)
         {
             <option value="@category.Id">@category.Title</option>
         }
@@ -59,7 +59,7 @@
     </thead>
 
     <tbody>
-        @foreach (var expense in MonthlyExpService.MonthlyExps)
+        @foreach (var expense in ExpensesService.AllExpenses)
         {
             <!-- reading data if foreach loop -->
             <tr>
@@ -83,8 +83,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await MonthlyExpService.GetMonthlyExps();
-        await MonthlyExpService.GetCategories();
+        await ExpensesService.GetExpenses();
+        await ExpensesService.GetCategories();
     }
 
     void ShowExp(int id)
@@ -94,14 +94,14 @@
 
     async Task AscOrDesc()
     {
-        await MonthlyExpService.GetOrderedMonthlyExps();
+        await ExpensesService.GetOrderedExpenses();
     }
 
-    MonthlyExp expenseFilter = new MonthlyExp { Category = new Category() };
+    Expense expenseFilter = new Expense { Category = new Category() };
 
     async Task FilterButton()
     {
-        await MonthlyExpService.ShowFilters(expenseFilter);
+        await ExpensesService.ShowFilters(expenseFilter);
     }
 
     void CreateExpense()
@@ -111,8 +111,8 @@
 
     async Task DeleteExp(int id)
     {
-        await MonthlyExpService.DeleteExpense(id);
-        NavigationManager.NavigateTo("/monthlyexp");
+        await ExpensesService.DeleteExpense(id);
+        NavigationManager.NavigateTo("/expenses");
     }
 
     private void OnInputFileChange(InputFileChangeEventArgs e)

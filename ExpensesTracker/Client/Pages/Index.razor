@@ -1,5 +1,21 @@
 ﻿@page "/"
+@inject IExpensesService ExpensesService
+@inject IJSRuntime jsRunTime;
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
+<div id="chartdiv"></div>
+@code {
+    List<Expense> allExpesnes = new List<Expense>();
+    ExpenseSummary summary = new ExpenseSummary();
+
+    protected override async Task OnInitializedAsync()
+    {     
+        await ExpensesService.GetExpenses();
+        await ExpensesService.GetCategories();
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.GetSummary(ExpensesService.AllExpenses, DateTime.Now.Month));
+    }
+
+
+}
