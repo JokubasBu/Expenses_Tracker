@@ -23,6 +23,11 @@ namespace ExpensesTracker.Client.Services.ExpensesService
 
         public async Task CreateExpense(Expense expense)
         {
+            if (expense.Comment.Replace(" ", "").Equals(String.Empty))
+            {
+                expense.Comment = "New Expense";
+            }
+
             var result = await http.PostAsJsonAsync("/api/expenses/Add", expense);
             await SetResults(result);
         }
@@ -84,6 +89,11 @@ namespace ExpensesTracker.Client.Services.ExpensesService
 
         public async Task UpdateExpense(Expense expense)
         {
+            if (expense.Comment.Replace(" ", "").Equals(String.Empty))
+            {
+                expense.Comment = "Updated expense";
+            }
+
             var result = await http.PutAsJsonAsync($"api/expenses/{expense.Id}", expense);
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
