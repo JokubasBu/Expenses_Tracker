@@ -17,7 +17,7 @@ else
 <EditForm Model="expense">
 	<div>
 		<label for="money"> Money</label>
-		<InputNumber id="money" min="0" @bind-Value="expense.Money"></InputNumber>
+		<InputNumber id="money" min="0" oninput="validity.valid||(value='');" @bind-Value="expense.Money"></InputNumber>
 	</div>
 	<div>
 		<label for="comment"> Comment</label>
