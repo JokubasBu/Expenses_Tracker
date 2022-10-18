@@ -9,9 +9,9 @@ namespace ExpensesTracker.Shared.Extensions
 {
     public static class Filter
     {
-        public static List<Expense> PickCategory(this List<Expense> expensesList, int id)
+        public static List<Expense> FilterBy(this List<Expense> expensesList, int id = 0, int month = 0, int year = 0)
         {
-            if (id != 0) 
+            if (id != 0) // nothing is selected
             {
                 var expenseCategory =
                     from allExpense in expensesList
@@ -19,41 +19,24 @@ namespace ExpensesTracker.Shared.Extensions
                     select allExpense;
                 return expenseCategory.ToList();
             }
-            else
+            if (month != 0) // nothing is selected
             {
-                return expensesList;
-            }
-        }
-
-        public static List<Expense> PickMonth(this List<Expense> expensesList, int monthNr)
-        {
-            if (monthNr != 0)
-            {
-                var expenseMonth =
+                var expenseCategory =
                     from allExpense in expensesList
-                    where allExpense.Month == monthNr
+                    where allExpense.Month == month
                     select allExpense;
-                return expenseMonth.ToList();
+                return expenseCategory.ToList();
             }
-            else
+            if (year != 0) // nothing is selected
             {
-                return expensesList;
-            }
-        }
-        public static List<Expense> PickYear(this List<Expense> expensesList, int year)
-        {
-            if (year != 0)
-            {
-                var expenseYear =
+                var expenseCategory =
                     from allExpense in expensesList
                     where allExpense.Year == year
                     select allExpense;
-                return expenseYear.ToList();
+                return expenseCategory.ToList();
             }
-            else
-            {
-                return expensesList;
-            }
+            return expensesList;
+
         }
 
     }

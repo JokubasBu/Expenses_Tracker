@@ -46,7 +46,6 @@ namespace ExpensesTracker.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Expense>>> ShowFilter(Expense expenseFilter)
         {
-
             _categoryId = expenseFilter.CategoryId;
             _month =expenseFilter.Month;
             _year =expenseFilter.Year;
@@ -127,13 +126,13 @@ namespace ExpensesTracker.Server.Controllers
             return await context.AllExpenses.Include(e => e.Category).ToListAsync();
         }
 
-        async Task<List<MonthlyExp>> GetFilteredExpenses()
+        async Task<List<Expense>> GetFilteredExpenses()
         {      
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
 
-            currentExpenses = expenses.PickCategory(id: _categoryId);
-            currentExpenses = currentExpenses.PickMonth(monthNr: _month);
-            currentExpenses = currentExpenses.PickYear(year: _year);
+            currentExpenses = expenses.FilterBy(id: _categoryId);
+            currentExpenses = currentExpenses.FilterBy(month: _month);
+            currentExpenses = currentExpenses.FilterBy(year: _year);
 
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
