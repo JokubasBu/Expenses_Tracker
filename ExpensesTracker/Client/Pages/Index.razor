@@ -13,7 +13,8 @@
     protected override async Task OnInitializedAsync()
     {     
         await ExpensesService.GetExpenses();
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", summary.GetSummary(ExpensesService.AllExpenses,DateTime.Now.Month));
+        await ExpensesService.GetCategories();
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.GetSummary(ExpensesService.AllExpenses, DateTime.Now.Month));
     }
 
 

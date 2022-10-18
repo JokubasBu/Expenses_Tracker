@@ -88,6 +88,32 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
         }
+        public List<ExpenseSummary> GetSummary(List<Expense> allExpenses, int month)
+        {
+            var summary = new List<ExpenseSummary>();
+
+            allExpenses = allExpenses.PickMonth(month);
+
+            foreach (Category category in Categories)
+            {
+                ExpenseSummary temp = new ExpenseSummary();
+                temp.totalExpenses = 0;
+                foreach (Expense expense in allExpenses)
+                {
+                    if (expense.CategoryId == category.Id)
+                    {
+                        temp.totalExpenses += expense.Money;
+                    }
+                }
+                if (temp.totalExpenses > 0)
+                {
+                    summary.Add(new ExpenseSummary() { category = category.Title, totalExpenses = temp.totalExpenses });
+                }
+            }
+
+            return summary;
+        }
+
     }
 }
 
