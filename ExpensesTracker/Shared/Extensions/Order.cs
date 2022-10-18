@@ -19,7 +19,7 @@ namespace ExpensesTracker.Shared.Extensions
                 {
                     for (int j = i + 1; j < expenses.Length; j++)
                     {
-                        if (expenses[i].Money > expenses[j].Money)
+                        if (expenses[i].CompareTo(expenses[j]) > 0)
                         {
                             swap<Expense>(ref expenses[i], ref expenses[j]);
                         }
@@ -33,7 +33,7 @@ namespace ExpensesTracker.Shared.Extensions
                 {
                     for (int j = i + 1; j < expenses.Length; j++)
                     {
-                        if (expenses[i].Year > expenses[j].Year)
+                        if (expenses[i].CompareTo(expenses[j]) > 0)
                         {
                             swap<Expense>(ref expenses[i], ref expenses[j]);
                         }
@@ -41,7 +41,7 @@ namespace ExpensesTracker.Shared.Extensions
                 }
                 return expenses.ToList();
             }
-            return expensesList;
+            return expenses.ToList();
         }
 
         public static List<Expense> OrderByAsc(List<Expense> expensesList, bool Money = false, bool Date = false)
@@ -54,7 +54,7 @@ namespace ExpensesTracker.Shared.Extensions
                 {
                     for (int j = i + 1; j < expenses.Length; j++)
                     {
-                        if (expenses[i].Money < expenses[j].Money)
+                        if (expenses[i].CompareTo(expenses[j]) <= 0)
                         {
                             swap<Expense>(ref expenses[i], ref expenses[j]);
                         }
@@ -68,7 +68,7 @@ namespace ExpensesTracker.Shared.Extensions
                 {
                     for (int j = i + 1; j < expenses.Length; j++)
                     {
-                        if (expenses[i].Year < expenses[j].Year)
+                        if (expenses[i].CompareTo(expenses[j]) <= 0)
                         {
                             swap<Expense>(ref expenses[i], ref expenses[j]);
                         }
