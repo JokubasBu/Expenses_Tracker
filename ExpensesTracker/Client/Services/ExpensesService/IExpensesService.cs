@@ -16,6 +16,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         Task CreateExpense(Expense expense);
         Task UpdateExpense(Expense expense);
         Task DeleteExpense(int id);
-        List<ExpenseSummary> GetSummary(List<Expense> allExpenses, int month);
+        List<ExpenseSummary> GetSummary(List<Expense> allExpenses);
     }
 }

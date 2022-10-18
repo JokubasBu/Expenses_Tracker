@@ -11,7 +11,7 @@
     {     
         await ExpensesService.GetEveryExpense();
         await ExpensesService.GetCategories();
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.GetSummary(ExpensesService.everyExpense, DateTime.Now.Month));
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.GetSummary(ExpensesService.everyExpense));
     }
 
 
