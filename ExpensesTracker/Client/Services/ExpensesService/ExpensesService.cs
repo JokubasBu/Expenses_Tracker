@@ -108,12 +108,13 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
         }
-        public List<ExpenseSummary> GetSummary(List<Expense> allExpenses, int month)
+        public List<ExpenseSummary> GetSummary(List<Expense> allExpenses)
         {
             var summary = new List<ExpenseSummary>();
 
 
-            allExpenses = allExpenses.FilterBy(month: month);
+            allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
+            allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month);
 
             foreach (Category category in Categories)
             {
