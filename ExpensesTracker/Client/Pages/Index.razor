@@ -4,7 +4,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Expenses Summary</h1>
+<h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
 <div id="chartdiv"></div>
 @code {
     List<Expense> allExpesnes = new List<Expense>();
