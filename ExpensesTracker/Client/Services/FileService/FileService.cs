@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using ExpensesTracker.Client.Services.ExpensesService;
+using ExpensesTracker.Shared.Models;
 
 namespace ExpensesTracker.Client.Services.FileService
 {
@@ -27,7 +28,7 @@ namespace ExpensesTracker.Client.Services.FileService
 
                     foreach (string line in lines)
                     {
-                        if (line.Length >= 6)
+                        if (!line.Replace(" ", "").Equals(String.Empty))
                         {
                             try
                             {

@@ -17,7 +17,7 @@ else
 <EditForm Model="expense">
 	<div>
 		<label for="money"> Money</label>
-		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
+		<InputNumber id="money" min="0" oninput="validity.valid||(value='');" @bind-Value="expense.Money"></InputNumber>
 	</div>
 	<div>
 		<label for="comment"> Comment</label>
@@ -84,11 +84,12 @@ else
 	{	
 		if(Id == null)
 		{
+			DateTime currentDate = DateTime.Now;
 			expense.Category = ExpensesService.Categories[0];
 			expense.CategoryId = expense.Category.Id;
-			expense.Year = 2022;
-			expense.Month = 1;
-			expense.Day = 1;
+			expense.Year = currentDate.Year;
+			expense.Month = currentDate.Month;
+			expense.Day = currentDate.Day;
 		}
 		else{
 			expense = await ExpensesService.GetSingleExpense((int)Id);
