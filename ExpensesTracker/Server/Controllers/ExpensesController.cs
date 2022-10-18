@@ -10,21 +10,21 @@ using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
 {
-    [Route("api/[controller]")] // the route will be taken from MonthlyExpController and it will read everything that is before controller
+    [Route("api/[controller]")] // the route will be taken from ExpensesController and it will read everything that is before controller
     [ApiController]
-    public class MonthlyExpController : ControllerBase
+    public class ExpensesController : ControllerBase
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static public List<MonthlyExp> currentExpenses = new List<MonthlyExp>();
+        static public List<Expense> currentExpenses = new List<Expense>();
 
-        public MonthlyExpController(DataContext context)
+        public ExpensesController(DataContext context)
         {
             this.context = context;
         }
 
         [HttpGet] 
-        public async Task<ActionResult<List<MonthlyExp>>> GetMonthlyExps()
+        public async Task<ActionResult<List<Expense>>> GetExpenses()
         {
             currentExpenses = await GetAllExpenses();
 
@@ -32,7 +32,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
-        public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
+        public async Task<ActionResult<List<Expense>>> GetOrderedExpenses()
         {
             currentExpenses.Sort(); //ascending
             if (currentCount % 2 == 0)
@@ -45,15 +45,13 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<MonthlyExp>>> ShowFilter(MonthlyExp expenseFilter)
+        public async Task<ActionResult<List<Expense>>> ShowFilter(Expense expenseFilter)
         {
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
             currentCount = 0; //restart order
             currentExpenses = expenses.PickCategory(id: expenseFilter.CategoryId);
             currentExpenses = currentExpenses.PickMonth(monthNr: expenseFilter.Month);
             currentExpenses = currentExpenses.PickYear(year: expenseFilter.Year);
-
-            // call filters for year and month (date)
 
             return Ok(currentExpenses);
         }
@@ -73,9 +71,9 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<MonthlyExp>>> GetSingleExp(int id) 
+        public async Task<ActionResult<List<Expense>>> GetSingleExpense(int id) 
         {
-            var expense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
+            var expense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
 
             if (expense == null) 
             {
@@ -85,23 +83,23 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<List<MonthlyExp>>> CreateExp(MonthlyExp expense)
+        public async Task<ActionResult<List<Expense>>> CreateExpemse(Expense expense)
         {
             expense.Category = null;
-            context.MonthlyExps.Add(expense);
+            context.AllExpenses.Add(expense);
             context.SaveChanges();
             currentExpenses.Add(expense);
             return Ok(await GetAllExpenses());
         }
        
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> DelteExpense(int id)
+        public async Task<ActionResult<List<Expense>>> DeleteExpense(int id)
         {
-            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
                 return NotFound("There is no such expense :/");
 
-            context.MonthlyExps.Remove(dbExpense);
+            context.AllExpenses.Remove(dbExpense);
             await context.SaveChangesAsync();
 
             currentExpenses.RemoveAll(e => e.Id == id); //Remove(dbExpense) does not work not sure why?
@@ -110,9 +108,9 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<List<MonthlyExp>>> UpdateExpense(MonthlyExp expense, int id)
+        public async Task<ActionResult<List<Expense>>> UpdateExpense(Expense expense, int id)
         {
-            var dbExpense = await context.MonthlyExps.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
                 return NotFound("Sorry, but no hero for you. :/");
 
@@ -127,9 +125,9 @@ namespace ExpensesTracker.Server.Controllers
 
             return Ok(await GetAllExpenses());
         }
-        async Task<List<MonthlyExp>> GetAllExpenses()
+        async Task<List<Expense>> GetAllExpenses()
         {
-            return await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            return await context.AllExpenses.Include(e => e.Category).ToListAsync();
         }
 
     }
