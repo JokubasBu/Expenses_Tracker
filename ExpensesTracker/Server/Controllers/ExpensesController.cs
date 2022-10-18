@@ -127,9 +127,9 @@ namespace ExpensesTracker.Server.Controllers
             return await context.AllExpenses.Include(e => e.Category).ToListAsync();
         }
 
-        async Task<List<MonthlyExp>> GetFilteredExpenses()
+        async Task<List<Expense>> GetFilteredExpenses()
         {      
-            var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
+            var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
 
             currentExpenses = expenses.PickCategory(id: _categoryId);
             currentExpenses = currentExpenses.PickMonth(monthNr: _month);
