@@ -89,6 +89,11 @@ namespace ExpensesTracker.Client.Services.ExpensesService
 
         public async Task UpdateExpense(Expense expense)
         {
+            if (expense.Comment.Replace(" ", "").Equals(String.Empty))
+            {
+                expense.Comment = "Updated expense";
+            }
+
             var result = await http.PutAsJsonAsync($"api/expenses/{expense.Id}", expense);
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
