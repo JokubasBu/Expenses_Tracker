@@ -36,15 +36,8 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("currentCount")] // http methods should all be different, otherwise: The request matched multiple endpoints
         public async Task<ActionResult<List<MonthlyExp>>> GetOrderedMonthlyExps()
         {
-            currentExpenses = await GetFilteredExpenses();
-            currentExpenses.Sort(); //ascending
-            if (currentCount % 2 == 0)
-            {
-                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
-            }
             currentCount++;
-
-            return Ok(currentExpenses);
+            return Ok(await GetFilteredExpenses());
         }
 
         [HttpPost]
@@ -130,22 +123,17 @@ namespace ExpensesTracker.Server.Controllers
 
         async Task<List<MonthlyExp>> GetFilteredExpenses()
         {      
-
-            if (currentExpenses.Count == 0 && _categoryId == 0 && _month == 0 && _year == 0)
-            {
-                _categoryId = 0;
-                _month = 0;
-                _year = 0;
-                return await GetAllExpenses();
-            }
-
             var expenses = await context.MonthlyExps.Include(e => e.Category).ToListAsync();
 
             currentExpenses = expenses.PickCategory(id: _categoryId);
             currentExpenses = currentExpenses.PickMonth(monthNr: _month);
             currentExpenses = currentExpenses.PickYear(year: _year);
 
-            // call filters for year and month (date)
+            currentExpenses.Sort(); //ascending
+            if (currentCount % 2 == 0)
+            {
+                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+            }
 
             return currentExpenses;
         }
