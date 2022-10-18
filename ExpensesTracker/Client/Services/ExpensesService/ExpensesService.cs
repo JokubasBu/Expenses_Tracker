@@ -23,6 +23,11 @@ namespace ExpensesTracker.Client.Services.ExpensesService
 
         public async Task CreateExpense(Expense expense)
         {
+            if (expense.Comment.Replace(" ", "").Equals(String.Empty))
+            {
+                expense.Comment = "New Expense";
+            }
+
             var result = await http.PostAsJsonAsync("/api/expenses/Add", expense);
             await SetResults(result);
         }
