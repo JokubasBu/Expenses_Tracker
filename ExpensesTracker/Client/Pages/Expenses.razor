@@ -101,6 +101,7 @@
 
     async Task FilterButton()
     {
+        expenseFilter.Comment = "Filter"; // Comment can't be empty
         await ExpensesService.ShowFilters(expenseFilter);
     }
 

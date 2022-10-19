@@ -14,10 +14,12 @@ else
 	<h3>Edit</h3>
 }
 
-<EditForm Model="expense">
+<EditForm Model="expense" OnValidSubmit="@Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 	<div>
 		<label for="money"> Money</label>
-		<InputNumber id="money" min="0" oninput="validity.valid||(value='');" @bind-Value="expense.Money"></InputNumber>
+		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
 	</div>
 	<div>
 		<label for="comment"> Comment</label>
@@ -58,7 +60,7 @@ else
     </InputSelect>
 	</div>
 	<br />
-	<button type="submit" class="btn btn-primary" @onclick="Submit">@buttonText</button>
+	<button type="submit" class="btn btn-primary">@buttonText</button>
 	<button type="submit" class="btn btn-danger" @onclick="GoBack"> Cancel</button>
 </EditForm>
 @code {
