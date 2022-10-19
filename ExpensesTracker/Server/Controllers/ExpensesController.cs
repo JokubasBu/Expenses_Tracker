@@ -56,8 +56,6 @@ namespace ExpensesTracker.Server.Controllers
             _year =expenseFilter.Year;
 
             return Ok(await GetFilteredExpenses());
-
-
         }
 
 
@@ -139,10 +137,12 @@ namespace ExpensesTracker.Server.Controllers
             currentExpenses = currentExpenses.FilterBy(month: _month);
             currentExpenses = currentExpenses.FilterBy(year: _year);
 
-            currentExpenses.Sort(); //ascending
+            //currentExpenses.Sort(); //ascending
+            currentExpenses = Order.OrderList(currentExpenses);
             if (currentCount % 2 == 0)
             {
-                currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                //currentExpenses.Reverse(); //descending (have to use sort beforehand for reverse to work)
+                currentExpenses = Order.OrderList(currentExpenses, Reverse: true);
             }
 
             return currentExpenses;
