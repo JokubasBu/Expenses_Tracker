@@ -5,6 +5,7 @@ using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Transactions;
 using static System.Net.WebRequestMethods;
 
@@ -18,7 +19,6 @@ namespace ExpensesTracker.Server.Controllers
         static int currentCount = 0; // amomunt of times the button Order was pressed
         static public List<Expense> currentExpenses = new List<Expense>();
 
-
         private static int _year;
         private static int _month;
         private static int _categoryId;
@@ -29,10 +29,35 @@ namespace ExpensesTracker.Server.Controllers
         {
             this.context = context;
         }
-        [HttpGet("allExpenses")]
-        public async Task<ActionResult<List<Expense>>> GetEveryExpense()
+        [HttpGet("summary")]
+        public async Task<ActionResult<List<ExpenseSummary>>> GetSummary() 
         {
-            return Ok(await GetAllExpenses());
+            var summary = new List<ExpenseSummary>();
+            var categories = await context.Categories.ToListAsync();
+            List<Expense> allExpenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+
+
+            allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
+            allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month);
+
+            foreach (Category category in categories)
+            {
+                ExpenseSummary temp = new ExpenseSummary();
+                temp.totalExpenses = 0;
+                foreach (Expense expense in allExpenses)
+                {
+                    if (expense.CategoryId == category.Id)
+                    {
+                        temp.totalExpenses += expense.Money;
+                    }
+                }
+                if (temp.totalExpenses > 0)
+                {
+                    summary.Add(new ExpenseSummary() { category = category.Title, totalExpenses = temp.totalExpenses });
+                }
+            }
+
+            return Ok(summary);
         }
 
         [HttpGet] 
