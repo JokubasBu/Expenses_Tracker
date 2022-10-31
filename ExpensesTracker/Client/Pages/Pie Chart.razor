@@ -1,6 +1,9 @@
 ﻿@page "/"
 @inject IExpensesService ExpensesService
 @inject IJSRuntime jsRunTime;
+@implements IDisposable
+
+
 
 <PageTitle>Pie Chart</PageTitle>
 
@@ -12,5 +15,8 @@
         await ExpensesService.GetCategories();
         await ExpensesService.GetSummary();
         await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.Summary);
+    }
+    public void Dispose(){
+       jsRunTime.InvokeVoidAsync("DisposePieChart");
     }
 }

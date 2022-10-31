@@ -1,11 +1,12 @@
 ﻿function GeneratePieChart(Expenses)
 {
+    
         // Themes begin
-        am4core.useTheme(am4themes_animated);
+    am4core.useTheme(am4themes_animated);
         // Themes end
 
         // Create chart instance
-        var chart = am4core.create("chartdiv", am4charts.PieChart);
+        chart = am4core.create("chartdiv", am4charts.PieChart);
 
         // Add data
     chart.data = Expenses;
@@ -22,6 +23,13 @@
         pieSeries.hiddenState.properties.endAngle = -90;
         pieSeries.hiddenState.properties.startAngle = -90;
 
-        chart.hiddenState.properties.radius = am4core.percent(0);
+    chart.hiddenState.properties.radius = am4core.percent(0);
 
- } // end am4core.ready()
+    
+
+
+} // end am4core.ready()
+function DisposePieChart() {
+    am4core.disposeAllCharts();
+}
+
