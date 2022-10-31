@@ -6,7 +6,7 @@
         // Themes end
 
         // Create chart instance
-        chart = am4core.create("chartdiv", am4charts.PieChart);
+        var chart = am4core.create("chartdiv", am4charts.PieChart);
 
         // Add data
     chart.data = Expenses;
@@ -29,7 +29,4 @@
 
 
 } // end am4core.ready()
-function DisposePieChart() {
-    am4core.disposeAllCharts();
-}
 
