@@ -113,7 +113,6 @@
     async Task DeleteExp(int id)
     {
         await ExpensesService.DeleteExpense(id);
-        NavigationManager.NavigateTo("/expenses");
     }
 
     private void OnInputFileChange(InputFileChangeEventArgs e)

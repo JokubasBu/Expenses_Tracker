@@ -1,7 +1,6 @@
 ﻿using ExpensesTracker.Client.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Collections.Generic;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
@@ -85,7 +84,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         {
             var response = await result.Content.ReadFromJsonAsync<List<Expense>>();
             AllExpenses = response;
-            // navigationManager.NavigateTo("monthlyexp");
         }
 
         public async Task<Expense> GetSingleExpense(int id)

@@ -5,7 +5,6 @@ using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Transactions;
 using static System.Net.WebRequestMethods;
 
@@ -17,7 +16,6 @@ namespace ExpensesTracker.Server.Controllers
     {
         private readonly DataContext context;
         static int currentCount = 0; // amomunt of times the button Order was pressed
-        static public List<Expense> currentExpenses = new List<Expense>();
 
         private static int _year;
         private static int _month;
@@ -93,12 +91,6 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(categories); 
         }
 
-        [HttpGet("SetCurrent")]
-        public async Task SetCurrentExpenses()
-        {
-            currentExpenses = await GetAllExpenses();
-        }
-
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<Expense>>> GetSingleExpense(int id) 
         {
@@ -151,16 +143,12 @@ namespace ExpensesTracker.Server.Controllers
 
             return Ok(await GetFilteredExpenses());
         }
-        async Task<List<Expense>> GetAllExpenses()
-        {
-            return await context.AllExpenses.Include(e => e.Category).ToListAsync();
-        }
 
         async Task<List<Expense>> GetFilteredExpenses()
         {      
             var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
 
-            currentExpenses = expenses.FilterBy(id: _categoryId);
+            var currentExpenses = expenses.FilterBy(id: _categoryId);
             currentExpenses = currentExpenses.FilterBy(month: _month);
             currentExpenses = currentExpenses.FilterBy(year: _year);
 
