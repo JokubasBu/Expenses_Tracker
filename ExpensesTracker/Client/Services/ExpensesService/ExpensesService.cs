@@ -21,6 +21,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<Expense> AllExpenses { get; set; } = new List<Expense>();
         public List<Expense> everyExpense { get; set; } = new List<Expense>();
         public List<Category> Categories { get; set; } = new List<Category>();
+        public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
 
         public async Task CreateExpense(Expense expense)
         {
@@ -57,12 +58,12 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             }
         }
 
-        public async Task GetEveryExpense()
+        public async Task GetSummary()
         {
-            var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses/allExpenses");
+            var result = await http.GetFromJsonAsync<List<ExpenseSummary>>("api/expenses/summary");
             if (result != null)
             {
-                everyExpense = result;
+                Summary = result;
             }
         }
 
@@ -108,34 +109,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
         }
-        public List<ExpenseSummary> GetSummary(List<Expense> allExpenses)
-        {
-            var summary = new List<ExpenseSummary>();
-
-
-            allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
-            allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month);
-
-            foreach (Category category in Categories)
-            {
-                ExpenseSummary temp = new ExpenseSummary();
-                temp.totalExpenses = 0;
-                foreach (Expense expense in allExpenses)
-                {
-                    if (expense.CategoryId == category.Id)
-                    {
-                        temp.totalExpenses += expense.Money;
-                    }
-                }
-                if (temp.totalExpenses > 0)
-                {
-                    summary.Add(new ExpenseSummary() { category = category.Title, totalExpenses = temp.totalExpenses });
-                }
-            }
-
-            return summary;
-        }
-
     }
 }
 

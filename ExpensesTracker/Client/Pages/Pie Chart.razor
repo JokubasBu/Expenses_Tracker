@@ -1,6 +1,9 @@
 ﻿@page "/"
 @inject IExpensesService ExpensesService
 @inject IJSRuntime jsRunTime;
+@implements IDisposable
+
+
 
 <PageTitle>Pie Chart</PageTitle>
 
@@ -9,10 +12,11 @@
 @code {
     protected override async Task OnInitializedAsync()
     {     
-        await ExpensesService.GetEveryExpense();
         await ExpensesService.GetCategories();
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.GetSummary(ExpensesService.everyExpense));
+        await ExpensesService.GetSummary();
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.Summary);
     }
-
-
+    public void Dispose(){
+       jsRunTime.InvokeVoidAsync("DisposePieChart");
+    }
 }
