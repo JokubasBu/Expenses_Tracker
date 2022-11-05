@@ -9,12 +9,24 @@
 
 <h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
 <div id="chartdiv"></div>
+
+<br />
+<h3>Total spent this month: @totalSPent</h3>
+
+
 @code {
+        double totalSPent = 0;
+
     protected override async Task OnInitializedAsync()
     {     
         await ExpensesService.GetCategories();
         await ExpensesService.GetSummary();
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.Summary);
+        var ExpenseSummaryList = ExpensesService.Summary;
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+
+        foreach (var epxense in ExpenseSummaryList){
+            totalSPent = totalSPent + epxense.totalExpenses;
+        }
     }
     public void Dispose(){
        jsRunTime.InvokeVoidAsync("DisposePieChart");
