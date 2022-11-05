@@ -11,11 +11,11 @@
 <div id="chartdiv"></div>
 
 <br />
-<h3>Total spent this month: @totalSPent</h3>
+<h3>Total spent this month: @totalSpent</h3>
 
 
 @code {
-        double totalSPent = 0;
+        double totalSpent = 0;
 
     protected override async Task OnInitializedAsync()
     {     
@@ -25,7 +25,7 @@
         await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
 
         foreach (var epxense in ExpenseSummaryList){
-            totalSPent = totalSPent + epxense.totalExpenses;
+            totalSpent = totalSpent + epxense.totalExpenses;
         }
     }
     public void Dispose(){

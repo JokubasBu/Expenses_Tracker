@@ -1,7 +1,5 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
-using ExpensesTracker.Shared.Extensions;
-using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -104,7 +102,7 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<List<Expense>>> CreateExpemse(Expense expense)
+        public async Task<ActionResult<List<Expense>>> CreateExpense(Expense expense)
         {
             expense.Category = null;
             context.AllExpenses.Add(expense);
@@ -130,7 +128,7 @@ namespace ExpensesTracker.Server.Controllers
         {
             var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
             if (dbExpense == null)
-                return NotFound("Sorry, but no hero for you. :/");
+                return NotFound("Sorry, but no expense for you. :/");
 
             dbExpense.Money = expense.Money;
             dbExpense.Comment = expense.Comment;
