@@ -9,12 +9,38 @@
 
 <h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
 <div id="chartdiv"></div>
+
+<br />
+<h3>Total spent this month: @(totalSpentThisMonth)€</h3>
+@if (totalSpentThisMonth > totalSpentPrevMonth){
+    <h3>Spent @(totalSpentThisMonth - totalSpentPrevMonth)€ more than last month</h3>
+}
+else{
+    <h3>Spent @(totalSpentPrevMonth - totalSpentThisMonth)€ less than last month</h3>
+}
+<h3>Total spent this year:  @(totalSpentThisYear)€</h3>
+
+
 @code {
+    double totalSpentThisMonth = 0;
+    double totalSpentPrevMonth = 0;
+    double totalSpentThisYear = 0;
+
     protected override async Task OnInitializedAsync()
     {     
         await ExpensesService.GetCategories();
         await ExpensesService.GetSummary();
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpensesService.Summary);
+        var ExpenseSummaryList = ExpensesService.Summary;
+        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+
+        foreach (var epxense in ExpenseSummaryList){
+            totalSpentThisMonth = totalSpentThisMonth + epxense.totalExpenses;
+        }
+
+        await ExpensesService.GetStatistics();
+        Statistic moneyStatistics = ExpensesService.Statistics;
+        totalSpentPrevMonth = moneyStatistics.previousMonthTotalExpenses;
+        totalSpentThisYear = moneyStatistics.currentYearTotalExpenses;
     }
     public void Dispose(){
        jsRunTime.InvokeVoidAsync("DisposePieChart");

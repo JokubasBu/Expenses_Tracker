@@ -22,7 +22,7 @@
         {
             get
             {
-                return Enumerable.Range(2000, DateTime.Now.Year - 1999);
+                return Enumerable.Range(2000, DateTime.Now.Year - 1999).Reverse();
             }
         }
     }

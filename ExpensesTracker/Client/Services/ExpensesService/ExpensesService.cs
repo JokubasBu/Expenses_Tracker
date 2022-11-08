@@ -1,7 +1,6 @@
 ﻿using ExpensesTracker.Client.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Collections.Generic;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
@@ -22,6 +21,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<Expense> everyExpense { get; set; } = new List<Expense>();
         public List<Category> Categories { get; set; } = new List<Category>();
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
+        public Statistic Statistics { get; set; } = new Statistic();
 
         public async Task CreateExpense(Expense expense)
         {
@@ -67,6 +67,15 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             }
         }
 
+        public async Task GetStatistics()
+        {
+            var result = await http.GetFromJsonAsync<Statistic>("api/expenses/statistics");
+            if (result != null)
+            {
+                Statistics = result;
+            }
+        }
+
         public async Task GetOrderedExpenses()
         {
             var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses/currentCount");
@@ -85,7 +94,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         {
             var response = await result.Content.ReadFromJsonAsync<List<Expense>>();
             AllExpenses = response;
-            // navigationManager.NavigateTo("monthlyexp");
         }
 
         public async Task<Expense> GetSingleExpense(int id)
