@@ -56,6 +56,31 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(summary);
         }
 
+        [HttpGet("statistics")]
+        public async Task<ActionResult<List<Statistic>>> GetStatistics()
+        {
+            var stats = new Statistic();
+            List<Expense> allExpenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+
+            allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
+            double spentThisYear = 0;
+            foreach (Expense exp in allExpenses)
+            {
+                spentThisYear = spentThisYear + exp.Money;
+            }
+            stats.currentYearTotalExpenses = spentThisYear;
+
+            allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month-1);
+            double spentPrevMonth = 0;
+            foreach (Expense exp in allExpenses)
+            {
+                spentPrevMonth = spentPrevMonth + exp.Money;
+            }
+            stats.previousMonthTotalExpenses = spentPrevMonth;
+
+            return Ok(stats);
+        }
+
         [HttpGet] 
         public async Task<ActionResult<List<Expense>>> GetExpenses()
         {
