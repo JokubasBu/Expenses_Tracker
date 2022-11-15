@@ -1,5 +1,5 @@
 ﻿@page "/income"
-@page "/income/{date}"
+@page "/income/{id:int}"
 @inject IIncomesService IncomesService
 @inject NavigationManager NavigationManager
 
@@ -34,21 +34,20 @@
 
 @code {
 	[Parameter]
-	public string date { get; set; }
+	public int? Id { get; set; }
 	Income income = new Income ();
 
 	protected override async Task OnParametersSetAsync()
 	{
-		if (String.IsNullOrEmpty(date))
+		if (Id == null)
 		{
 			DateTime currentDate = DateTime.Now;
 			income.Year = currentDate.Year;
 			income.Month = currentDate.Month;
-			//income.Date = income.Year + "-" + income.Month.ToString("D2");
 		}
 		else
 		{
-			income = await IncomesService.GetSingleIncome(date);
+			income = await IncomesService.GetSingleIncome((int)Id);
 		}
 	}
 
@@ -59,6 +58,13 @@
 
 	async Task Submit()
 	{
-		await IncomesService.CreateOrUpdateIncome(income);
+		if (Id == null)
+		{
+			await IncomesService.CreateIncome(income);
+		}
+		else
+		{
+			await IncomesService.UpdateIncome(income);
+		}
 	}
 }

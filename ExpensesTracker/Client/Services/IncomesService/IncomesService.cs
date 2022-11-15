@@ -18,13 +18,14 @@ namespace ExpensesTracker.Client.Services.IncomesService
         }
         public List<Income> AllIncomes { get; set; } = new List<Income>();
 
-        public async Task CreateOrUpdateIncome(Income income)
+        public async Task CreateIncome(Income income)
         {
             var result = await http.PostAsJsonAsync("/api/incomes/Add", income);
             await SetResults(result);
-            navigationManager.NavigateTo("incomes");
+            navigationManager.NavigateTo("/incomes");
         }
-        public Task DeleteIncome(string date)
+
+        public Task DeleteIncome(int id)
         {
             throw new NotImplementedException();
         }
@@ -38,9 +39,9 @@ namespace ExpensesTracker.Client.Services.IncomesService
             }
         }
 
-        public async Task<Income> GetSingleIncome(string date)
+        public async Task<Income> GetSingleIncome(int id)
         {
-            var result = await http.GetFromJsonAsync<Income>($"api/incomes/{date}");
+            var result = await http.GetFromJsonAsync<Income>($"api/incomes/{id}");
             if (result != null)
             {
                 return result;
@@ -55,7 +56,12 @@ namespace ExpensesTracker.Client.Services.IncomesService
             await SetResults(result);
         }
 
-        
+        public async Task UpdateIncome(Income income)
+        {
+            var result = await http.PutAsJsonAsync($"api/incomes/{income.Id}", income);
+            await SetResults(result);
+            navigationManager.NavigateTo("incomes");
+        }
 
         private async Task SetResults(HttpResponseMessage result)
         {

@@ -43,9 +43,9 @@
                 <td>@income.Year-@income.Month.ToString("D2")</td>
                 <td>@income.Money</td>
                 <td>
-                    <button class="btn btn-primary" @onclick="(() => ShowIncome(income.Date))"><i class="oi oi-pencil"></i></button>
+                    <button class="btn btn-primary" @onclick="(() => ShowIncome(income.Id))"><i class="oi oi-pencil"></i></button>
                     &nbsp;
-                    <button class="btn btn-danger" @onclick="(() => DeleteIncome(income.Date))">Delete</button>
+                    <button class="btn btn-danger" @onclick="(() => DeleteIncome(income.Id))">Delete</button>
                 </td>
             </tr>
         }
@@ -65,9 +65,9 @@
         await IncomesService.ShowFilters(incomeFilter);
     }
 
-    void ShowIncome(string date)
+    void ShowIncome(int id)
     {
-        NavigationManager.NavigateTo($"income/{date}");
+        NavigationManager.NavigateTo($"income/{id}");
     }
 
     void CreateIncome()
@@ -75,7 +75,7 @@
         NavigationManager.NavigateTo("/income");
     }
 
-    async Task DeleteIncome(string date)
+    async Task DeleteIncome(int id)
     {
 
     }

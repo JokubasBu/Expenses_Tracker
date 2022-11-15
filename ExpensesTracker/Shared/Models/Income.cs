@@ -12,8 +12,7 @@ namespace ExpensesTracker.Shared.Models
         private int _month;
         private int _year;
 
-        [Key]
-        public string Date { get; set; } = string.Empty;
+        public int Id { get; set; }
 
         [Required]
         [RegularExpression(@"^[0-9]+.?[0-9]*$", ErrorMessage = "Use Non-negative Number for Money field!")]

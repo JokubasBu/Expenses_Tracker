@@ -44,10 +44,10 @@ namespace ExpensesTracker.Server.Controllers
             return currentIncomes;
         }
 
-        [HttpGet("{date}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<Income>>> GetSingleIncome(string date)
+        [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
+        public async Task<ActionResult<List<Income>>> GetSingleIncome(int id)
         {
-            var income = await context.AllIncomes.FirstOrDefaultAsync(i => i.Date == date);
+            var income = await context.AllIncomes.FirstOrDefaultAsync(i => i.Id == id);
 
             if (income == null)
             {
@@ -57,29 +57,28 @@ namespace ExpensesTracker.Server.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<List<Income>>> CreateorUpdateIncome(Income income)
+        public async Task<ActionResult<List<Income>>> CreateIncome(Income income)
         {
-            var searchIncome = await context.AllIncomes.FirstOrDefaultAsync(i => i.Date == income.Date);
+            context.AllIncomes.Add(income);
+            context.SaveChanges();
+            return Ok(await GetFilteredIncomes());
+        }
 
-            if (searchIncome == null) // new entry, date doesnt exist
-            {
-                income.Date = income.Year + "-" + income.Month.ToString("D2");
-                context.AllIncomes.Add(income);
-                context.SaveChanges();
-                return Ok(await GetFilteredIncomes());
-            }
-            else // date already exists in DB
-            {
-                searchIncome.Money =  income.Money;
-                searchIncome.Year = income.Year;
-                searchIncome.Month = income.Month;
+        [HttpPut("{id}")]
+        public async Task<ActionResult<List<Income>>> UpdateIncome(Income income, int id)
+        {
+            var incomeSearch = await context.AllIncomes.FirstOrDefaultAsync(e => e.Id == id);
+            if (incomeSearch == null)
+                return NotFound("Sorry :/");
 
-                context.SaveChanges();
+            incomeSearch.Money = income.Money;
+            incomeSearch.Year = income.Year;
+            incomeSearch.Month = income.Month;
 
-                return Ok(await GetFilteredIncomes());
-            }
-            
+            await context.SaveChangesAsync();
+
+            return Ok(await GetFilteredIncomes());
         }
     }
-    
 }
+    

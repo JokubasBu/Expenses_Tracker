@@ -5,8 +5,9 @@
         List<Income> AllIncomes { get; set; }
         Task GetIncomes();
         Task ShowFilters(Income incomeFilter);
-        Task<Income> GetSingleIncome(string date);
-        Task CreateOrUpdateIncome(Income income);
-        Task DeleteIncome(string date);
+        Task<Income> GetSingleIncome(int id);
+        Task CreateIncome(Income income);
+        Task UpdateIncome(Income income);
+        Task DeleteIncome(int id);
     }
 }
