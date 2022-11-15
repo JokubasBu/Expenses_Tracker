@@ -79,6 +79,31 @@ namespace ExpensesTracker.Server.Controllers
 
             return Ok(await GetFilteredIncomes());
         }
+
+        [HttpGet("statistics")]
+        public async Task<ActionResult<List<Statistic>>> GetStatistics()
+        {
+            var stats = new Statistic();
+            var allIncomes = await context.AllIncomes.ToListAsync();
+
+            allIncomes = allIncomes.FilterBy(year: DateTime.Now.Year);
+            double earnedThisYear = 0;
+            foreach (Income inc in allIncomes)
+            {
+                earnedThisYear = earnedThisYear + inc.Money;
+            }
+            stats.yearStat = earnedThisYear;
+
+            allIncomes = allIncomes.FilterBy(month: DateTime.Now.Month);
+            double earnedThisMonth = 0;
+            foreach (Income inc in allIncomes)
+            {
+                earnedThisMonth = earnedThisMonth + inc.Money;
+            }
+            stats.monthStat = earnedThisMonth;
+
+            return Ok(stats);
+        }
     }
 }
     

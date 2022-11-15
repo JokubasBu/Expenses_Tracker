@@ -17,6 +17,7 @@ namespace ExpensesTracker.Client.Services.IncomesService
             this.navigationManager = navigationManager;
         }
         public List<Income> AllIncomes { get; set; } = new List<Income>();
+        public Statistic Statistics { get; set; } = new Statistic();
 
         public async Task CreateIncome(Income income)
         {
@@ -69,6 +70,14 @@ namespace ExpensesTracker.Client.Services.IncomesService
             AllIncomes = response;
         }
 
+        public async Task GetStatistics()
+        {
+            var result = await http.GetFromJsonAsync<Statistic>("api/incomes/statistics");
+            if (result != null)
+            {
+                Statistics = result;
+            }
+        }
 
     }
 }
