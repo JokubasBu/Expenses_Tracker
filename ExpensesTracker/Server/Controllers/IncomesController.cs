@@ -44,7 +44,7 @@ namespace ExpensesTracker.Server.Controllers
             return currentIncomes;
         }
 
-        [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
+        [HttpGet("{date}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<Income>>> GetSingleIncome(string date)
         {
             var income = await context.AllIncomes.FirstOrDefaultAsync(i => i.Date == date);
@@ -63,18 +63,18 @@ namespace ExpensesTracker.Server.Controllers
 
             if (searchIncome == null) // new entry, date doesnt exist
             {
+                income.Date = income.Year + "-" + income.Month.ToString("D2");
                 context.AllIncomes.Add(income);
                 context.SaveChanges();
                 return Ok(await GetFilteredIncomes());
             }
             else // date already exists in DB
             {
-                searchIncome.Money = searchIncome.Money + income.Money;
+                searchIncome.Money =  income.Money;
                 searchIncome.Year = income.Year;
                 searchIncome.Month = income.Month;
-                searchIncome.Date = income.Year + "-" + income.Month.ToString("D2");
 
-                await context.SaveChangesAsync();
+                context.SaveChanges();
 
                 return Ok(await GetFilteredIncomes());
             }
