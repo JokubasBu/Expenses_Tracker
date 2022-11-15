@@ -26,9 +26,10 @@ namespace ExpensesTracker.Client.Services.IncomesService
             navigationManager.NavigateTo("/incomes");
         }
 
-        public Task DeleteIncome(int id)
+        public async Task DeleteIncome(int id)
         {
-            throw new NotImplementedException();
+            var result = await http.DeleteAsync($"api/incomes/{id}");
+            await SetResults(result);
         }
 
         public async Task GetIncomes()

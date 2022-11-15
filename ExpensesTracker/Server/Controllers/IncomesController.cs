@@ -80,6 +80,19 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(await GetFilteredIncomes());
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<Income>>> DeleteIncome(int id)
+        {
+            var incomeSearch = await context.AllIncomes.FirstOrDefaultAsync(e => e.Id == id);
+            if (incomeSearch == null)
+                return NotFound("There is no such expense :/");
+
+            context.AllIncomes.Remove(incomeSearch);
+            await context.SaveChangesAsync();
+
+            return Ok(await GetFilteredIncomes());
+        }
+
         [HttpGet("statistics")]
         public async Task<ActionResult<List<Statistic>>> GetStatistics()
         {
