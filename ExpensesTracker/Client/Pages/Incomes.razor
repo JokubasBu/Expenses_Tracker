@@ -1,0 +1,32 @@
+﻿@page "/incomes"
+@inject NavigationManager NavigationManager
+@inject HttpClient http
+
+<PageTitle>Incomes</PageTitle> <!-- this is how we will define this file in navmenu-->
+<h3>Incomes</h3>
+
+<EditForm Model="incomeFilter" OnSubmit="FilterButton">
+    <InputSelect @bind-Value="incomeFilter.Year">
+        <option value="0">All Years</option>
+        @foreach (var year in Dates.Years)
+        {
+            <option value="@year">@year</option>
+        }
+    </InputSelect>
+    <InputSelect @bind-Value="incomeFilter.Month">
+        <option value="0">All Months</option>
+        @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
+        {
+            <option value="@((int)month)">@month</option>
+        }
+    </InputSelect>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</EditForm>
+
+@code {
+    Income incomeFilter = new Income ();
+
+    async Task FilterButton()
+    {
+    }
+}

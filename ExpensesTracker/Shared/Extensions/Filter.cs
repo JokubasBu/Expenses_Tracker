@@ -21,21 +21,43 @@ namespace ExpensesTracker.Shared.Extensions
             }
             if (month != 0) // nothing is selected
             {
-                var expenseCategory =
+                var expenseMonth =
                     from allExpense in expensesList
                     where allExpense.Month == month
                     select allExpense;
-                return expenseCategory.ToList();
+                return expenseMonth.ToList();
             }
             if (year != 0) // nothing is selected
             {
-                var expenseCategory =
+                var expenseYear =
                     from allExpense in expensesList
                     where allExpense.Year == year
                     select allExpense;
-                return expenseCategory.ToList();
+                return expenseYear.ToList();
             }
             return expensesList;
+
+        }
+
+        public static List<Income> FilterBy(this List<Income> incomesList, int month = 0, int year = 0)
+        {
+            if (month != 0) // nothing is selected
+            {
+                var incomeMonth =
+                    from allIncome in incomesList
+                    where allIncome.Month == month
+                    select allIncome;
+                return incomeMonth.ToList();
+            }
+            if (year != 0) // nothing is selected
+            {
+                var incomeYear =
+                    from allIncome in incomesList
+                    where allIncome.Year == year
+                    select allIncome;
+                return incomeYear.ToList();
+            }
+            return incomesList;
 
         }
 

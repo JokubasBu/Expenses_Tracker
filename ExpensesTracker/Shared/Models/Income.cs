@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ExpensesTracker.Shared.Models
 {
-    public class Income
+    public class Income : IComparable
     {
         private int _month;
         private int _year;
@@ -39,6 +39,12 @@ namespace ExpensesTracker.Shared.Models
                     _month = value;
                 }
             }
+        }
+
+        public int CompareTo(object? obj)
+        {
+            Income incomingincome = obj as Income;
+            return Money.CompareTo(incomingincome.Money);
         }
     }
 }
