@@ -1,0 +1,47 @@
+﻿@page "/income"
+@page "/income/{date}"
+@inject IIncomesService IncomesService
+@inject NavigationManager NavigationManager
+
+<h3>Income</h3>
+
+<EditForm Model="income" OnValidSubmit="@Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div>
+		<label for="money"> Money</label>
+		<InputNumber id="money" @bind-Value="income.Money"></InputNumber>
+	</div>
+	<div>
+		<label> Date </label>
+		<InputSelect @bind-Value="income.Year">
+			@foreach (var year in Dates.Years)
+			{
+				<option value="@year">@year</option>
+			}
+		</InputSelect>
+		<InputSelect @bind-Value="income.Month">
+			@foreach (var month in Enum.GetValues(typeof(Dates.Months)))
+			{
+				<option value="@((int)month)">@month</option>
+			}
+		</InputSelect>
+	</div>
+	<br />
+	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-danger" @onclick="GoBack"> Cancel</button>
+</EditForm>
+
+@code {
+	Income income = new Income ();
+
+	public void GoBack()
+	{
+		NavigationManager.NavigateTo("/incomes");
+	}
+
+	async Task Submit()
+	{
+		await IncomesService.CreateOrUpdateIncome(income);
+	}
+}

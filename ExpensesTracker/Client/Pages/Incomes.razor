@@ -24,9 +24,8 @@
     <button type="submit" class="btn btn-primary">Filter</button>
 </EditForm>
 
-<button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
+<button class="btn btn-success" @onclick="CreateIncome">Add New</button>
 &nbsp;
-
 
 <table class="table">
     <thead>
@@ -40,7 +39,6 @@
     <tbody>
         @foreach (var income in IncomesService.AllIncomes)
         {
-            <!-- reading data if foreach loop -->
             <tr>
                 <td>@income.Year-@income.Month.ToString("D2")</td>
                 <td>@income.Money</td>
@@ -57,12 +55,12 @@
 @code {
     Income incomeFilter = new Income ();
 
-    async Task FilterButton()
+    protected override async Task OnInitializedAsync()
     {
-
+        await IncomesService.GetIncomes();
     }
 
-    async Task AscOrDesc()
+    async Task FilterButton()
     {
 
     }
@@ -70,6 +68,11 @@
     void ShowIncome(string date)
     {
         NavigationManager.NavigateTo($"income/{date}");
+    }
+
+    void CreateIncome()
+    {
+        NavigationManager.NavigateTo("/income");
     }
 
     async Task DeleteIncome(string date)

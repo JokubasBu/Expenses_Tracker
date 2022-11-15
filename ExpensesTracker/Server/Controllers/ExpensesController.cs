@@ -21,10 +21,10 @@ namespace ExpensesTracker.Server.Controllers
 
 
         public ExpensesController(DataContext context)
-
         {
             this.context = context;
         }
+
         [HttpGet("summary")]
         public async Task<ActionResult<List<ExpenseSummary>>> GetSummary() 
         {
@@ -102,7 +102,6 @@ namespace ExpensesTracker.Server.Controllers
             _year =expenseFilter.Year;
 
             return Ok(await GetFilteredExpenses());
-
 
         }
 
