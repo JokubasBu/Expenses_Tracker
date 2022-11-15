@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ExpensesTracker.Client.Pages;
+using ExpensesTracker.Shared.Models;
+using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
@@ -16,11 +18,12 @@ namespace ExpensesTracker.Client.Services.IncomesService
         }
         public List<Income> AllIncomes { get; set; } = new List<Income>();
 
-        public Task CreateOrUpdateIncome(Income income)
+        public async Task CreateOrUpdateIncome(Income income)
         {
-            throw new NotImplementedException();
+            var result = await http.PostAsJsonAsync("/api/incomes/Add", income);
+            await SetResults(result);
+            navigationManager.NavigateTo("incomes");
         }
-
         public Task DeleteIncome(string date)
         {
             throw new NotImplementedException();
@@ -35,10 +38,16 @@ namespace ExpensesTracker.Client.Services.IncomesService
             }
         }
 
-        public Task<Income> GetSingleIncome(string date)
+        public async Task<Income> GetSingleIncome(string date)
         {
-            throw new NotImplementedException();
+            var result = await http.GetFromJsonAsync<Income>($"api/incomes/{date}");
+            if (result != null)
+            {
+                return result;
+            }
+            throw new Exception("not found whoops");
         }
+
 
         public async Task ShowFilters(Income incomeFilter)
         {
@@ -46,11 +55,14 @@ namespace ExpensesTracker.Client.Services.IncomesService
             await SetResults(result);
         }
 
+        
+
         private async Task SetResults(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<List<Income>>();
             AllIncomes = response;
         }
+
 
     }
 }
