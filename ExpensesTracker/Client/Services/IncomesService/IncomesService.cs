@@ -40,9 +40,16 @@ namespace ExpensesTracker.Client.Services.IncomesService
             throw new NotImplementedException();
         }
 
-        public Task ShowFilters(Income incomeFilter)
+        public async Task ShowFilters(Income incomeFilter)
         {
-            throw new NotImplementedException();
+            var result = await http.PostAsJsonAsync("api/incomes", incomeFilter);
+            await SetResults(result);
+        }
+
+        private async Task SetResults(HttpResponseMessage result)
+        {
+            var response = await result.Content.ReadFromJsonAsync<List<Income>>();
+            AllIncomes = response;
         }
 
     }

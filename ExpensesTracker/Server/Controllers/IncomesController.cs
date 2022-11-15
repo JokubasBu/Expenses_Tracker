@@ -22,6 +22,16 @@ namespace ExpensesTracker.Server.Controllers
         {
             return Ok(await GetFilteredIncomes());
         }
+
+        [HttpPost]
+        public async Task<ActionResult<List<Income>>> ShowFilter(Income incomeFilter)
+        {
+            _month = incomeFilter.Month;
+            _year = incomeFilter.Year;
+
+            return Ok(await GetFilteredIncomes());
+
+        }
         async Task<List<Income>> GetFilteredIncomes()
         {
             var incomes = await context.AllIncomes.ToListAsync();
