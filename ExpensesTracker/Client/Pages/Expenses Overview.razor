@@ -1,0 +1,30 @@
+﻿@page "/Overview"
+@inject IExpensesService ExpensesService
+@inject IIncomesService IncomesService
+@inject IJSRuntime jsRunTime;
+@implements IDisposable
+
+
+
+<PageTitle>Expenses Overview</PageTitle>
+
+<div id="chartdiv"></div>
+
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(ExpensesService.GetExpenses(), ExpensesService.GetCategories());
+        ExpensesService.GetExpensesTree();
+        await jsRunTime.InvokeVoidAsync("GenerateTreemapChart", ExpensesService.ExpensesTree);
+
+        
+
+
+    }
+    public void Dispose(){
+       jsRunTime.InvokeVoidAsync("DisposePieChart");
+    }
+}

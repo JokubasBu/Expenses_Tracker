@@ -1,6 +1,7 @@
 ﻿using ExpensesTracker.Client.Pages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Net.Http.Json;
 using static System.Net.WebRequestMethods;
 
@@ -21,6 +22,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<Expense> everyExpense { get; set; } = new List<Expense>();
         public List<Category> Categories { get; set; } = new List<Category>();
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
+        public List<ExpensesTree> ExpensesTree { get; set; } = new List<ExpensesTree>();
         public Statistic Statistics { get; set; } = new Statistic();
 
         public async Task CreateExpense(Expense expense)
@@ -66,6 +68,29 @@ namespace ExpensesTracker.Client.Services.ExpensesService
                 Summary = result;
             }
         }
+        public void GetExpensesTree()
+        {
+            List<Expense> allExpenses = AllExpenses;
+
+            allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
+
+            foreach (Category category in Categories)
+            {
+                ExpensesTree tempExpense = new ExpensesTree();
+                tempExpense.name = category.Title;
+                tempExpense.children = new ExpensesTreeChildren[AllExpenses.Count];
+                int index = 0;
+                foreach (Expense expense in allExpenses)
+                {
+                    if (expense.CategoryId == category.Id)
+                    {
+                        tempExpense.children.SetValue(new ExpensesTreeChildren() { name = expense.Comment, value = expense.Money },index++);
+                    }
+                }
+                ExpensesTree.Add(tempExpense);
+            }
+        }
+    
 
         public async Task GetStatistics()
         {
