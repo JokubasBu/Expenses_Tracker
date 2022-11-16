@@ -18,5 +18,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         Task DeleteExpense(int id);
         Task GetSummary();
         Task GetStatistics();
+        Task Initialize();
     }
 }

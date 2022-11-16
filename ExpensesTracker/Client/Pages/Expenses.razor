@@ -81,11 +81,7 @@
     private string? message = null;
     IReadOnlyList<IBrowserFile>? selectedFiles;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await ExpensesService.GetExpenses();
-        await ExpensesService.GetCategories();
-    }
+    protected override async Task OnInitializedAsync() => await ExpensesService.Initialize();
 
     void ShowExp(int id)
     {

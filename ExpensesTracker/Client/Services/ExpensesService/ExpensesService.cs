@@ -23,6 +23,12 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
         public Statistic Statistics { get; set; } = new Statistic();
 
+        public async Task Initialize()
+        {
+            await GetCategories();
+            await GetExpenses();
+        }
+
         public async Task CreateExpense(Expense expense)
         {
             if (expense.Comment.Replace(" ", "").Equals(String.Empty))
@@ -117,6 +123,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             await SetResults(result);
             navigationManager.NavigateTo("expenses");
         }
+
     }
 }
 
