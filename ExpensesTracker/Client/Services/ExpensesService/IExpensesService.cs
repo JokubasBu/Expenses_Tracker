@@ -4,7 +4,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
 {
     public interface IExpensesService
     {
-        List<Expense> AllExpenses { get; set; }
+        Lazy<List<Expense>> AllExpenses { get; set; }
         List<Category> Categories { get; set; }
         List<ExpenseSummary> Summary { get; set; }
         Statistic Statistics { get; set; }

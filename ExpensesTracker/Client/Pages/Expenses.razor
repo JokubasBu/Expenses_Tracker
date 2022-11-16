@@ -59,7 +59,7 @@
     </thead>
 
     <tbody>
-        @foreach (var expense in ExpensesService.AllExpenses)
+        @foreach (var expense in ExpensesService.AllExpenses.Value)
         {
             <!-- reading data if foreach loop -->
             <tr>

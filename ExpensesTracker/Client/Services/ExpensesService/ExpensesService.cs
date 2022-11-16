@@ -17,10 +17,10 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             this.http = http;
             this.navigationManager = navigationManager;
 
-            InitializeAll += async () => { Task.WhenAll(GetExpenses()); };
-            InitializeAll += async () => { Task.WhenAll(GetCategories()); };
+            InitializeAll += async () => { GetExpenses(); };
+            InitializeAll += async () => { GetCategories(); };
         }
-        public List<Expense> AllExpenses { get; set; } = new List<Expense>();
+        public Lazy<List<Expense>> AllExpenses { get; set; } = new Lazy<List<Expense>>();
         public List<Expense> everyExpense { get; set; } = new List<Expense>();
         public List<Category> Categories { get; set; } = new List<Category>();
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
@@ -60,7 +60,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses");
             if (result != null)
             {
-                AllExpenses = result;
+                AllExpenses = new Lazy<List<Expense>>(() => result);
             }
         }
 
@@ -87,7 +87,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             var result = await http.GetFromJsonAsync<List<Expense>>("api/expenses/currentCount");
             if (result != null)
             {
-                AllExpenses = result;
+                AllExpenses = new Lazy<List<Expense>>(() => result);
             }
         }
         public async Task ShowFilters(Expense expenseFilter)
@@ -99,7 +99,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         private async Task SetResults(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<List<Expense>>();
-            AllExpenses = response;
+            AllExpenses = new Lazy<List<Expense>>(() => response);
         }
 
         public async Task<Expense> GetSingleExpense(int id)
