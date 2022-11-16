@@ -32,9 +32,8 @@ else{
     double totalEarnedThisYear = 0;
 
     protected override async Task OnInitializedAsync()
-    {     
-        await ExpensesService.GetCategories();
-        await ExpensesService.GetSummary();
+    {
+        await ExpensesService.Initialize();
         var ExpenseSummaryList = ExpensesService.Summary;
         await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
 

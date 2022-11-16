@@ -17,8 +17,8 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             this.http = http;
             this.navigationManager = navigationManager;
 
-            InitializeAll += async () => { await GetExpenses(); };
-            InitializeAll += async () => { await GetCategories(); };
+            InitializeAll += async () => { Task.WhenAll(GetExpenses()); };
+            InitializeAll += async () => { Task.WhenAll(GetCategories()); };
         }
         public List<Expense> AllExpenses { get; set; } = new List<Expense>();
         public List<Expense> everyExpense { get; set; } = new List<Expense>();
@@ -27,7 +27,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public Statistic Statistics { get; set; } = new Statistic();
 
         public event Action InitializeAll;
-
         public async Task Initialize() => InitializeAll?.Invoke();
 
         public async Task CreateExpense(Expense expense)
