@@ -19,5 +19,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         Task GetSummary();
         Task GetStatistics();
         Task Initialize();
+        event Action InitializeAll;
     }
 }

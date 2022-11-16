@@ -23,6 +23,8 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
         public Statistic Statistics { get; set; } = new Statistic();
 
+        public event Action InitializeAll;
+
         public async Task Initialize()
         {
             await GetCategories();
