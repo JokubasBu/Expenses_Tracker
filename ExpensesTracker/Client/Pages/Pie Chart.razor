@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject IExpensesService ExpensesService
+@inject IIncomesService IncomesService
 @inject IJSRuntime jsRunTime;
 @implements IDisposable
 
@@ -12,6 +13,7 @@
 
 <br />
 <h3>Total spent this month: @(totalSpentThisMonth)€</h3>
+<h3>Total earned this month:  @(totalEarnedThisMonth)€</h3>
 @if (totalSpentThisMonth > totalSpentPrevMonth){
     <h3>Spent @(totalSpentThisMonth - totalSpentPrevMonth)€ more than last month</h3>
 }
@@ -19,12 +21,15 @@ else{
     <h3>Spent @(totalSpentPrevMonth - totalSpentThisMonth)€ less than last month</h3>
 }
 <h3>Total spent this year:  @(totalSpentThisYear)€</h3>
+<h3>Total earned this year:  @(totalEarnedThisYear)€</h3>
 
 
 @code {
     double totalSpentThisMonth = 0;
     double totalSpentPrevMonth = 0;
     double totalSpentThisYear = 0;
+    double totalEarnedThisMonth = 0;
+    double totalEarnedThisYear = 0;
 
     protected override async Task OnInitializedAsync()
     {     
@@ -39,8 +44,13 @@ else{
 
         await ExpensesService.GetStatistics();
         Statistic moneyStatistics = ExpensesService.Statistics;
-        totalSpentPrevMonth = moneyStatistics.previousMonthTotalExpenses;
-        totalSpentThisYear = moneyStatistics.currentYearTotalExpenses;
+        totalSpentPrevMonth = moneyStatistics.monthStat;
+        totalSpentThisYear = moneyStatistics.yearStat;
+
+        await IncomesService.GetStatistics();
+        moneyStatistics = IncomesService.Statistics;
+        totalEarnedThisMonth = moneyStatistics.monthStat;
+        totalEarnedThisYear = moneyStatistics.yearStat;
     }
     public void Dispose(){
        jsRunTime.InvokeVoidAsync("DisposePieChart");

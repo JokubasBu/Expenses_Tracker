@@ -1,0 +1,82 @@
+﻿@page "/incomes"
+@inject IIncomesService IncomesService
+@inject NavigationManager NavigationManager
+@inject HttpClient http
+
+<PageTitle>Incomes</PageTitle>
+<h3>Incomes</h3>
+
+<EditForm Model="incomeFilter" OnSubmit="FilterButton">
+    <InputSelect @bind-Value="incomeFilter.Year">
+        <option value="0">All Years</option>
+        @foreach (var year in Dates.Years)
+        {
+            <option value="@year">@year</option>
+        }
+    </InputSelect>
+    <InputSelect @bind-Value="incomeFilter.Month">
+        <option value="0">All Months</option>
+        @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
+        {
+            <option value="@((int)month)">@month</option>
+        }
+    </InputSelect>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</EditForm>
+
+<button class="btn btn-success" @onclick="CreateIncome">Add New</button>
+&nbsp;
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Money</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var income in IncomesService.AllIncomes)
+        {
+            <tr>
+                <td>@income.Year-@income.Month.ToString("D2")</td>
+                <td>@income.Money</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowIncome(income.Id))"><i class="oi oi-pencil"></i></button>
+                    &nbsp;
+                    <button class="btn btn-danger" @onclick="(() => DeleteIncome(income.Id))">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    Income incomeFilter = new Income ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await IncomesService.GetIncomes();
+    }
+
+    async Task FilterButton()
+    {
+        await IncomesService.ShowFilters(incomeFilter);
+    }
+
+    void ShowIncome(int id)
+    {
+        NavigationManager.NavigateTo($"income/{id}");
+    }
+
+    void CreateIncome()
+    {
+        NavigationManager.NavigateTo("/income");
+    }
+
+    async Task DeleteIncome(int id)
+    {
+        await IncomesService.DeleteIncome(id);
+    }
+}

@@ -21,10 +21,10 @@ namespace ExpensesTracker.Server.Controllers
 
 
         public ExpensesController(DataContext context)
-
         {
             this.context = context;
         }
+
         [HttpGet("summary")]
         public async Task<ActionResult<List<ExpenseSummary>>> GetSummary() 
         {
@@ -68,7 +68,7 @@ namespace ExpensesTracker.Server.Controllers
             {
                 spentThisYear = spentThisYear + exp.Money;
             }
-            stats.currentYearTotalExpenses = spentThisYear;
+            stats.yearStat = spentThisYear;
 
             allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month-1);
             double spentPrevMonth = 0;
@@ -76,7 +76,7 @@ namespace ExpensesTracker.Server.Controllers
             {
                 spentPrevMonth = spentPrevMonth + exp.Money;
             }
-            stats.previousMonthTotalExpenses = spentPrevMonth;
+            stats.monthStat = spentPrevMonth;
 
             return Ok(stats);
         }
@@ -102,7 +102,6 @@ namespace ExpensesTracker.Server.Controllers
             _year =expenseFilter.Year;
 
             return Ok(await GetFilteredExpenses());
-
 
         }
 
