@@ -4,6 +4,7 @@
     {
         List<Income> AllIncomes { get; set; }
         Statistic Statistics { get; set; }
+        Income incomeFilter { get; set; }
         Task GetIncomes();
         Task ShowFilters(Income incomeFilter);
         Task<Income> GetSingleIncome(int id);

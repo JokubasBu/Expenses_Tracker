@@ -11,17 +11,18 @@ namespace ExpensesTracker.Client.Services.ExpensesService
     {
         private readonly HttpClient http;
         private readonly NavigationManager navigationManager;
+        public List<Expense> AllExpenses { get; set; } = new List<Expense>();
+        public List<Category> Categories { get; set; } = new List<Category>();
+        public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
+        public Statistic Statistics { get; set; } = new Statistic();
+        public Expense expenseFilter { get; set; } = new Expense { Category = new Category() , Comment = "Filter" };
 
         public ExpensesService(HttpClient http, NavigationManager navigationManager)
         {
             this.http = http;
             this.navigationManager = navigationManager;
         }
-        public List<Expense> AllExpenses { get; set; } = new List<Expense>();
-        public List<Expense> everyExpense { get; set; } = new List<Expense>();
-        public List<Category> Categories { get; set; } = new List<Category>();
-        public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
-        public Statistic Statistics { get; set; } = new Statistic();
+        
 
         public async Task CreateExpense(Expense expense)
         {
