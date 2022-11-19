@@ -1,5 +1,6 @@
 ﻿using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Server.Data;
+using ExpensesTracker.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace ExpensesTracker.Server.Controllers
     public class ExpensesController : ControllerBase
     {
         private readonly DataContext context;
+        private readonly IExpense _expenses;
         static int currentCount = 0; // amomunt of times the button Order was pressed
 
         private static int _year;
