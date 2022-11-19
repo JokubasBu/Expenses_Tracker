@@ -7,8 +7,8 @@ namespace ExpensesTracker.Server.Interfaces
         Task<List<Expense>> GetExpensesAsync();
         Task<ActionResult<Expense>> GetSingleExpenseAsync(int id);
         Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense);
-        Task<ActionResult<Expense>> DeleteExpenseAsync(int id);
-        Task<ActionResult<List<Expense>>> UpdateExpenseAsync(Expense expense, int id);
+        Task<ActionResult<Expense>> DeleteExpenseAsync(Expense expense);
+        Task<Expense> UpdateExpenseAsync(Expense expense, Expense dbExpense);
         Task<List<Category>> GetCategoriesAsync();
     }
 }

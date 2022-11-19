@@ -1,4 +1,5 @@
 ﻿using ExpensesTracker.Server.Interfaces;
+using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesTracker.Server.Data.Repositories
@@ -20,16 +21,12 @@ namespace ExpensesTracker.Server.Data.Repositories
             return expense;
         }
 
-        public Task<ActionResult<Expense>> DeleteExpenseAsync(int id)
+        public async Task<ActionResult<Expense>> DeleteExpenseAsync(Expense dbExpense)
         {
-            //var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
-            //if (dbExpense == null)
-            //    return NotFound("There is no such expense :/");
+            context.AllExpenses.Remove(dbExpense);
+            await context.SaveChangesAsync();
 
-            //context.AllExpenses.Remove(dbExpense);
-            //await context.SaveChangesAsync();
-
-            throw new NotImplementedException();
+            return dbExpense;
         }
 
         public async Task<List<Category>> GetCategoriesAsync()
@@ -47,10 +44,8 @@ namespace ExpensesTracker.Server.Data.Repositories
             return await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<ActionResult<List<Expense>>> UpdateExpenseAsync(Expense expense, int id)
+        public async Task<Expense> UpdateExpenseAsync(Expense expense, Expense dbExpense)
         {
-            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
-
             dbExpense.Money = expense.Money;
             dbExpense.Comment = expense.Comment;
             dbExpense.CategoryId = expense.CategoryId;
@@ -60,7 +55,7 @@ namespace ExpensesTracker.Server.Data.Repositories
 
             await context.SaveChangesAsync();
 
-            //return expense;
+            return expense;
 
         }
     }

@@ -136,12 +136,11 @@ namespace ExpensesTracker.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Expense>>> DeleteExpense(int id)
         {
-            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            var dbExpense = await _expenses.GetSingleExpenseAsync(id);
             if (dbExpense == null)
                 return NotFound("There is no such expense :/");
 
-            context.AllExpenses.Remove(dbExpense);
-            await context.SaveChangesAsync();
+            await _expenses.DeleteExpenseAsync(dbExpense.Value);
 
             return Ok(await GetFilteredExpenses());
         }
@@ -156,7 +155,7 @@ namespace ExpensesTracker.Server.Controllers
             }
             else
             {
-                await _expenses.UpdateExpenseAsync(expense, id);
+                await _expenses.UpdateExpenseAsync(expense, dbExpense.Value);
             }
             return Ok(await GetFilteredExpenses());
         }
