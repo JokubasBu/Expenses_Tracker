@@ -13,7 +13,6 @@ namespace ExpensesTracker.Server.Controllers
     [ApiController]
     public class ExpensesController : ControllerBase
     {
-        //private readonly DataContext context;
         private readonly IExpense _expenses;
         static int currentCount = 0; // amomunt of times the button Order was pressed
 
@@ -114,8 +113,8 @@ namespace ExpensesTracker.Server.Controllers
             return Ok(await _expenses.GetCategoriesAsync()); 
         }
 
-        [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<Expense>>> GetSingleExpense(int id) 
+        [HttpGet("{id}")] 
+        public async Task<ActionResult<Expense>> GetSingleExpense(int id) 
         {
             var expense = await _expenses.GetSingleExpenseAsync(id);
 
@@ -123,7 +122,7 @@ namespace ExpensesTracker.Server.Controllers
             {
                 return NotFound("no entry..."); 
             }
-            return Ok(expense);
+            return Ok(expense.Value);
         }
 
         [HttpPost("Add")]
@@ -150,13 +149,10 @@ namespace ExpensesTracker.Server.Controllers
         {
             var dbExpense = await _expenses.GetSingleExpenseAsync(id);
             if (dbExpense == null)
-            {
                 return NotFound("Sorry, but no expense for you. :/");
-            }
-            else
-            {
-                await _expenses.UpdateExpenseAsync(expense, dbExpense.Value);
-            }
+
+            await _expenses.UpdateExpenseAsync(expense, dbExpense.Value);
+
             return Ok(await GetFilteredExpenses());
         }
 
