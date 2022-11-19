@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesTracker.Client", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpensesTracker.Shared", "ExpensesTracker\Shared\ExpensesTracker.Shared.csproj", "{39D13499-D27E-482C-AA59-FEBCCE285AAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{CF7CE9E2-B6BC-45ED-9DBA-1B68BB47EEFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{39D13499-D27E-482C-AA59-FEBCCE285AAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39D13499-D27E-482C-AA59-FEBCCE285AAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39D13499-D27E-482C-AA59-FEBCCE285AAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7CE9E2-B6BC-45ED-9DBA-1B68BB47EEFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7CE9E2-B6BC-45ED-9DBA-1B68BB47EEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7CE9E2-B6BC-45ED-9DBA-1B68BB47EEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7CE9E2-B6BC-45ED-9DBA-1B68BB47EEFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

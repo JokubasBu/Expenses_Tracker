@@ -61,6 +61,7 @@ namespace ExpensesTracker.Server.Controllers
         {
             var stats = new Statistic();
             List<Expense> allExpenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+            //var expenses = _expensesRepository.GetAllExpenses();
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
             double spentThisYear = 0;
