@@ -1,6 +1,4 @@
-﻿using ExpensesTracker.Server.Interfaces;
-using ExpensesTracker.Shared.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesTracker.Server.Data.Repositories
 {

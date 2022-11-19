@@ -1,9 +1,9 @@
 global using ExpensesTracker.Shared.Models;
 global using ExpensesTracker.Shared.Extensions;
 global using Microsoft.EntityFrameworkCore;
+global using ExpensesTracker.Server.Repositories.Interfaces;
 using ExpensesTracker.Server.Data;
 using ExpensesTracker.Server.Data.Repositories;
-using ExpensesTracker.Server.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

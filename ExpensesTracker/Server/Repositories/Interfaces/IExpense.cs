@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace ExpensesTracker.Server.Interfaces
+namespace ExpensesTracker.Server.Repositories.Interfaces
 {
     public interface IExpense
     {
