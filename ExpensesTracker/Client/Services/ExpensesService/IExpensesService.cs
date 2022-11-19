@@ -7,6 +7,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         List<Expense> AllExpenses { get; set; }
         List<Category> Categories { get; set; }
         List<ExpenseSummary> Summary { get; set; }
+        Expense expenseFilter { get; set; }
         Statistic Statistics { get; set; }
         Task GetCategories();
         Task GetExpenses();

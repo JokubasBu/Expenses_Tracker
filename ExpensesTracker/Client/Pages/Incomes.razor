@@ -6,15 +6,15 @@
 <PageTitle>Incomes</PageTitle>
 <h3>Incomes</h3>
 
-<EditForm Model="incomeFilter" OnSubmit="FilterButton">
-    <InputSelect @bind-Value="incomeFilter.Year">
+<EditForm Model="IncomesService.incomeFilter" OnSubmit="FilterButton">
+    <InputSelect @bind-Value="IncomesService.incomeFilter.Year">
         <option value="0">All Years</option>
         @foreach (var year in Dates.Years)
         {
             <option value="@year">@year</option>
         }
     </InputSelect>
-    <InputSelect @bind-Value="incomeFilter.Month">
+    <InputSelect @bind-Value="IncomesService.incomeFilter.Month">
         <option value="0">All Months</option>
         @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
         {
@@ -53,8 +53,6 @@
 </table>
 
 @code {
-    Income incomeFilter = new Income ();
-
     protected override async Task OnInitializedAsync()
     {
         await IncomesService.GetIncomes();
@@ -62,7 +60,7 @@
 
     async Task FilterButton()
     {
-        await IncomesService.ShowFilters(incomeFilter);
+        await IncomesService.ShowFilters(IncomesService.incomeFilter);
     }
 
     void ShowIncome(int id)

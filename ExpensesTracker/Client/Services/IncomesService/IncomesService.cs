@@ -11,14 +11,16 @@ namespace ExpensesTracker.Client.Services.IncomesService
         private readonly HttpClient http;
         private readonly NavigationManager navigationManager;
 
+        public List<Income> AllIncomes { get; set; } = new List<Income>();
+        public Statistic Statistics { get; set; } = new Statistic();
+        public Income incomeFilter {get; set; } = new Income();
+
         public IncomesService(HttpClient http, NavigationManager navigationManager)
         {
             this.http = http;
             this.navigationManager = navigationManager;
         }
-        public List<Income> AllIncomes { get; set; } = new List<Income>();
-        public Statistic Statistics { get; set; } = new Statistic();
-
+        
         public async Task CreateIncome(Income income)
         {
             var result = await http.PostAsJsonAsync("/api/incomes/Add", income);
