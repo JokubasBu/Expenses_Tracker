@@ -16,11 +16,12 @@ namespace TestProject
         private readonly NavigationManager navigationManager;
         private readonly IExpensesService expensesService;
 
-        [Fact]
-        public void Test1()
-        {
-
-        }
+        //public UnitTest1(HttpClient http, NavigationManager navigationManager, IExpensesService expensesService)
+        //{
+        //    this.http = http;
+        //    this.navigationManager = navigationManager;
+        //    this.expensesService = expensesService;
+        //}
 
         [Fact]
         public void Find()
@@ -53,6 +54,22 @@ namespace TestProject
 
         }
 
+        [Fact]
+        public void Create()
+        {
+            Services.AddSingleton<IExpensesService>(new ExpensesService(http, navigationManager));
+
+            Expense expense = new();
+
+            expensesService.CreateExpense(expense); // System.NullReferenceException : Object reference not set to an instance of an object.
+
+            //expensesService.GetExpenses()
+            // contains expense
+            // or
+            // Assert.Equals(expensesService.GetSingleExpense(expense.Id), expense);
+
+            Assert.Same(expensesService.GetSingleExpense(expense.Id), expense);
+        }
 
     }
 }
