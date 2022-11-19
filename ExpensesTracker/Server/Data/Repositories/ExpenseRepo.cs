@@ -32,12 +32,12 @@ namespace ExpensesTracker.Server.Data.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<ActionResult<List<Category>>> GetCategoriesAsync()
+        public async Task<List<Category>> GetCategoriesAsync()
         {
             return await context.Categories.ToListAsync();
         }
 
-        public async Task<List<Expense>> GetFilteredExpensesAsync()
+        public async Task<List<Expense>> GetExpensesAsync()
         {
             return await context.AllExpenses.Include(e => e.Category).ToListAsync();
         }
@@ -45,6 +45,23 @@ namespace ExpensesTracker.Server.Data.Repositories
         public async Task<ActionResult<Expense>> GetSingleExpenseAsync(int id)
         {
             return await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<ActionResult<List<Expense>>> UpdateExpenseAsync(Expense expense, int id)
+        {
+            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+
+            dbExpense.Money = expense.Money;
+            dbExpense.Comment = expense.Comment;
+            dbExpense.CategoryId = expense.CategoryId;
+            dbExpense.Year = expense.Year;
+            dbExpense.Month = expense.Month;
+            dbExpense.Day = expense.Day;
+
+            await context.SaveChangesAsync();
+
+            //return expense;
+
         }
     }
 }
