@@ -12,7 +12,7 @@ namespace ExpensesTracker.Server.Controllers
     [ApiController]
     public class ExpensesController : ControllerBase
     {
-        private readonly DataContext context;
+        private readonly IExpense _expenses;
         static int currentCount = 0; // amomunt of times the button Order was pressed
 
         private static int _year;
@@ -20,17 +20,17 @@ namespace ExpensesTracker.Server.Controllers
         private static int _categoryId;
 
 
-        public ExpensesController(DataContext context)
+        public ExpensesController(IExpense _expenses)
         {
-            this.context = context;
+            this._expenses = _expenses;
         }
 
         [HttpGet("summary")]
         public async Task<ActionResult<List<ExpenseSummary>>> GetSummary() 
         {
             var summary = new List<ExpenseSummary>();
-            var categories = await context.Categories.ToListAsync();
-            List<Expense> allExpenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+            var categories = await _expenses.GetCategoriesAsync();
+            List<Expense> allExpenses = await _expenses.GetExpensesAsync();
 
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
@@ -60,7 +60,7 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<Statistic>>> GetStatistics()
         {
             var stats = new Statistic();
-            List<Expense> allExpenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+            List<Expense> allExpenses = await _expenses.GetExpensesAsync();
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
             double spentThisYear = 0;
@@ -109,40 +109,36 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("categories")] 
         public async Task<ActionResult<List<Category>>> GetCategories() 
         {
-            var categories = await context.Categories.ToListAsync();
-            return Ok(categories); 
+            return Ok(await _expenses.GetCategoriesAsync()); 
         }
 
-        [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
-        public async Task<ActionResult<List<Expense>>> GetSingleExpense(int id) 
+        [HttpGet("{id}")] 
+        public async Task<ActionResult<Expense>> GetSingleExpense(int id) 
         {
-            var expense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id); 
+            var expense = await _expenses.GetSingleExpenseAsync(id);
 
             if (expense == null) 
             {
                 return NotFound("no entry..."); 
             }
-            return Ok(expense);
+            return Ok(expense.Value);
         }
 
         [HttpPost("Add")]
         public async Task<ActionResult<List<Expense>>> CreateExpense(Expense expense)
         {
-            expense.Category = null;
-            context.AllExpenses.Add(expense);
-            context.SaveChanges();
+            await _expenses.CreateExpenseAsync(expense);
             return Ok(await GetFilteredExpenses());
         }
        
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Expense>>> DeleteExpense(int id)
         {
-            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            var dbExpense = await _expenses.GetSingleExpenseAsync(id);
             if (dbExpense == null)
                 return NotFound("There is no such expense :/");
 
-            context.AllExpenses.Remove(dbExpense);
-            await context.SaveChangesAsync();
+            await _expenses.DeleteExpenseAsync(dbExpense.Value);
 
             return Ok(await GetFilteredExpenses());
         }
@@ -150,25 +146,18 @@ namespace ExpensesTracker.Server.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<List<Expense>>> UpdateExpense(Expense expense, int id)
         {
-            var dbExpense = await context.AllExpenses.Include(e => e.Category).FirstOrDefaultAsync(e => e.Id == id);
+            var dbExpense = await _expenses.GetSingleExpenseAsync(id);
             if (dbExpense == null)
                 return NotFound("Sorry, but no expense for you. :/");
 
-            dbExpense.Money = expense.Money;
-            dbExpense.Comment = expense.Comment;
-            dbExpense.CategoryId = expense.CategoryId;
-            dbExpense.Year = expense.Year;
-            dbExpense.Month = expense.Month;
-            dbExpense.Day = expense.Day;
-
-            await context.SaveChangesAsync();
+            await _expenses.UpdateExpenseAsync(expense, dbExpense.Value);
 
             return Ok(await GetFilteredExpenses());
         }
 
         async Task<List<Expense>> GetFilteredExpenses()
-        {      
-            var expenses = await context.AllExpenses.Include(e => e.Category).ToListAsync();
+        {
+            var expenses = await _expenses.GetExpensesAsync();
 
             var currentExpenses = expenses.FilterBy(id: _categoryId);
             currentExpenses = currentExpenses.FilterBy(month: _month);

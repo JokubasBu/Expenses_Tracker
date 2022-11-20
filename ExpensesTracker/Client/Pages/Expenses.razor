@@ -61,7 +61,6 @@
     <tbody>
         @foreach (var expense in ExpensesService.AllExpenses)
         {
-            <!-- reading data if foreach loop -->
             <tr>
                 <td>@expense.Year-@expense.Month.ToString("D2")-@expense.Day.ToString("D2")</td>
                 <td>@expense.Money€</td>

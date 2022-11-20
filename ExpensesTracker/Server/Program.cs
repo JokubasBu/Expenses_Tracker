@@ -1,9 +1,9 @@
-global using ExpensesTracker.Shared;
 global using ExpensesTracker.Shared.Models;
 global using ExpensesTracker.Shared.Extensions;
 global using Microsoft.EntityFrameworkCore;
+global using ExpensesTracker.Server.Repositories.Interfaces;
 using ExpensesTracker.Server.Data;
-using Microsoft.AspNetCore.ResponseCompression;
+using ExpensesTracker.Server.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))); // finds the connection: DefaultConnection that we named in appsettings.json
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IExpense, ExpenseRepo>();
 
 var app = builder.Build();
 
