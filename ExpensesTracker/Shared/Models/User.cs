@@ -31,10 +31,10 @@ namespace ExpensesTracker.Shared.Models
             users.Add(this);
         }
 
-
-
-
-
+        public static User? GetUser(int userId)
+        {
+            return users.FirstOrDefault(x => x.userId == userId);
+        }
 
     }
 }
