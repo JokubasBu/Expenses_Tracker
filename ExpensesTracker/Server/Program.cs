@@ -4,9 +4,11 @@ global using Microsoft.EntityFrameworkCore;
 global using ExpensesTracker.Server.Repositories.Interfaces;
 using ExpensesTracker.Server.Data;
 using ExpensesTracker.Server.Data.Repositories;
+using ExpensesTracker.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddFile(builder.Configuration.GetSection("LoggingSer"));
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
@@ -14,6 +16,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))); // finds the connection: DefaultConnection that we named in appsettings.json
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IExpense, ExpenseRepo>();
+builder.Services.AddScoped<ILoggerService, LoggerService>();
+
 
 var app = builder.Build();
 
@@ -30,6 +34,7 @@ else
 }
 
 app.UseHttpsRedirection();
+
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
