@@ -18,6 +18,8 @@ namespace ExpensesTracker.Shared.Models
         public List<Expense> expenses { get; set; } = new List<Expense>();
         public List<Income> income { get; set; } = new List<Income>();
 
+        public static List<User> users = new List<User>();
+
         public User(string nickname, string birth, string email)
         {
             this.nickname = nickname;
@@ -25,7 +27,11 @@ namespace ExpensesTracker.Shared.Models
             this.email = email;
 
             userId = idQueue++;
+
+            users.Add(this);
         }
+
+
 
 
 
