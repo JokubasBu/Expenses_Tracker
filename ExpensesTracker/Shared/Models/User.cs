@@ -29,6 +29,7 @@ namespace ExpensesTracker.Shared.Models
             this.nickname = nickname;
             this.birth = birth;
             this.email = email;
+            this.balance = balance;
 
             userId = idQueue++;
 

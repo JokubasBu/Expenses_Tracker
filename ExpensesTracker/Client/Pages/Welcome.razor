@@ -3,18 +3,23 @@
 @inject IIncomesService IncomesService
 
 <h3>Welcome, @user.nickname</h3>
+<h3>Balance: @user.balance €</h3>
+
+@foreach(var expense in user.expenses)
+{
+    <div>
+            @expense.Year
+    </div>
+}
 
 
 @code {
     User? user;
 
-    protected override void OnInitialized()
+    public Welcome()
     {
-
-        new User("Linas", "2002-05-12", "linas.jann@gmail.com");
-        new User("Deniza", "2002-04-12", "deniza@gmail.com");
-        new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
-        user = User.GetUser(0);
+        TempUsers();
+        LoadUser(0);
     }
 
     protected override async Task OnInitializedAsync()
@@ -22,6 +27,20 @@
         await ExpensesService.GetExpenses();
         await ExpensesService.GetCategories();
         await IncomesService.GetIncomes();
+    }
+
+    public void LoadUser(int i)
+    {
+        //User.setExpenses(i, ExpensesService.AllExpenses);
+        user = User.GetUser(i);
+    }
+
+    public void TempUsers()
+    {
+        new User("Linas", "2002-05-12", "linas.jann@gmail.com", balance: 2000);
+        new User("Deniza", "2002-04-12", "deniza@gmail.com");
+        new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
+
     }
 
 }
