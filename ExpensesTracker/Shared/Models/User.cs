@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,10 @@ namespace ExpensesTracker.Shared.Models
     {
         public int userId { get; set; }
         public string nickname { get; set; }
+
+        [RegularExpression(@"^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$")]
         public string birth { get; set; }
-        public double balance { get; set; } = 0
+        public double balance { get; set; } = 0;
         public string email { get; set; }
 
         private static int idQueue = 0;
@@ -61,11 +64,7 @@ namespace ExpensesTracker.Shared.Models
 
         public static int FindUser(int userId)
         {
-            int index = 0;
-            while ((users.ElementAt(index).userId != userId))
-            index++;
-
-            return index;
+            return users.FindIndex(a => a.userId == userId);
         }
 
 
