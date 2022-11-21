@@ -29,10 +29,6 @@
 
 }
 
-
-
-
-
 @code {
     User? user;
     public static event Action<int> Startup;
@@ -78,5 +74,35 @@
         new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
 
     }
+
+
+    public delegate User.Record testDelegate(string date);
+    testDelegate sendDelegate;
+
+    //delegates with generics?
+
+    public List<T> OrderByy<T>(List<T> list, testDelegate predicate)
+    {
+        //sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
+        //list = list.ToList().OrderBy(predicate);//OrderBy(predicate);
+        return list;
+    }
+
+    /*
+     <button @onclick="e => this.Collapsed = !this.Collapsed">
+    @(this.Collapsed ? "+" : "-")
+    </button>
+
+    @if (!Collapsed)
+    {
+    @foreach (var record in sheet)
+        {
+            <div>
+            @record.type @record.amount € @record.date
+    </div>
+     }
+     }
+
+    */
 
 }
