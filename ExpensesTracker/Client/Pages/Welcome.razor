@@ -2,11 +2,11 @@
 @inject IExpensesService ExpensesService
 @inject IIncomesService IncomesService
 
-<h3>Welcome, @User.GetUser(0).nickname</h3>
-<h3>Welcome, @User.GetUser(1).nickname</h3>
-<h3>Welcome, @User.GetUser(2).nickname</h3>
+<h3>Welcome, @user.nickname</h3>
+
 
 @code {
+    User? user;
 
     protected override void OnInitialized()
     {
@@ -14,7 +14,7 @@
         new User("Linas", "2002-05-12", "linas.jann@gmail.com");
         new User("Deniza", "2002-04-12", "deniza@gmail.com");
         new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
-
+        user = User.GetUser(0);
     }
 
     protected override async Task OnInitializedAsync()
