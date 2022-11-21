@@ -5,13 +5,20 @@
 <h3>Welcome, @user.nickname</h3>
 <h3>Balance: @user.balance €</h3>
 
-@foreach (var expense in User.users[User.FindUser(0)].expenses)
+<button @onclick="e => this.Collapsed = !this.Collapsed">
+    @(this.Collapsed ? "+" : "-")
+</button>
+
+@if (!Collapsed)
 {
-    <div>
-        @expense.Money
-    </div>
-    
+    @foreach (var record in sheet)
+    {
+        <div>
+            @record.type @record.amount € @record.date
+        </div>
+    }
 }
+
 
 
 
@@ -20,6 +27,7 @@
     User? user;
     public static event Action<int> Startup;
     List<Record> sheet = new List<Record>();
+    public bool Collapsed = true;
 
     public struct Record
     {
@@ -36,6 +44,7 @@
 
         TempUsers(0);
         LoadUser(0);
+        LoadSheet(0);
     }
 
     public Welcome()
