@@ -24,6 +24,13 @@ namespace ExpensesTracker.Shared.Models
 
         public static List<User> users = new List<User>();
 
+        public struct Record
+        {
+            public string type { get; set; }
+            public string date { get; set; }
+            public double amount { get; set; }
+        }
+
         public User(string nickname, string birth, string email, double balance = 0)
         {
             this.nickname = nickname;
@@ -76,6 +83,37 @@ namespace ExpensesTracker.Shared.Models
         public static void setIncome(int userId, List<Income> income)
         {
             users[FindUser(userId)].income = income;
+        }
+
+        public static List<Record> History(int userId)
+        {
+            User? user = GetUser(userId);
+            List<Record> sheet = new List<Record>();
+
+            foreach (var expense in user.expenses)
+            {
+                Record record = new Record();
+                record.type = "Expense";
+                record.date = expense.Year + "-" + expense.Month + "-" + expense.Day;
+                record.amount = expense.Money;
+                sheet.Add(record);
+            }
+
+            foreach (var income in user.income)
+            {
+                int day = 0;
+                if (day >= 30)
+                    day = 0;
+
+                Record record = new Record();
+                record.type = "Income";
+                record.date = income.Year + "-" + income.Month + "-" + day;
+                record.amount = income.Money;
+                sheet.Add(record);
+            }
+
+            sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
+            return sheet;
         }
     }
 }

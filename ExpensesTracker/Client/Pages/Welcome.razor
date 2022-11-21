@@ -11,12 +11,22 @@
 
 @if (!Collapsed)
 {
-    @foreach (var record in sheet)
+    @foreach (var record in LazySheet.Value)
     {
         <div>
-            @record.type @record.amount € @record.date
+            @if (record.type == "Expense")
+            {
+                <span style="color:red">@record.type</span>
+            }
+            else
+            {
+                <span style="color:lightgreen">@record.type</span>
+            }
+            @record.amount € 
+            @record.date
         </div>
     }
+
 }
 
 
@@ -26,15 +36,9 @@
 @code {
     User? user;
     public static event Action<int> Startup;
-    List<Record> sheet = new List<Record>();
+    Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
     public bool Collapsed = true;
 
-    public struct Record
-    {
-        public string type { get; set; }
-        public string date { get; set; }
-        public double amount { get; set; }
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,31 +61,11 @@
     {
         user = User.GetUser(i);
     }
+
+
     public void LoadSheet(int i)
     {
-        foreach (var expense in user.expenses)
-        {
-            Record record = new Record();
-            record.type = "Expense";
-            record.date = expense.Year + "-" + expense.Month + "-" + expense.Day;
-            record.amount = expense.Money;
-            sheet.Add(record);
-        }
-
-        foreach (var income in user.income)
-        {
-            int day = 0;
-            if (day >= 30)
-                day = 0;
-
-            Record record = new Record();
-            record.type = "Income";
-            record.date = income.Year + "-" + income.Month + "-" + day;
-            record.amount = income.Money;
-            sheet.Add(record);
-        }
-
-        sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
+        LazySheet = new Lazy<List<User.Record>>(() => User.History(i));
     }
 
     public void TempUsers(int i)
