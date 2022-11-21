@@ -18,6 +18,7 @@
 
 @code {
     User? user;
+    public static event Action<int> Startup;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +32,8 @@
 
     public Welcome()
     {
+        Startup += TempUsers;
+        Startup += LoadUser;
     }
 
     public void LoadUser(int i)
