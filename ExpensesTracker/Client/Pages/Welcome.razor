@@ -5,39 +5,44 @@
 <h3>Welcome, @user.nickname</h3>
 <h3>Balance: @user.balance €</h3>
 
-@foreach(var expense in user.expenses)
+@foreach (var expense in User.users[User.FindUser(0)].expenses)
 {
     <div>
-            @expense.Year
+        @expense.Money
     </div>
+    
 }
+
+
 
 
 @code {
     User? user;
-
-    public Welcome()
-    {
-        TempUsers();
-        LoadUser(0);
-    }
 
     protected override async Task OnInitializedAsync()
     {
         await ExpensesService.GetExpenses();
         await ExpensesService.GetCategories();
         await IncomesService.GetIncomes();
+
+        TempUsers(0);
+        LoadUser(0);
+    }
+
+    public Welcome()
+    {
     }
 
     public void LoadUser(int i)
     {
-        //User.setExpenses(i, ExpensesService.AllExpenses);
         user = User.GetUser(i);
     }
 
-    public void TempUsers()
+    public void TempUsers(int i)
     {
         new User("Linas", "2002-05-12", "linas.jann@gmail.com", balance: 2000);
+        User.setExpenses(i, ExpensesService.AllExpenses);
+
         new User("Deniza", "2002-04-12", "deniza@gmail.com");
         new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
 
