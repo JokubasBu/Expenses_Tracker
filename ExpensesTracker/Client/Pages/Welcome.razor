@@ -19,6 +19,14 @@
 @code {
     User? user;
     public static event Action<int> Startup;
+    List<Record> sheet = new List<Record>();
+
+    public struct Record
+    {
+        public string type { get; set; }
+        public string date { get; set; }
+        public double amount { get; set; }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,11 +48,38 @@
     {
         user = User.GetUser(i);
     }
+    public void LoadSheet(int i)
+    {
+        foreach (var expense in user.expenses)
+        {
+            Record record = new Record();
+            record.type = "Expense";
+            record.date = expense.Year + "-" + expense.Month + "-" + expense.Day;
+            record.amount = expense.Money;
+            sheet.Add(record);
+        }
+
+        foreach (var income in user.income)
+        {
+            int day = 0;
+            if (day >= 30)
+                day = 0;
+
+            Record record = new Record();
+            record.type = "Income";
+            record.date = income.Year + "-" + income.Month + "-" + day;
+            record.amount = income.Money;
+            sheet.Add(record);
+        }
+
+        sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
+    }
 
     public void TempUsers(int i)
     {
         new User("Linas", "2002-05-12", "linas.jann@gmail.com", balance: 2000);
         User.setExpenses(i, ExpensesService.AllExpenses);
+        User.setIncome(i, IncomesService.AllIncomes);
 
         new User("Deniza", "2002-04-12", "deniza@gmail.com");
         new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
