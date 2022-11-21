@@ -67,7 +67,14 @@ namespace ExpensesTracker.Shared.Models
             return users.FindIndex(a => a.userId == userId);
         }
 
+        public static void setExpenses(int userId, List<Expense> expense)
+        {
+            users[FindUser(userId)].expenses = expense;
+        }
 
-
+        public static void setIncome(int userId, List<Income> income)
+        {
+            users[FindUser(userId)].income = income;
+        }
     }
 }
