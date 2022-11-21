@@ -42,15 +42,15 @@
         await ExpensesService.GetCategories();
         await IncomesService.GetIncomes();
 
-        TempUsers(0);
-        LoadUser(0);
-        LoadSheet(0);
+        Startup.Invoke(0);
+
     }
 
     public Welcome()
     {
         Startup += TempUsers;
         Startup += LoadUser;
+        Startup += LoadSheet;
     }
 
     public void LoadUser(int i)
