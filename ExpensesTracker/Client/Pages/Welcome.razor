@@ -34,6 +34,7 @@
     public static event Action<int> Startup;
     Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
     public bool Collapsed = true;
+    double recentExpense, recentIncome;
 
 
     protected override async Task OnInitializedAsync()
@@ -43,7 +44,6 @@
         await IncomesService.GetIncomes();
 
         Startup.Invoke(0);
-
     }
 
     public Welcome()
@@ -75,34 +75,13 @@
 
     }
 
-
-    public delegate User.Record testDelegate(string date);
-    testDelegate sendDelegate;
-
-    //delegates with generics?
-
-    public List<T> OrderByy<T>(List<T> list, testDelegate predicate)
+    public void LoadRecentExpenses()
     {
-        //sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
-        //list = list.ToList().OrderBy(predicate);//OrderBy(predicate);
-        return list;
+
     }
 
-    /*
-     <button @onclick="e => this.Collapsed = !this.Collapsed">
-    @(this.Collapsed ? "+" : "-")
-    </button>
-
-    @if (!Collapsed)
+    public void LoadRecentIncome()
     {
-    @foreach (var record in sheet)
-        {
-            <div>
-            @record.type @record.amount € @record.date
-    </div>
-     }
-     }
 
-    */
-
+    }
 }

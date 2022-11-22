@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExpensesTracker.Shared.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -115,5 +116,28 @@ namespace ExpensesTracker.Shared.Models
             sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
             return sheet;
         }
+
+        public double getRecentExpenses()
+        {
+            double recentExpenses = 0;
+            List<Expense> filter = expenses.FilterBy(month: DateTime.Now.Month);
+
+            foreach (Expense expense in filter)
+                recentExpenses += expense.Money;
+
+            return recentExpenses;
+        }
+
+        public double getRecentIncome()
+        {
+            double recentIncome = 0;
+            List<Income> filter = income.FilterBy(month: DateTime.Now.Month);
+
+            foreach (Income income in filter)
+                recentIncome += income.Money;
+
+            return recentIncome;
+        }
+
     }
 }
