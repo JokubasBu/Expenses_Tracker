@@ -3,5 +3,6 @@
     public interface ILoggerService
     {
         void LogMessage(Exception ex);
+        void LogMessage(string Message);
     }
 }

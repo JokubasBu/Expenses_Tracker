@@ -12,5 +12,10 @@
         {
             _logger.LogError($"Error:{ex.Message},\n{ex.StackTrace}");
         }
+
+        public void LogMessage(string Message)
+        {
+            _logger.LogError(Message);
+        }
     }
 }
