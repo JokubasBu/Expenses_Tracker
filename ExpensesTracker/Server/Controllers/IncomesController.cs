@@ -3,6 +3,7 @@ using ExpensesTracker.Server.Data;
 using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static ExpensesTracker.Shared.Extensions.Delegates;
 
 namespace ExpensesTracker.Server.Controllers
 {
@@ -98,22 +99,13 @@ namespace ExpensesTracker.Server.Controllers
         {
             var stats = new Statistic();
             var allIncomes = await context.AllIncomes.ToListAsync();
+            StatsIncome del = new StatsIncome(CalculateIncome);
 
             allIncomes = allIncomes.FilterBy(year: DateTime.Now.Year);
-            double earnedThisYear = 0;
-            foreach (Income inc in allIncomes)
-            {
-                earnedThisYear = earnedThisYear + inc.Money;
-            }
-            stats.yearStat = earnedThisYear;
+            stats.yearStat = del(allIncomes);
 
             allIncomes = allIncomes.FilterBy(month: DateTime.Now.Month);
-            double earnedThisMonth = 0;
-            foreach (Income inc in allIncomes)
-            {
-                earnedThisMonth = earnedThisMonth + inc.Money;
-            }
-            stats.monthStat = earnedThisMonth;
+            stats.monthStat = del(allIncomes);
 
             return Ok(stats);
         }

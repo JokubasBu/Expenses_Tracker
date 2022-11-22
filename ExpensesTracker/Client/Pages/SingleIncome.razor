@@ -5,22 +5,22 @@
 
 <h3>Income</h3>
 
-<EditForm Model="income" OnValidSubmit="@Submit">
+<EditForm Model="IncomesService.singleIncome" OnValidSubmit="@Submit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 	<div>
 		<label for="money"> Money</label>
-		<InputNumber id="money" @bind-Value="income.Money"></InputNumber>
+		<InputNumber id="money" @bind-Value="IncomesService.singleIncome.Money"></InputNumber>
 	</div>
 	<div>
 		<label> Date </label>
-		<InputSelect @bind-Value="income.Year">
+		<InputSelect @bind-Value="IncomesService.singleIncome.Year">
 			@foreach (var year in Dates.Years)
 			{
 				<option value="@year">@year</option>
 			}
 		</InputSelect>
-		<InputSelect @bind-Value="income.Month">
+		<InputSelect @bind-Value="IncomesService.singleIncome.Month">
 			@foreach (var month in Enum.GetValues(typeof(Dates.Months)))
 			{
 				<option value="@((int)month)">@month</option>
@@ -38,27 +38,26 @@
 
 	[Parameter]
 	public int? Id { get; set; }
-	Income income = new Income ();
 
 	protected override async Task OnParametersSetAsync()
 	{
 		try
 		{
-			if (Id == null)
+		  if (Id == null)
 			{
-				DateTime currentDate = DateTime.Now;
-				income.Year = currentDate.Year;
-				income.Month = currentDate.Month;
-			}
-			else
+        DateTime currentDate = DateTime.Now;
+        IncomesService.singleIncome.Year = currentDate.Year;
+        IncomesService.singleIncome.Month = currentDate.Month;
+      }
+      else
 			{
-				income = await IncomesService.GetSingleIncome((int)Id);
-			}
-		}
+			  IncomesService.singleIncome = await IncomesService.GetSingleIncome((int)Id);
+		  }
+    }
 		catch (System.Exception ex)
 		{
-			Error.ProcessError(ex);
-		}
+		  Error.ProcessError(ex);
+    }
 	}
 
 	public void GoBack()
@@ -70,11 +69,11 @@
 	{
 		if (Id == null)
 		{
-			await IncomesService.CreateIncome(income);
+			await IncomesService.CreateIncome(IncomesService.singleIncome);
 		}
 		else
 		{
-			await IncomesService.UpdateIncome(income);
+			await IncomesService.UpdateIncome(IncomesService.singleIncome);
 		}
 	}
 }

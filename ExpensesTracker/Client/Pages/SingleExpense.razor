@@ -16,20 +16,20 @@ else
 	<h3>Edit</h3>
 }
 
-<EditForm Model="expense" OnValidSubmit="@Submit">
+<EditForm Model="ExpensesService.singleExpense" OnValidSubmit="@Submit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 	<div>
 		<label for="money"> Money</label>
-		<InputNumber id="money" @bind-Value="expense.Money"></InputNumber>
+		<InputNumber id="money" @bind-Value="ExpensesService.singleExpense.Money"></InputNumber>
 	</div>
 	<div>
 		<label for="comment"> Comment</label>
-		<InputText id="comment" @bind-Value="expense.Comment"></InputText>
+		<InputText id="comment" @bind-Value="ExpensesService.singleExpense.Comment"></InputText>
 	</div>
 	<div>
 		<label for="category"> Category</label>
-		<InputSelect @bind-Value="expense.CategoryId">
+		<InputSelect @bind-Value="ExpensesService.singleExpense.CategoryId">
 			@foreach(var category in ExpensesService.Categories){
 				<option value="@category.Id">@category.Title</option>
 			}
@@ -37,23 +37,24 @@ else
 	</div>
 	<div>
 		<label> Date </label>
-	<InputSelect @bind-Value="expense.Year">
+		<InputSelect @bind-Value="ExpensesService.singleExpense.Year">
         @*<option selected disabled="true">--Select Year--</option>*@
         @foreach (var year in Dates.Years)
         {
             <option value="@year">@year</option>
         }
     </InputSelect>
-	<InputSelect @bind-Value="expense.Month">
+		<InputSelect @bind-Value="ExpensesService.singleExpense.Month">
 		@*<option selected disabled="true">--Select Month--</option>*@
         @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
         {
             <option value="@((int)month)">@month</option>
         }
     </InputSelect>
-	<InputSelect @bind-Value="expense.Day">
-		@if (expense.Month != 0 || expense.Year !=0){
-		@for (int day = 1; day<= DateTime.DaysInMonth(expense.Year, expense.Month); day++)
+		<InputSelect @bind-Value="ExpensesService.singleExpense.Day">
+			@if (ExpensesService.singleExpense.Month != 0 || ExpensesService.singleExpense.Year != 0)
+			{
+				@for (int day = 1; day <= DateTime.DaysInMonth(ExpensesService.singleExpense.Year, ExpensesService.singleExpense.Month); day++)
 		{
 		<option value="@day">@day</option>
 		}
@@ -73,8 +74,6 @@ else
 	[Parameter]
 	public int? Id { get; set; }
 
-	Expense expense = new Expense { Category = new Category() };
-
 	string buttonText = string.Empty;
 	protected override async Task OnInitializedAsync()
 	{
@@ -91,35 +90,34 @@ else
 	{	
 		try
 		{
-			if(Id == null)
-			{
-				DateTime currentDate = DateTime.Now;
-				expense.Category = ExpensesService.Categories[0];
-				expense.CategoryId = expense.Category.Id;
-				expense.Year = currentDate.Year;
-				expense.Month = currentDate.Month;
-				expense.Day = currentDate.Day;
-			}
-			else{
-				expense = await ExpensesService.GetSingleExpense((int)Id);
-			}
-		}
-		catch(System.Exception ex)
+			if(Id == null){
+        DateTime currentDate = DateTime.Now;
+        ExpensesService.singleExpense.Category = ExpensesService.Categories[0];
+        ExpensesService.singleExpense.CategoryId = ExpensesService.singleExpense.Category.Id;
+        ExpensesService.singleExpense.Year = currentDate.Year;
+        ExpensesService.singleExpense.Month = currentDate.Month;
+        ExpensesService.singleExpense.Day = currentDate.Day;
+		  }
+		  else{
+			ExpensesService.singleExpense = await ExpensesService.GetSingleExpense((int)Id);
+		  }
+    }
+    catch(System.Exception ex)
 		{
 			Error.ProcessError(ex);
-		}
+    }
 	}
 
 	async Task Submit()
 	{ 
 		if (Id == null)
 		{
-			await ExpensesService.CreateExpense(expense);
+			await ExpensesService.CreateExpense(ExpensesService.singleExpense);
 			NavigationManager.NavigateTo("/expenses");
 		}
 		else
 		{
-			await ExpensesService.UpdateExpense(expense);
+			await ExpensesService.UpdateExpense(ExpensesService.singleExpense);
 		}
 	}
 

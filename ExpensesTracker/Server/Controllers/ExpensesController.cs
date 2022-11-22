@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
+using static ExpensesTracker.Shared.Extensions.Delegates;
 using static System.Net.WebRequestMethods;
 
 namespace ExpensesTracker.Server.Controllers
@@ -31,7 +32,6 @@ namespace ExpensesTracker.Server.Controllers
             var summary = new List<ExpenseSummary>();
             var categories = await _expenses.GetCategoriesAsync();
             List<Expense> allExpenses = await _expenses.GetExpensesAsync();
-
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
             allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month);
@@ -61,22 +61,13 @@ namespace ExpensesTracker.Server.Controllers
         {
             var stats = new Statistic();
             List<Expense> allExpenses = await _expenses.GetExpensesAsync();
+            StatsExpense del = new StatsExpense(CalculateExpense);
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
-            double spentThisYear = 0;
-            foreach (Expense exp in allExpenses)
-            {
-                spentThisYear = spentThisYear + exp.Money;
-            }
-            stats.yearStat = spentThisYear;
+            stats.yearStat = del(allExpenses);
 
             allExpenses = allExpenses.FilterBy(month: DateTime.Now.Month-1);
-            double spentPrevMonth = 0;
-            foreach (Expense exp in allExpenses)
-            {
-                spentPrevMonth = spentPrevMonth + exp.Money;
-            }
-            stats.monthStat = spentPrevMonth;
+            stats.monthStat = del(allExpenses);
 
             return Ok(stats);
         }
