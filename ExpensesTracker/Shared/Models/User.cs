@@ -1,5 +1,6 @@
 ﻿using ExpensesTracker.Shared.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -86,7 +87,7 @@ namespace ExpensesTracker.Shared.Models
             users[FindUser(userId)].income = income;
         }
 
-        public static List<Record> History(int userId, int filterMonth = 0, int filterYear = 0)
+        public static List<Record> History(int userId, int filterMonth = 0, int filterYear = 0, bool descending = false)
         {
             User? user = GetUser(userId);
             List<Record> sheet = new List<Record>();
@@ -113,7 +114,7 @@ namespace ExpensesTracker.Shared.Models
                 sheet.Add(record);
             }
 
-            sheet = sheet.OrderBy(o => o.date).Reverse().ToList();
+            sheet = ListSort<Record>(sheet, "date", descending);
             return sheet;
         }
 
@@ -139,6 +140,29 @@ namespace ExpensesTracker.Shared.Models
                 recentIncome += income.Money;
 
             return recentIncome;
+        }
+
+        public static List<T> ListSort<T>(List<T> data, string sortExpression, bool descending = false)
+        {
+            List<T>? sortedList = new List<T>();
+            if (!descending)
+            {
+                sortedList = (from n in data
+                              orderby GetSortProperty(n, sortExpression) ascending
+                              select n).ToList();
+            }
+            else 
+            {
+                sortedList = (from n in data
+                              orderby GetSortProperty(n, sortExpression) descending
+                              select n).ToList();
+            }
+            return sortedList;
+        }
+
+        public static object GetSortProperty(object item, string propName)
+        {
+            return item.GetType().GetProperty(propName).GetValue(item, null);
         }
     }
 }

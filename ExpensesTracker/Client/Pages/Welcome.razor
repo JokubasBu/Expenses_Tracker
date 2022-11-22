@@ -96,7 +96,7 @@
 
     public void LoadSheet(int i)
     {
-        LazySheet = new Lazy<List<User.Record>>(() => User.History(i, filterYear: DateTime.Now.Year));
+        LazySheet = new Lazy<List<User.Record>>(() => User.History(i, filterYear: DateTime.Now.Year, descending: true));
     }
 
     public void LoadRecent(int i)
