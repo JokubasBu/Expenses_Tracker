@@ -117,10 +117,11 @@ namespace ExpensesTracker.Shared.Models
             return sheet;
         }
 
-        public double getRecentExpenses()
+        public static double getRecentExpenses(int i)
         {
+            User? user = GetUser(FindUser(i));
             double recentExpenses = 0;
-            List<Expense> filter = expenses.FilterBy(month: DateTime.Now.Month);
+            List<Expense> filter = user.expenses.FilterBy(month: DateTime.Now.Month);
 
             foreach (Expense expense in filter)
                 recentExpenses += expense.Money;
@@ -128,10 +129,11 @@ namespace ExpensesTracker.Shared.Models
             return recentExpenses;
         }
 
-        public double getRecentIncome()
+        public static double getRecentIncome()
         {
+            User? user = GetUser(FindUser(i));
             double recentIncome = 0;
-            List<Income> filter = income.FilterBy(month: DateTime.Now.Month);
+            List<Income> filter = user.income.FilterBy(month: DateTime.Now.Month);
 
             foreach (Income income in filter)
                 recentIncome += income.Money;
