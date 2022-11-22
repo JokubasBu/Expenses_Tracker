@@ -6,8 +6,27 @@
     </div>
 
     <main>
+        <BlazoredToasts />
         <article class="content px-4">
-            @Body
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="Exception">
+                    <div class="alert alert-primary">
+                        <h3>Exception happened and been logged</h3>
+                    </div>
+                </ErrorContent>
+            </ErrorBoundary>           
         </article>
     </main>
 </div>
+
+@code{
+    private ErrorBoundary? errorBoundary;
+    protected override void OnInitialized()
+    {
+        errorBoundary = new ErrorBoundary();
+    }
+
+}
