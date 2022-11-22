@@ -11,13 +11,14 @@ namespace ExpensesTracker.Server.Controllers
     [ApiController]
     public class IncomesController : ControllerBase
     {
-        private readonly DataContext context;
+        private readonly IIncome _incomes;
+
         private static int _year;
         private static int _month;
 
-        public IncomesController(DataContext context)
+        public IncomesController(IIncome incomes)
         {
-            this.context = context;
+            _incomes = incomes;
         }
 
         [HttpGet]
@@ -37,7 +38,7 @@ namespace ExpensesTracker.Server.Controllers
         }
         async Task<List<Income>> GetFilteredIncomes()
         {
-            var incomes = await context.AllIncomes.ToListAsync();
+            var incomes = await _incomes.GetIncomeAsync();
 
             var currentIncomes = incomes.FilterBy(month: _month);
             currentIncomes = currentIncomes.FilterBy(year: _year);
@@ -48,35 +49,30 @@ namespace ExpensesTracker.Server.Controllers
         [HttpGet("{id}")] //since we are using id as param in method, we have to specify it here as well
         public async Task<ActionResult<List<Income>>> GetSingleIncome(int id)
         {
-            var income = await context.AllIncomes.FirstOrDefaultAsync(i => i.Id == id);
+            var income = await _incomes.GetSingleIncomeAsync(id);
 
             if (income == null)
             {
                 return NotFound("no entry...");
             }
-            return Ok(income);
+            return Ok(income.Value);
         }
 
         [HttpPost("Add")]
         public async Task<ActionResult<List<Income>>> CreateIncome(Income income)
         {
-            context.AllIncomes.Add(income);
-            context.SaveChanges();
+            await _incomes.CreateIncomeAsync(income);
             return Ok(await GetFilteredIncomes());
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<List<Income>>> UpdateIncome(Income income, int id)
         {
-            var incomeSearch = await context.AllIncomes.FirstOrDefaultAsync(e => e.Id == id);
-            if (incomeSearch == null)
-                return NotFound("Sorry :/");
+            var dbIncome = await _incomes.GetSingleIncomeAsync(id);
+            if (dbIncome == null)
+                return NotFound("Income not found");
 
-            incomeSearch.Money = income.Money;
-            incomeSearch.Year = income.Year;
-            incomeSearch.Month = income.Month;
-
-            await context.SaveChangesAsync();
+            await _incomes.UpdateIncomeAsync(income, dbIncome.Value);
 
             return Ok(await GetFilteredIncomes());
         }
@@ -84,12 +80,11 @@ namespace ExpensesTracker.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<List<Income>>> DeleteIncome(int id)
         {
-            var incomeSearch = await context.AllIncomes.FirstOrDefaultAsync(e => e.Id == id);
-            if (incomeSearch == null)
-                return NotFound("There is no such expense :/");
+            var dbIncome = await _incomes.GetSingleIncomeAsync(id);
+            if (dbIncome == null)
+                return NotFound("Income not found");
 
-            context.AllIncomes.Remove(incomeSearch);
-            await context.SaveChangesAsync();
+            await _incomes.DeleteIncomeAsync(dbIncome.Value);
 
             return Ok(await GetFilteredIncomes());
         }
@@ -98,7 +93,7 @@ namespace ExpensesTracker.Server.Controllers
         public async Task<ActionResult<List<Statistic>>> GetStatistics()
         {
             var stats = new Statistic();
-            var allIncomes = await context.AllIncomes.ToListAsync();
+            var allIncomes = await _incomes.GetIncomeAsync();
             StatsIncome del = new StatsIncome(CalculateIncome);
 
             allIncomes = allIncomes.FilterBy(year: DateTime.Now.Year);
