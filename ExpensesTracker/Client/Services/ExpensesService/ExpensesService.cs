@@ -16,6 +16,7 @@ namespace ExpensesTracker.Client.Services.ExpensesService
         public List<ExpenseSummary> Summary { get; set; } = new List<ExpenseSummary>();
         public Statistic Statistics { get; set; } = new Statistic();
         public Expense expenseFilter { get; set; } = new Expense { Category = new Category() , Comment = "Filter" };
+        public Expense singleExpense { get; set; } = new Expense { Category = new Category()};
 
         public ExpensesService(HttpClient http, NavigationManager navigationManager)
         {
@@ -23,7 +24,6 @@ namespace ExpensesTracker.Client.Services.ExpensesService
             this.navigationManager = navigationManager;
         }
         
-
         public async Task CreateExpense(Expense expense)
         {
             if (expense.Comment.Replace(" ", "").Equals(String.Empty))
