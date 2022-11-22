@@ -14,6 +14,7 @@ namespace ExpensesTracker.Client.Services.IncomesService
         public List<Income> AllIncomes { get; set; } = new List<Income>();
         public Statistic Statistics { get; set; } = new Statistic();
         public Income incomeFilter {get; set; } = new Income();
+        public Income singleIncome { get; set; } = new Income();
 
         public IncomesService(HttpClient http, NavigationManager navigationManager)
         {
