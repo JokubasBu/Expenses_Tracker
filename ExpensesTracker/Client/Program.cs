@@ -3,7 +3,6 @@ global using ExpensesTracker.Client.Services.FileService;
 global using ExpensesTracker.Client.Services.IncomesService;
 global using ExpensesTracker.Shared.Models;
 global using ExpensesTracker.Shared.Extensions;
-global using ExpensesTracker.Shared;
 using ExpensesTracker.Client;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

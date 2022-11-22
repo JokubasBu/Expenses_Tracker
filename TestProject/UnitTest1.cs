@@ -1,75 +1,101 @@
 using Bunit;
-using Bunit.TestDoubles;
 using ExpensesTracker.Client.Pages;
 using ExpensesTracker.Client.Services.ExpensesService;
-using ExpensesTracker.Client.Services.FileService;
 using ExpensesTracker.Client.Services.IncomesService;
+using ExpensesTracker.Server.Data;
 using ExpensesTracker.Shared.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+
 
 namespace TestProject
 {
     public class UnitTest1 : TestContext
     {
+        private readonly DbContextOptions<DataContext> options = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "DataContext")
+                .Options;
+
         private readonly HttpClient http;
         private readonly NavigationManager navigationManager;
-        private readonly IExpensesService expensesService;
-
-        //public UnitTest1(HttpClient http, NavigationManager navigationManager, IExpensesService expensesService)
-        //{
-        //    this.http = http;
-        //    this.navigationManager = navigationManager;
-        //    this.expensesService = expensesService;
-        //}
+        Expense b = new Expense
+        {
+            Id = 400,
+            Money = 500,
+            Comment = "hi",
+            Year = 2022,
+            Month = 10,
+            Day = 15,
+            CategoryId = 2
+        };
 
         [Fact]
-        public void Find()
+        public void Adding()
         {
-            Services.AddSingleton<IIncomesService>(new IncomesService(http, navigationManager));
+            ExpensesService a = new ExpensesService(http, navigationManager);
+            //Expense b = new Expense {
+            //    Id = 400,
+            //    Money = 500,
+            //    Comment = "hi",
+            //    Year = 2022,
+            //    Month = 10,
+            //    Day = 15,
+            //    CategoryId = 2
+            //};
 
-            // RenderComponent will inject the service in the component when it is instantiated and rendered.
-            var smth = RenderComponent<SingleIncome>();
-            smth.Find("h3").MarkupMatches("<h3>Income</h3>");
+            using (var context = new DataContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
 
-            // Assert that service is injected
-            //Assert.NotNull(Instance.Forecasts);
+            using (var context = new DataContext(options))
+            {
+                context.AllExpenses.Add(b);
+                context.SaveChanges();
+            }
+            using (var context = new DataContext(options))
+            {
+                Assert.NotNull(a.GetSingleExpense(400));
+                Assert.False(b.Equals(a.GetSingleExpense(12)));
+            }
         }
 
         [Fact]
-        public void Navigation()
+        public void Deleting()
         {
-            Services.AddSingleton<IIncomesService>(new IncomesService(http, navigationManager));
+            ExpensesService a = new ExpensesService(http, navigationManager);
+            //Expense b = new Expense
+            //{
+            //    Id = 400,
+            //    Money = 500,
+            //    Comment = "hi",
+            //    Year = 2022,
+            //    Month = 10,
+            //    Day = 15,
+            //    CategoryId = 2
+            //};
 
-            var nav = Services.GetRequiredService<NavigationManager>();
-            var smth = RenderComponent<SingleIncome>();
+            using (var context = new DataContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
 
-            smth.Find("button:nth-of-type(2)").MarkupMatches("<button type=\"submit\" class=\"btn btn-danger\" > Cancel</button>");
-            
-            // this line makes it crash?
-            smth.Find("button:nth-of-type(2)").Click();
+            using (var context = new DataContext(options))
+            {
+                context.AllExpenses.Remove(b);
+                context.SaveChanges();
+            }
+            using (var context = new DataContext(options))
+            {
+                Assert.True(a.GetSingleExpense(400).IsFaulted);
 
-
-            Assert.Equal("https://localhost:7172/incomes", nav.Uri);
-
+                //Assert.Equal(404, a.GetSingleExpense(400).Status);
+                //Assert.IsType<StatusCodes.Status404NotFound>(a.GetSingleExpense(400));
+                //Assert.IsType<NotFoundObjectResult>(a.GetSingleExpense(400));
+            }
         }
-
-        [Fact]
-        public void Create()
-        {
-            Services.AddSingleton<IExpensesService>(new ExpensesService(http, navigationManager));
-
-            Expense expense = new();
-
-            expensesService.CreateExpense(expense); // System.NullReferenceException : Object reference not set to an instance of an object.
-
-            //expensesService.GetExpenses()
-            // contains expense
-            // or
-            // Assert.Equals(expensesService.GetSingleExpense(expense.Id), expense);
-
-            Assert.Same(expensesService.GetSingleExpense(expense.Id), expense);
-        }
-
     }
 }

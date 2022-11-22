@@ -10,9 +10,7 @@ namespace ExpensesTracker.Server.Data
         }
 
         public DbSet<Expense> AllExpenses { get; set; } // DbSet represents the collection of all entities in the context, or that can be queried from the database
-
         public DbSet<Category> Categories { get; set; }
-
         public DbSet<Income> AllIncomes { get; set; }
     }
 }
