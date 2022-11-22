@@ -140,6 +140,5 @@ namespace ExpensesTracker.Shared.Models
 
             return recentIncome;
         }
-
     }
 }

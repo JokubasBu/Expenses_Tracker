@@ -2,36 +2,45 @@
 @inject IExpensesService ExpensesService
 @inject IIncomesService IncomesService
 
-<h3>Welcome, @user.nickname</h3>
-<h3>Balance: @user.balance €</h3>
-<h3>Income: @recentIncome € Expenses: @recentExpenses €</h3>
-
-<button @onclick="e => this.Collapsed = !this.Collapsed">
-    @(this.Collapsed ? "+" : "-")
-</button>
-
-@if (!Collapsed)
+@if (user != null)
 {
-    @foreach (var record in LazySheet.Value)
-    {
-        <div>
-            @if (record.type == "Expense")
-            {
-                <span style="color:red">@record.type</span>
-            }
-            else
-            {
-                <span style="color:lightgreen">@record.type</span>
-            }
-            @record.amount € 
-            @record.date
-        </div>
-    }
+    <h3>Welcome back, @user.nickname!</h3>
+    <br />
+    <br />
+    <h4 style="background-color: #fff88b; padding: 10px; border: 1px solid #8e8a4a;"> Balance: @user.balance€</h4>
+    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green;"> Income: @recentIncome € </h4>
+    <h4 style="background-color: #f5818e ; padding: 10px; border: 1px solid red;"> Expenses: @recentExpenses €</h4>
+    <br />
 
+
+    <button @onclick="e => this.Collapsed = !this.Collapsed">
+        More details: @(this.Collapsed ? "+" : "-")
+    </button>
+
+    @if (!Collapsed)
+    {
+        @foreach (var record in LazySheet.Value)
+        {
+            <div>
+                @if (record.type == "Expense")
+                {
+                    <span style="color:red">@record.type:&ensp;</span>
+                }
+                else
+                {
+                    <span style="color:lightgreen">@record.type:&ensp;&ensp;</span>
+                }
+                @record.amount€
+                @record.date
+            </div>
+        }
+
+    }
 }
 
+
 @code {
-    User? user;
+    User user;
     public static event Action<int> Startup;
     Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
     public bool Collapsed = true;
