@@ -2,6 +2,8 @@
 @page "/expense/{id:int}"
 @inject IExpensesService ExpensesService
 @inject NavigationManager NavigationManager
+@inject IToastService _toastService
+
 
 @if (Id == null)
 {
@@ -66,6 +68,9 @@ else
 </EditForm>
 @code {
 
+	[CascadingParameter]
+	public Error Error { get; set; }
+
 	[Parameter]
 	public int? Id { get; set; }
 
@@ -83,18 +88,24 @@ else
 
 	protected override async Task OnParametersSetAsync()
 	{	
-		if(Id == null)
+		try
 		{
-			DateTime currentDate = DateTime.Now;
-			ExpensesService.singleExpense.Category = ExpensesService.Categories[0];
-			ExpensesService.singleExpense.CategoryId = ExpensesService.singleExpense.Category.Id;
-			ExpensesService.singleExpense.Year = currentDate.Year;
-			ExpensesService.singleExpense.Month = currentDate.Month;
-			ExpensesService.singleExpense.Day = currentDate.Day;
-		}
-		else{
+			if(Id == null){
+        DateTime currentDate = DateTime.Now;
+        ExpensesService.singleExpense.Category = ExpensesService.Categories[0];
+        ExpensesService.singleExpense.CategoryId = ExpensesService.singleExpense.Category.Id;
+        ExpensesService.singleExpense.Year = currentDate.Year;
+        ExpensesService.singleExpense.Month = currentDate.Month;
+        ExpensesService.singleExpense.Day = currentDate.Day;
+		  }
+		  else{
 			ExpensesService.singleExpense = await ExpensesService.GetSingleExpense((int)Id);
-		}
+		  }
+    }
+    catch(System.Exception ex)
+		{
+			Error.ProcessError(ex);
+    }
 	}
 
 	async Task Submit()

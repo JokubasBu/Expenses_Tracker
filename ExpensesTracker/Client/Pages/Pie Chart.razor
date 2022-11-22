@@ -25,6 +25,9 @@ else{
 
 
 @code {
+    [CascadingParameter]
+    public Error Error { get; set; }
+
     double totalSpentThisMonth = 0;
     double totalSpentPrevMonth = 0;
     double totalSpentThisYear = 0;
@@ -36,7 +39,15 @@ else{
         await ExpensesService.GetCategories();
         await ExpensesService.GetSummary();
         var ExpenseSummaryList = ExpensesService.Summary;
-        await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+        try
+        {
+            await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+        }
+        catch(System.Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+
 
         foreach (var epxense in ExpenseSummaryList){
             totalSpentThisMonth = totalSpentThisMonth + epxense.totalExpenses;

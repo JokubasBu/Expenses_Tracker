@@ -33,21 +33,31 @@
 </EditForm>
 
 @code {
+	[CascadingParameter]
+	public Error Error { get; set; }
+
 	[Parameter]
 	public int? Id { get; set; }
 
 	protected override async Task OnParametersSetAsync()
 	{
-		if (Id == null)
+		try
 		{
-			DateTime currentDate = DateTime.Now;
-			IncomesService.singleIncome.Year = currentDate.Year;
-			IncomesService.singleIncome.Month = currentDate.Month;
-		}
-		else
+		  if (Id == null)
+			{
+        DateTime currentDate = DateTime.Now;
+        IncomesService.singleIncome.Year = currentDate.Year;
+        IncomesService.singleIncome.Month = currentDate.Month;
+      }
+      else
+			{
+			  IncomesService.singleIncome = await IncomesService.GetSingleIncome((int)Id);
+		  }
+    }
+		catch (System.Exception ex)
 		{
-			IncomesService.singleIncome = await IncomesService.GetSingleIncome((int)Id);
-		}
+		  Error.ProcessError(ex);
+    }
 	}
 
 	public void GoBack()
