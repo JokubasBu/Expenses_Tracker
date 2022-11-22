@@ -16,22 +16,25 @@
     <button @onclick="e => this.Collapsed = !this.Collapsed">
         More details: @(this.Collapsed ? "+" : "-")
     </button>
+    <br/>
+    <br/>
 
     @if (!Collapsed)
     {
         @foreach (var record in LazySheet.Value)
         {
-            <div>
+            <div  style = "border: 1px solid black">
+                @record.date &emsp;
                 @if (record.type == "Expense")
                 {
                     <span style="color:red">@record.type:&ensp;</span>
+                    <span>-@record.amount€ </span>
                 }
                 else
                 {
-                    <span style="color:lightgreen">@record.type:&ensp;&ensp;</span>
+                    <span style="color: #75bd6c">@record.type:&ensp;&ensp;</span>
+                    <span>+@record.amount€ </span>
                 }
-                @record.amount€
-                @record.date
             </div>
         }
 
@@ -69,7 +72,7 @@
 
     public void LoadSheet(int i)
     {
-        LazySheet = new Lazy<List<User.Record>>(() => User.History(i));
+        LazySheet = new Lazy<List<User.Record>>(() => User.History(i, filterYear: DateTime.Now.Year));
     }
 
     public void LoadRecent(int i)

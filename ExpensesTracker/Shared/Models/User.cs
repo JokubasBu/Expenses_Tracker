@@ -86,21 +86,21 @@ namespace ExpensesTracker.Shared.Models
             users[FindUser(userId)].income = income;
         }
 
-        public static List<Record> History(int userId)
+        public static List<Record> History(int userId, int filterMonth = 0, int filterYear = 0)
         {
             User? user = GetUser(userId);
             List<Record> sheet = new List<Record>();
 
-            foreach (var expense in user.expenses)
+            foreach (var expense in user.expenses.FilterBy(month: filterMonth, year: filterYear))
             {
                 Record record = new Record();
                 record.type = "Expense";
-                record.date = expense.Year + "-" + expense.Month + "-" + expense.Day;
+                record.date = expense.Month.ToString().PadLeft(2, '0') + "-" + expense.Day.ToString().PadLeft(2, '0');
                 record.amount = expense.Money;
                 sheet.Add(record);
             }
 
-            foreach (var income in user.income)
+            foreach (var income in user.income.FilterBy(month: filterMonth, year: filterYear))
             {
                 int day = 0;
                 if (day >= 30)
@@ -108,7 +108,7 @@ namespace ExpensesTracker.Shared.Models
 
                 Record record = new Record();
                 record.type = "Income";
-                record.date = income.Year + "-" + income.Month + "-" + day;
+                record.date = income.Month.ToString().PadLeft(2, '0') + "-" + day.ToString().PadLeft(2, '0');
                 record.amount = income.Money;
                 sheet.Add(record);
             }
@@ -121,7 +121,7 @@ namespace ExpensesTracker.Shared.Models
         {
             User? user = GetUser(FindUser(i));
             double recentExpenses = 0;
-            List<Expense> filter = user.expenses.FilterBy(month: DateTime.Now.Month);
+            List<Expense> filter = user.expenses.FilterBy(month: DateTime.Now.Month, year: DateTime.Now.Year);
 
             foreach (Expense expense in filter)
                 recentExpenses += expense.Money;
@@ -133,7 +133,7 @@ namespace ExpensesTracker.Shared.Models
         {
             User? user = GetUser(FindUser(i));
             double recentIncome = 0;
-            List<Income> filter = user.income.FilterBy(month: DateTime.Now.Month);
+            List<Income> filter = user.income.FilterBy(month: DateTime.Now.Month, year: DateTime.Now.Year);
 
             foreach (Income income in filter)
                 recentIncome += income.Money;
