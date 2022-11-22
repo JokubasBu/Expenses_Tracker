@@ -129,7 +129,7 @@ namespace ExpensesTracker.Shared.Models
             return recentExpenses;
         }
 
-        public static double getRecentIncome()
+        public static double getRecentIncome(int i)
         {
             User? user = GetUser(FindUser(i));
             double recentIncome = 0;

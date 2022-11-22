@@ -42,7 +42,6 @@
         await ExpensesService.GetExpenses();
         await ExpensesService.GetCategories();
         await IncomesService.GetIncomes();
-
         Startup.Invoke(0);
     }
 
@@ -50,6 +49,7 @@
     {
         Startup += TempUsers;
         Startup += LoadUser;
+        Startup += LoadRecent;
         Startup += LoadSheet;
     }
 
@@ -58,10 +58,15 @@
         user = User.GetUser(i);
     }
 
-
     public void LoadSheet(int i)
     {
         LazySheet = new Lazy<List<User.Record>>(() => User.History(i));
+    }
+
+    public void LoadRecent(int i)
+    {
+        User.getRecentExpenses(i);
+        User.getRecentIncome(i);
     }
 
     public void TempUsers(int i)
@@ -72,17 +77,6 @@
 
         new User("Deniza", "2002-04-12", "deniza@gmail.com");
         new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
-
-    }
-
-    public void LoadRecentExpenses()
-    {
-
-
-    }
-
-    public void LoadRecentIncome()
-    {
 
     }
 }
