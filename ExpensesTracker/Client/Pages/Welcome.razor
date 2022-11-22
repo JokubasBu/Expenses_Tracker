@@ -4,6 +4,7 @@
 
 <h3>Welcome, @user.nickname</h3>
 <h3>Balance: @user.balance €</h3>
+<h3>Income: @recentIncome € Expenses: @recentExpenses €</h3>
 
 <button @onclick="e => this.Collapsed = !this.Collapsed">
     @(this.Collapsed ? "+" : "-")
@@ -34,8 +35,7 @@
     public static event Action<int> Startup;
     Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
     public bool Collapsed = true;
-    double recentExpense, recentIncome;
-
+    double recentExpenses, recentIncome;
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,8 +65,8 @@
 
     public void LoadRecent(int i)
     {
-        User.getRecentExpenses(i);
-        User.getRecentIncome(i);
+        recentExpenses = User.getRecentExpenses(i);
+        recentIncome = User.getRecentIncome(i);
     }
 
     public void TempUsers(int i)
