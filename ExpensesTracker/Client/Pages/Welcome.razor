@@ -1,0 +1,119 @@
+﻿@page "/"
+@inject IExpensesService ExpensesService
+@inject IIncomesService IncomesService
+
+@if (user != null)
+{
+    <div style ="float: left">
+        <h2 style= "color: #3d85c6">Welcome back, @user.nickname!</h2>
+    </div>
+    <div style="float: right">
+        <button class="btn btn-outline-primary"> Log Out</button>
+    </div>
+    <br />
+    <br />
+    <br />
+    <h3>Your account: </h3>
+    <h4 style="background-color: #fff88b; padding: 10px; border: 1px solid #8e8a4a;"> Current Balance: @user.balance€</h4>
+    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green;"> Monthly Income: @recentIncome € </h4>
+    <h4 style="background-color: #f5818e ; padding: 10px; border: 1px solid red;"> Monthly Expenses: @recentExpenses €</h4>
+    <br />
+
+    <div>
+        <button @onclick="e => {this.expensesCollapsed = !this.expensesCollapsed; this.acountDetailsCollapsed = true;}">
+            More details: @(this.expensesCollapsed ? "+" : "-")
+        </button>
+        &nbsp;
+        <button @onclick="e => {this.acountDetailsCollapsed = !this.acountDetailsCollapsed; this.expensesCollapsed = true;}">
+            Your Account: @(this.acountDetailsCollapsed ? "+" : "-")
+        </button>
+    </div>
+    <br/>
+    <br/>
+
+    @if (!expensesCollapsed)
+    {
+        @foreach (var record in LazySheet.Value)
+        {
+            <div  style = "border: 1px solid black">
+                @record.date &emsp;
+                @if (record.type == "Expense")
+                {
+                    <span style="color:red">@record.type:&ensp;</span>
+                    <span>-@record.amount€ </span>
+                }
+                else
+                {
+                    <span style="color: #75bd6c">@record.type:&ensp;&ensp;</span>
+                    <span>+@record.amount€ </span>
+                }
+            </div>
+        }
+
+    }
+    @if (!acountDetailsCollapsed)
+    {
+        <div style="border: 1px solid black">
+            @user.nickname
+        </div>
+        <div style="border: 1px solid black">
+            @user.birth
+        </div>
+        <div style="border: 1px solid black">
+            @user.email
+        </div>
+    }
+}
+
+@code {
+    User user;
+    public static event Action<int> Startup;
+    Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
+    public bool expensesCollapsed = true;
+    public bool acountDetailsCollapsed = true;
+    double recentExpenses, recentIncome;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ExpensesService.GetExpenses();
+        await ExpensesService.GetCategories();
+        await IncomesService.GetIncomes();
+        Startup.Invoke(0);
+    }
+
+    public Welcome()
+    {
+        Startup += TempUsers;
+        Startup += LoadUser;
+        Startup += LoadRecent;
+        Startup += LoadSheet;
+    }
+
+    public void LoadUser(int i)
+    {
+        user = User.GetUser(i);
+    }
+
+    public void LoadSheet(int i)
+    {
+        LazySheet = new Lazy<List<User.Record>>(() => User.History(i, filterYear: DateTime.Now.Year, descending: true));
+    }
+
+    public void LoadRecent(int i)
+    {
+        recentExpenses = User.getRecentExpenses(i);
+        recentIncome = User.getRecentIncome(i);
+    }
+
+    public void TempUsers(int i)
+    {
+        new User("TestUser", "1998-11-12", "test.user@gmail.com", balance: 42355.56);
+        User.setExpenses(i, ExpensesService.AllExpenses);
+        User.setIncome(i, IncomesService.AllIncomes);
+
+        new User("Linas", "2002-05-12", "linas.jann@gmail.com");
+        new User("Deniza", "2002-04-12", "deniza@gmail.com");
+        new User("Jokubas", "2002-11-12", "jokubas@gmail.com");
+
+    }
+}
