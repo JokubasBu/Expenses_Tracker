@@ -12,16 +12,16 @@
 <div id="chartdiv"></div>
 
 <br />
-<h3>Total spent this month: @(totalSpentThisMonth)€</h3>
-<h3>Total earned this month:  @(totalEarnedThisMonth)€</h3>
+<h3>Total spent this month: @(totalSpentThisMonth) €</h3>
+<h3>Total earned this month:  @(totalEarnedThisMonth) €</h3>
 @if (totalSpentThisMonth > totalSpentPrevMonth){
-    <h3>Spent @(totalSpentThisMonth - totalSpentPrevMonth)€ more than last month</h3>
+    <h3>Spent @(totalSpentThisMonth - totalSpentPrevMonth) € more than last month</h3>
 }
 else{
-    <h3>Spent @(totalSpentPrevMonth - totalSpentThisMonth)€ less than last month</h3>
+    <h3>Spent @(totalSpentPrevMonth - totalSpentThisMonth) € less than last month</h3>
 }
-<h3>Total spent this year:  @(totalSpentThisYear)€</h3>
-<h3>Total earned this year:  @(totalEarnedThisYear)€</h3>
+<h3>Total spent this year:  @(totalSpentThisYear) €</h3>
+<h3>Total earned this year:  @(totalEarnedThisYear) €</h3>
 
 
 @code {
@@ -53,15 +53,17 @@ else{
             totalSpentThisMonth = totalSpentThisMonth + epxense.totalExpenses;
         }
 
+        totalSpentThisMonth = Math.Round(totalSpentThisMonth, 0);
+
         await ExpensesService.GetStatistics();
         Statistic moneyStatistics = ExpensesService.Statistics;
-        totalSpentPrevMonth = moneyStatistics.monthStat;
-        totalSpentThisYear = moneyStatistics.yearStat;
+        totalSpentPrevMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalSpentThisYear = Math.Round(moneyStatistics.yearStat, 2);
 
         await IncomesService.GetStatistics();
         moneyStatistics = IncomesService.Statistics;
-        totalEarnedThisMonth = moneyStatistics.monthStat;
-        totalEarnedThisYear = moneyStatistics.yearStat;
+        totalEarnedThisMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalEarnedThisYear = Math.Round(moneyStatistics.yearStat, 2);
     }
     public void Dispose(){
        jsRunTime.InvokeVoidAsync("DisposePieChart");

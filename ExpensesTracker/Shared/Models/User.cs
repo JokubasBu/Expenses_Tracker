@@ -101,14 +101,18 @@ namespace ExpensesTracker.Shared.Models
                 sheet.Add(record);
             }
 
+            int day = 1;
             foreach (var income in user.income.FilterBy(month: filterMonth, year: filterYear))
             {
-                Random day = new Random();
+                if (day >= 30)
+                    day = 1;
+
                 Record record = new Record();
                 record.type = "Income";
-                record.date = income.Month.ToString().PadLeft(2, '0') + "-" + day.Next(0, DateTime.Now.Day).ToString().PadLeft(2, '0');
+                record.date = income.Month.ToString().PadLeft(2, '0') + "-" + day.ToString().PadLeft(2, '0');
                 record.amount = income.Money;
                 sheet.Add(record);
+                day += 2;
             }
 
             sheet = Sort.ListSort<Record>(sheet, "date", descending);
