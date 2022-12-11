@@ -12,17 +12,16 @@
 <div id="chartdiv"></div>
 
 <br />
-<h3>Total spent this month: @(totalSpentThisMonth) €</h3>
-<h3>Total earned this month:  @(totalEarnedThisMonth) €</h3>
-@if (totalSpentThisMonth > totalSpentPrevMonth){
-    <h3>Spent @(totalSpentThisMonth - totalSpentPrevMonth) € more than last month</h3>
-}
-else{
-    <h3>Spent @(totalSpentPrevMonth - totalSpentThisMonth) € less than last month</h3>
-}
-<h3>Total spent this year:  @(totalSpentThisYear) €</h3>
-<h3>Total earned this year:  @(totalEarnedThisYear) €</h3>
-
+<div class="row" style="border:1px solid grey; border-radius: 25px; width:55%; box-shadow: 2px 2px 10px #888888;">
+    @if (totalSpentThisMonth > totalSpentPrevMonth){
+        <h3 style="font-size: 170%; padding-left: 10px;">Spent more than last month by: <span style="color: cornflowerblue;">@(totalSpentThisMonth - totalSpentPrevMonth) €</span></h3>
+    }
+    else{
+        <h3 style="font-size: 170%; padding-left: 10px;">Spentless less than last month by: <span style="color: cornflowerblue;">@(totalSpentPrevMonth - totalSpentThisMonth) €</span></h3>
+    }
+    <h3 style="font-size: 170%; padding-left: 10px;">Total spent this year: <span style="color: cornflowerblue;">@totalSpentThisYear €</span> </h3>
+    <h3 style="font-size: 170%; padding-left: 10px;">Total earned this year: <span style="color: cornflowerblue;">@totalEarnedThisYear €</span></h3>
+</div>
 
 @code {
     [CascadingParameter]
