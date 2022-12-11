@@ -61,7 +61,7 @@ namespace ExpensesTracker.Server.Controllers
         {
             var stats = new Statistic();
             List<Expense> allExpenses = await _expenses.GetExpensesAsync();
-            StatsExpense del = new StatsExpense(CalculateExpense);
+            StatsExpense del = CalculateExpense;
 
             allExpenses = allExpenses.FilterBy(year: DateTime.Now.Year);
             stats.yearStat = del(allExpenses);

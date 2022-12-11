@@ -5,7 +5,7 @@
 @if (user != null)
 {
     <div style ="float: left">
-        <h2 style= "color: #3d85c6">Welcome back, @user.nickname!</h2>
+        <h2 class="oi oi-person"> @user.nickname</h2>
     </div>
     <div style="float: right">
         <button class="btn btn-outline-primary"> Log Out</button>
@@ -13,10 +13,30 @@
     <br />
     <br />
     <br />
-    <h3>Your account: </h3>
-    <h4 style="background-color: #fff88b; padding: 10px; border: 1px solid #8e8a4a;"> Current Balance: @user.balance€</h4>
+    <div style="border:1px solid grey; border-radius: 25px; width:55%; box-shadow: 2px 2px 10px #888888;">
+        <div style="height: 160px; padding-top: 15px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;">
+            @*this month's spendings*@
+            <h3 style="text-align:center; font-size: 300%;">Month's spendings</h3>
+            <p style="text-align: center; font-size: 320%; color: cornflowerblue;">@recentExpenses €</p>
+            <hr>
+        </div>
+        <div class= "row" style="height: 160px; padding-top: 30px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;">
+            <div class="col-sm">
+                <h3 style="text-align:center;">Current Balance</h3>
+                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@user.balance €</p>
+            </div>
+            <div class="col-sm" style="border-left: 1px solid gray">
+                <h3 style="text-align:center;">Month's Income</h3>
+                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@recentIncome €</p>
+            </div>
+        </div>
+    </div>
+   @* <h3>Your account: </h3>
+    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green"> Current Balance: @user.balance€</h4>
     <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green;"> Monthly Income: @recentIncome € </h4>
     <h4 style="background-color: #f5818e ; padding: 10px; border: 1px solid red;"> Monthly Expenses: @recentExpenses €</h4>
+    <br />*@
+
     <br />
 
     <div>
