@@ -11,27 +11,10 @@
 <h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
 <div id="chartdiv"></div>
 
-<br />
-<div class="row" style="border:1px solid grey; border-radius: 25px; width:55%; box-shadow: 2px 2px 10px #888888;">
-    @if (totalSpentThisMonth > totalSpentPrevMonth){
-        <h3 style="font-size: 170%; padding-left: 10px;">Spent more than last month by: <span style="color: cornflowerblue;">@(totalSpentThisMonth - totalSpentPrevMonth) €</span></h3>
-    }
-    else{
-        <h3 style="font-size: 170%; padding-left: 10px;">Spentless less than last month by: <span style="color: cornflowerblue;">@(totalSpentPrevMonth - totalSpentThisMonth) €</span></h3>
-    }
-    <h3 style="font-size: 170%; padding-left: 10px;">Total spent this year: <span style="color: cornflowerblue;">@totalSpentThisYear €</span> </h3>
-    <h3 style="font-size: 170%; padding-left: 10px;">Total earned this year: <span style="color: cornflowerblue;">@totalEarnedThisYear €</span></h3>
-</div>
 
 @code {
     [CascadingParameter]
     public Error Error { get; set; }
-
-    double totalSpentThisMonth = 0;
-    double totalSpentPrevMonth = 0;
-    double totalSpentThisYear = 0;
-    double totalEarnedThisMonth = 0;
-    double totalEarnedThisYear = 0;
 
     protected override async Task OnInitializedAsync()
     {     
@@ -47,22 +30,6 @@
             Error.ProcessError(ex);
         }
 
-
-        foreach (var epxense in ExpenseSummaryList){
-            totalSpentThisMonth = totalSpentThisMonth + epxense.totalExpenses;
-        }
-
-        totalSpentThisMonth = Math.Round(totalSpentThisMonth, 0);
-
-        await ExpensesService.GetStatistics();
-        Statistic moneyStatistics = ExpensesService.Statistics;
-        totalSpentPrevMonth = Math.Round(moneyStatistics.monthStat, 2);
-        totalSpentThisYear = Math.Round(moneyStatistics.yearStat, 2);
-
-        await IncomesService.GetStatistics();
-        moneyStatistics = IncomesService.Statistics;
-        totalEarnedThisMonth = Math.Round(moneyStatistics.monthStat, 2);
-        totalEarnedThisYear = Math.Round(moneyStatistics.yearStat, 2);
     }
     public void Dispose(){
        jsRunTime.InvokeVoidAsync("DisposePieChart");

@@ -1,11 +1,13 @@
 ﻿@page "/"
 @inject IExpensesService ExpensesService
 @inject IIncomesService IncomesService
+@inject IJSRuntime jsRunTime;
+@implements IDisposable
 
 @if (user != null)
 {
     <div style ="float: left">
-        <h2 class="oi oi-person"> @user.nickname</h2>
+        <h2 class="oi oi-person" style="padding-left: 9"> @user.nickname</h2>
     </div>
     <div style="float: right">
         <button class="btn btn-outline-primary"> Log Out</button>
@@ -30,11 +32,25 @@
             </div>
         </div>
     </div>
-   @* <h3>Your account: </h3>
-    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green"> Current Balance: @user.balance€</h4>
-    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green;"> Monthly Income: @recentIncome € </h4>
-    <h4 style="background-color: #f5818e ; padding: 10px; border: 1px solid red;"> Monthly Expenses: @recentExpenses €</h4>
-    <br />*@
+
+    <br />
+    <h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
+    <div id="chartdiv"></div>
+
+    <br />
+
+    <div style="border:1px solid grey; border-radius: 25px; width:55%; box-shadow: 2px 2px 10px #888888;">
+        @if (recentExpenses > totalSpentPrevMonth)
+        {
+            <h3 style="font-size:160%; padding-left: 10px;">Spent more than last month by: <span style="color: cornflowerblue; font-size: 120%">@(recentExpenses - totalSpentPrevMonth) €</span></h3>
+        }
+        else
+        {
+            <h3 style="font-size: 160%; padding-left: 10px;">Spentless less than last month by: <span style="color: cornflowerblue; font-size: 120%">@(totalSpentPrevMonth - recentExpenses) €</span></h3>
+        }
+        <h3 style="font-size: 160%; padding-left: 10px;">Total spent this year: <span style="color: cornflowerblue; font-size: 120%">@totalSpentThisYear €</span> </h3>
+        <h3 style="font-size: 160%; padding-left: 10px;">Total earned this year: <span style="color: cornflowerblue; font-size: 120%">@totalEarnedThisYear €</span></h3>
+    </div>
 
     <br />
 
@@ -47,7 +63,6 @@
             Your Account: @(this.acountDetailsCollapsed ? "+" : "-")
         </button>
     </div>
-    <br/>
     <br/>
 
     @if (!expensesCollapsed)
@@ -92,12 +107,52 @@
     public bool acountDetailsCollapsed = true;
     double recentExpenses, recentIncome;
 
+    double totalSpentPrevMonth = 0;
+    double totalSpentThisYear = 0;
+    double totalEarnedThisMonth = 0;
+    double totalEarnedThisYear = 0;
+
+    [CascadingParameter]
+    public Error Error { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await ExpensesService.GetExpenses();
         await ExpensesService.GetCategories();
         await IncomesService.GetIncomes();
+
+
+        await ExpensesService.GetSummary();
+        var ExpenseSummaryList = ExpensesService.Summary;
+
+        // chart
+        try
+        {
+            await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+        }
+        catch (System.Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+        // chart
+
+        await ExpensesService.GetStatistics();
+        Statistic moneyStatistics = ExpensesService.Statistics;
+        totalSpentPrevMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalSpentThisYear = Math.Round(moneyStatistics.yearStat, 2);
+
+        await IncomesService.GetStatistics();
+        moneyStatistics = IncomesService.Statistics;
+        totalEarnedThisMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalEarnedThisYear = Math.Round(moneyStatistics.yearStat, 2);
+
+
         Startup.Invoke(0);
+    }
+
+    public void Dispose()
+    {
+        jsRunTime.InvokeVoidAsync("DisposePieChart");
     }
 
     public Welcome()
