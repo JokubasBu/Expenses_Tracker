@@ -24,6 +24,8 @@
     chart.legend = new am4charts.Legend();
     pieSeries.labels.template.disabled = true;
     pieSeries.ticks.template.disabled = true;
+    pieSeries.slices.template.tooltipText = "";
+
     
 } 
 
