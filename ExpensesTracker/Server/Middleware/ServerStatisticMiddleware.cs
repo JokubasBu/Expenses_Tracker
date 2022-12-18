@@ -16,10 +16,7 @@ namespace ExpensesTracker.Server.Middleware
         }
 
         public async Task InvokeAsync(HttpContext context)
-        {
-            if (context != null)
-            {
-                
+        {   
                 var controllerActionDescriptor =
                     context
                     .GetEndpoint()
@@ -42,7 +39,6 @@ namespace ExpensesTracker.Server.Middleware
                     _logger.LogInformation($"It took {sw.ElapsedMilliseconds} ms to perform " +
                         $"this action {actionName} in this controller {controllerName}");
                 }
-            }
         }
     }
 }
