@@ -19,7 +19,7 @@ namespace ExpensesTracker.Shared.Extensions
                     select allExpense;
                 return expenseCategory.ToList();
             }
-            if (month != 0) // nothing is selected
+            if (month != 0) 
             {
                 var expenseMonth =
                     from allExpense in expensesList
@@ -27,7 +27,7 @@ namespace ExpensesTracker.Shared.Extensions
                     select allExpense;
                 return expenseMonth.ToList();
             }
-            if (year != 0) // nothing is selected
+            if (year != 0) 
             {
                 var expenseYear =
                     from allExpense in expensesList
@@ -41,7 +41,7 @@ namespace ExpensesTracker.Shared.Extensions
 
         public static List<Income> FilterBy(this List<Income> incomesList, int month = 0, int year = 0)
         {
-            if (month != 0) // nothing is selected
+            if (month != 0)
             {
                 var incomeMonth =
                     from allIncome in incomesList
@@ -49,7 +49,7 @@ namespace ExpensesTracker.Shared.Extensions
                     select allIncome;
                 return incomeMonth.ToList();
             }
-            if (year != 0) // nothing is selected
+            if (year != 0)
             {
                 var incomeYear =
                     from allIncome in incomesList

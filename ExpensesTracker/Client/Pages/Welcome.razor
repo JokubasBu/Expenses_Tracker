@@ -5,15 +5,12 @@
 @implements IDisposable
 
 
-@*<h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
-<div id="chartdiv"></div>*@
 <table>
     <tbody>
         <tr>
             <td >
                 @if (user != null)
                 {
-                // <div id="chartdiv"></div>
                     <div style="float: left">
                         <h2 class="oi oi-person" style="padding-left: 9px"> @user.nickname</h2>
                     </div>
@@ -43,9 +40,6 @@
 
                     <br />
 
-                    @* <h1>@((Dates.Months)DateTime.Now.Month) expenses</h1>
-                <div id="chartdiv"></div> it doesnt work here because its inside an if??*@
-
                     <div style="border:1px solid grey; border-radius: 25px; width:600px; box-shadow: 2px 2px 10px #888888;">
                         @if (recentExpenses > totalSpentPrevMonth)
                         {
@@ -61,7 +55,6 @@
 
                     <br />
 
-
                     <div>
                         <button @onclick="e => {this.expensesCollapsed = !this.expensesCollapsed; this.acountDetailsCollapsed = true;}">
                             More details: @(this.expensesCollapsed ? "+" : "-")
@@ -71,6 +64,7 @@
                             Your Account: @(this.acountDetailsCollapsed ? "+" : "-")
                         </button>
                     </div>
+
                     <br />
 
                     @if (!expensesCollapsed)
