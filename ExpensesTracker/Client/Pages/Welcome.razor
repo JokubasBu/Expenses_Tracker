@@ -29,7 +29,7 @@
                         <div class="row" style="height: 160px; padding-top: 30px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;">
                             <div class="col-sm">
                                 <h3 style="text-align:center;">Current Balance</h3>
-                                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@user.balance €</p>
+                                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@currentBalance €</p>
                             </div>
                             <div class="col-sm" style="border-left: 1px solid gray">
                                 <h3 style="text-align:center;"> Month's Income</h3>
@@ -127,6 +127,7 @@
     double totalSpentThisYear = 0;
     double totalEarnedThisMonth = 0;
     double totalEarnedThisYear = 0;
+    double currentBalance = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,6 +190,7 @@
     {
         recentExpenses = User.getRecentExpenses(i);
         recentIncome = User.getRecentIncome(i);
+        currentBalance = User.getBalance(0);
     }
 
     public void TempUsers(int i)
