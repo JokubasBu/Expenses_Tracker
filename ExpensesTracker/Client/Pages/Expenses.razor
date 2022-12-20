@@ -30,12 +30,12 @@
         }
     </InputSelect>
     <button type="submit" class="btn btn-primary">Filter</button>
+    <button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
+    <button class="btn btn-success" @onclick="CreateExpense">Add New</button>
+    &nbsp;
 </EditForm>
 
-<button class="btn btn-primary" @onclick="AscOrDesc">Order</button>
-&nbsp;
-<button class="btn btn-success" @onclick="CreateExpense">Add New</button>
-&nbsp; &nbsp;
+
 <form @onsubmit="OnUploadFiles">
     <div>
         <br />
