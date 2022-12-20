@@ -152,6 +152,8 @@ namespace ExpensesTracker.Shared.Models
             foreach (Record record in history)
                 balance += record.amount;
 
+            balance = Math.Round(balance, 2);
+
             return balance;
         }
 
