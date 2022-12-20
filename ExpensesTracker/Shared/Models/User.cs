@@ -150,7 +150,12 @@ namespace ExpensesTracker.Shared.Models
             double balance = user.balance;
 
             foreach (Record record in history)
-                balance += record.amount;
+            {
+                if (record.type == "Income")
+                    balance += record.amount;
+                else
+                    balance -= record.amount;
+            }
 
             balance = Math.Round(balance, 2);
 
