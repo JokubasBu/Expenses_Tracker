@@ -8,7 +8,6 @@ namespace ExpensesTracker.Shared.Models
 {
     public class Statistic
     {
-        //public double currentMonthTotalExpenses { get; set; }
         public double monthStat { get; set; }
         public double yearStat { get; set; }
     }

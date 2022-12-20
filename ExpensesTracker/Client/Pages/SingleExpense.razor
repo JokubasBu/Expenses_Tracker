@@ -38,14 +38,12 @@ else
 	<div>
 		<label> Date </label>
 		<InputSelect @bind-Value="ExpensesService.singleExpense.Year">
-        @*<option selected disabled="true">--Select Year--</option>*@
         @foreach (var year in Dates.Years)
         {
             <option value="@year">@year</option>
         }
     </InputSelect>
 		<InputSelect @bind-Value="ExpensesService.singleExpense.Month">
-		@*<option selected disabled="true">--Select Month--</option>*@
         @foreach (var month in Enum.GetValues(typeof(Dates.Months)))
         {
             <option value="@((int)month)">@month</option>

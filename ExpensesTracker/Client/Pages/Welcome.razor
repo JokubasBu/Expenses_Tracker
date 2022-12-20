@@ -1,71 +1,121 @@
 ﻿@page "/"
 @inject IExpensesService ExpensesService
 @inject IIncomesService IncomesService
+@inject IJSRuntime jsRunTime;
+@implements IDisposable
 
-@if (user != null)
-{
-    <div style ="float: left">
-        <h2 style= "color: #3d85c6">Welcome back, @user.nickname!</h2>
-    </div>
-    <div style="float: right">
-        <button class="btn btn-outline-primary"> Log Out</button>
-    </div>
-    <br />
-    <br />
-    <br />
-    <h3>Your account: </h3>
-    <h4 style="background-color: #fff88b; padding: 10px; border: 1px solid #8e8a4a;"> Current Balance: @user.balance€</h4>
-    <h4 style="background-color: #cfc ; padding: 10px; border: 1px solid green;"> Monthly Income: @recentIncome € </h4>
-    <h4 style="background-color: #f5818e ; padding: 10px; border: 1px solid red;"> Monthly Expenses: @recentExpenses €</h4>
-    <br />
 
-    <div>
-        <button @onclick="e => {this.expensesCollapsed = !this.expensesCollapsed; this.acountDetailsCollapsed = true;}">
-            More details: @(this.expensesCollapsed ? "+" : "-")
-        </button>
-        &nbsp;
-        <button @onclick="e => {this.acountDetailsCollapsed = !this.acountDetailsCollapsed; this.expensesCollapsed = true;}">
-            Your Account: @(this.acountDetailsCollapsed ? "+" : "-")
-        </button>
-    </div>
-    <br/>
-    <br/>
-
-    @if (!expensesCollapsed)
-    {
-        @foreach (var record in LazySheet.Value)
-        {
-            <div  style = "border: 1px solid black">
-                @record.date &emsp;
-                @if (record.type == "Expense")
+<table>
+    <tbody>
+        <tr>
+            <td >
+                @if (user != null)
                 {
-                    <span style="color:red">@record.type:&ensp;</span>
-                    <span>-@record.amount€ </span>
-                }
-                else
-                {
-                    <span style="color: #75bd6c">@record.type:&ensp;&ensp;</span>
-                    <span>+@record.amount€ </span>
-                }
-            </div>
-        }
+                    <div style="float: left">
+                        <h2 class="oi oi-person" style="padding-left: 9px"> @user.nickname</h2>
+                    </div>
+                    <div style="float: right">
+                        <button class="btn btn-outline-primary"> Log Out</button>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <div style="border:1px solid grey; border-radius: 25px; width:630px; box-shadow: 2px 2px 10px #888888;">
+                        <div style="height: 160px; padding-top: 15px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;">
+                            <h3 style="text-align:center; font-size: 300%;">Month's spendings</h3>
+                            <p style="text-align: center; font-size: 320%; color: cornflowerblue;">@recentExpenses €</p>
+                            <hr>
+                        </div>
+                        <div class="row" style="height: 160px; padding-top: 30px; padding-bottom: 15px; padding-left: 20px; padding-right: 20px;">
+                            <div class="col-sm">
+                                <h3 style="text-align:center;">Current Balance</h3>
+                                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@currentBalance €</p>
+                            </div>
+                            <div class="col-sm" style="border-left: 1px solid gray">
+                                <h3 style="text-align:center;"> Month's Income</h3>
+                                <p style="text-align: center; font-size: 220%; color: cornflowerblue;">@recentIncome €</p>
+                            </div>
+                        </div>
+                    </div>
 
-    }
-    @if (!acountDetailsCollapsed)
-    {
-        <div style="border: 1px solid black">
-            @user.nickname
-        </div>
-        <div style="border: 1px solid black">
-            @user.birth
-        </div>
-        <div style="border: 1px solid black">
-            @user.email
-        </div>
-    }
-}
+                    <br />
+
+                    <div style="border:1px solid grey; border-radius: 25px; width:600px; box-shadow: 2px 2px 10px #888888;">
+                        @if (recentExpenses > totalSpentPrevMonth)
+                        {
+                            <h3 style="font-size:160%; padding-left: 10px;">Spent more than last month by: <span style="color: cornflowerblue; font-size: 120%">@(recentExpenses - totalSpentPrevMonth) €</span></h3>
+                        }
+                        else
+                        {
+                            <h3 style="font-size: 160%; padding-left: 10px;">Spentless less than last month by: <span style="color: cornflowerblue; font-size: 120%">@(totalSpentPrevMonth - recentExpenses) €</span></h3>
+                        }
+                        <h3 style="font-size: 160%; padding-left: 10px;">Total spent this year: <span style="color: cornflowerblue; font-size: 120%">@totalSpentThisYear €</span> </h3>
+                        <h3 style="font-size: 160%; padding-left: 10px;">Total earned this year: <span style="color: cornflowerblue; font-size: 120%">@totalEarnedThisYear €</span></h3>
+                    </div>
+
+                    <br />
+
+                    <div>
+                        <button @onclick="e => {this.expensesCollapsed = !this.expensesCollapsed; this.acountDetailsCollapsed = true;}">
+                            More details: @(this.expensesCollapsed ? "+" : "-")
+                        </button>
+                        &nbsp;
+                        <button @onclick="e => {this.acountDetailsCollapsed = !this.acountDetailsCollapsed; this.expensesCollapsed = true;}">
+                            Your Account: @(this.acountDetailsCollapsed ? "+" : "-")
+                        </button>
+                    </div>
+
+                    <br />
+
+                    @if (!expensesCollapsed)
+                    {
+                        @foreach (var record in LazySheet.Value)
+                        {
+                            <div style="border: 1px solid black">
+                                @record.date &emsp;
+                                @if (record.type == "Expense")
+                                {
+                                    <span style="color:red">@record.type:&ensp;</span>
+                                    <span>-@record.amount€ </span>
+                                }
+                                else
+                                {
+                                    <span style="color: #75bd6c">@record.type:&ensp;&ensp;</span>
+                                    <span>+@record.amount€ </span>
+                                }
+                            </div>
+                        }
+
+                    }
+                    @if (!acountDetailsCollapsed)
+                    {
+                        <div style="border: 1px solid black">
+                            @user.nickname
+                        </div>
+                        <div style="border: 1px solid black">
+                            @user.birth
+                        </div>
+                        <div style="border: 1px solid black">
+                            @user.email
+                        </div>
+                    }
+                }
+            </td>
+            <td style="width: 50%;">
+                
+                <div id="chartdiv"></div>
+            </td>       
+        </tr>
+    </tbody>
+</table>
+
+
+
 
 @code {
+    [CascadingParameter]
+    public Error Error { get; set; }
+
     User user;
     public static event Action<int> Startup;
     Lazy<List<User.Record>> LazySheet = new Lazy<List<User.Record>>();
@@ -73,12 +123,49 @@
     public bool acountDetailsCollapsed = true;
     double recentExpenses, recentIncome;
 
+    double totalSpentPrevMonth = 0;
+    double totalSpentThisYear = 0;
+    double totalEarnedThisMonth = 0;
+    double totalEarnedThisYear = 0;
+    double currentBalance = 0;
+
     protected override async Task OnInitializedAsync()
     {
         await ExpensesService.GetExpenses();
+
+        // chart
         await ExpensesService.GetCategories();
+        await ExpensesService.GetSummary();
+        var ExpenseSummaryList = ExpensesService.Summary;
+        try
+        {
+            await jsRunTime.InvokeVoidAsync("GeneratePieChart", ExpenseSummaryList);
+        }
+        catch (System.Exception ex)
+        {
+            Error.ProcessError(ex);
+        }
+        // chart
+
         await IncomesService.GetIncomes();
+
+        await ExpensesService.GetStatistics();
+        Statistic moneyStatistics = ExpensesService.Statistics;
+        totalSpentPrevMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalSpentThisYear = Math.Round(moneyStatistics.yearStat, 2);
+
+        await IncomesService.GetStatistics();
+        moneyStatistics = IncomesService.Statistics;
+        totalEarnedThisMonth = Math.Round(moneyStatistics.monthStat, 2);
+        totalEarnedThisYear = Math.Round(moneyStatistics.yearStat, 2);
+
+
         Startup.Invoke(0);
+    }
+
+    public void Dispose()
+    {
+        jsRunTime.InvokeVoidAsync("DisposePieChart");
     }
 
     public Welcome()
@@ -103,11 +190,12 @@
     {
         recentExpenses = User.getRecentExpenses(i);
         recentIncome = User.getRecentIncome(i);
+        currentBalance = User.getBalance(0);
     }
 
     public void TempUsers(int i)
     {
-        new User("TestUser", "1998-11-12", "test.user@gmail.com", balance: 42355.56);
+        new User("Antanas", "1998-11-12", "test.user@gmail.com", balance: 42355.56);
         User.setExpenses(i, ExpensesService.AllExpenses);
         User.setIncome(i, IncomesService.AllIncomes);
 
