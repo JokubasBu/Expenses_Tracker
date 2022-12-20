@@ -143,5 +143,17 @@ namespace ExpensesTracker.Shared.Models
             return recentIncome;
         }
 
+        public static double getBalance(int userId)
+        {
+            User? user = GetUser(userId);
+            List<Record> history = History(FindUser(userId));
+            double balance = user.balance;
+
+            foreach (Record record in history)
+                balance += record.amount;
+
+            return balance;
+        }
+
     }
 }
