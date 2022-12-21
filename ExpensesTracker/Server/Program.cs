@@ -6,10 +6,13 @@ using ExpensesTracker.Server.Data;
 using ExpensesTracker.Server.Data.Repositories;
 using ExpensesTracker.Server.Services;
 using ExpensesTracker.Server.Repositories;
+using ExpensesTracker.Server.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddFile(builder.Configuration.GetSection("LoggingSer"));
+//builder.Logging.AddConfiguration().WriteTo.File("log-.txt").CreateLogger();
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
@@ -53,5 +56,7 @@ app.UseSwaggerUI(c =>
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.UseMiddleware<ServerStatisticMiddleware>();
 
 app.Run();
