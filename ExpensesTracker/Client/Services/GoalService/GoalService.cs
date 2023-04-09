@@ -5,7 +5,6 @@ namespace ExpensesTracker.Client.Services.GoalService
 {
     public class GoalService : IGoalService
     {
-
         private readonly HttpClient http;
         private readonly NavigationManager navigationManager;
 
@@ -55,13 +54,6 @@ namespace ExpensesTracker.Client.Services.GoalService
             throw new Exception("not found whoops");
         }
 
-
-        //public async Task ShowFilters(Goal goalFilter)
-        //{
-        //    var result = await http.PostAsJsonAsync("api/goals", goalFilter);
-        //    await SetResults(result);
-        //}
-
         public async Task UpdateGoal(Goal goal)
         {
             var result = await http.PutAsJsonAsync($"api/goals/{goal.Id}", goal);
@@ -74,7 +66,5 @@ namespace ExpensesTracker.Client.Services.GoalService
             var response = await result.Content.ReadFromJsonAsync<List<Goal>>();
             AllGoals = response;
         }
-
-       
     }
 }

@@ -9,6 +9,5 @@
         Task CreateGoal(Goal goal);
         Task UpdateGoal(Goal goal);
         Task DeleteGoal(int id);
-    }
-    
+    } 
 }

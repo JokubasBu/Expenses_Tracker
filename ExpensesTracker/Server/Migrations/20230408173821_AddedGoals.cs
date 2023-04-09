@@ -9,9 +9,6 @@ namespace ExpensesTracker.Server.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.DropTable(
-            //    name: "MonthlyExps");
-
             migrationBuilder.DeleteData(
                 table: "Categories",
                 keyColumn: "Id",
@@ -91,15 +88,6 @@ namespace ExpensesTracker.Server.Migrations
                 table: "AllExpenses",
                 column: "CategoryId");
 
-            migrationBuilder.InsertData(
-               table: "AllGoals",
-               columns: new[] { "Id", "Description", "Title", "DueDate" },
-               values: new object[] { 1, "Groceries will not exceed 3000", "GroceryStop", "2023-05-30" });
-
-            //migrationBuilder.InsertData(
-            //    table: "Categories",
-            //    columns: new[] { "Id", "Title" },
-            //    values: new object[] { 2, "Transportation" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
