@@ -151,13 +151,13 @@
 
         await ExpensesService.GetStatistics();
         Statistic moneyStatistics = ExpensesService.Statistics;
-        totalSpentPrevMonth = Math.Round(moneyStatistics.monthStat, 2);
-        totalSpentThisYear = Math.Round(moneyStatistics.yearStat, 2);
+        totalSpentPrevMonth = 912.22;
+        totalSpentThisYear = 18000.98;
 
         await IncomesService.GetStatistics();
         moneyStatistics = IncomesService.Statistics;
-        totalEarnedThisMonth = Math.Round(moneyStatistics.monthStat, 2);
-        totalEarnedThisYear = Math.Round(moneyStatistics.yearStat, 2);
+        totalEarnedThisMonth = 534.23;
+        totalEarnedThisYear = 23089.12;
 
 
         Startup.Invoke(0);

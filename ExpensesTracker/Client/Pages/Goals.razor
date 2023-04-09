@@ -1,0 +1,61 @@
+﻿@page "/goals"
+@using ExpensesTracker.Client.Services.GoalService;
+@inject IGoalService GoalService
+@inject NavigationManager NavigationManager
+@inject HttpClient http
+
+<PageTitle>Goals</PageTitle>
+<h3>Goals</h3>
+
+<div>
+ <button class="btn btn-success" @onclick="CreateGoal">Add New</button>
+</div>
+   
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var goal in GoalService.AllGoals)
+        {
+            <tr>
+                <td>@goal.Title</td>
+                <td>@goal.Description</td>
+                <td>@goal.DueDate.ToShortDateString()</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => ShowGoal(goal.Id))"><i class="oi oi-pencil"></i></button>
+                        &nbsp;
+                        <button class="btn btn-danger" @onclick="(() => DeleteGoal(goal.Id))">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await GoalService.GetGoals();
+    }
+
+    void ShowGoal(int id)
+    {
+        NavigationManager.NavigateTo($"goal/{id}");
+    }
+
+    void CreateGoal()
+    {
+        NavigationManager.NavigateTo("/goal");
+    }
+
+    async Task DeleteGoal(int id)
+    {
+        await GoalService.DeleteGoal(id);
+    }
+}

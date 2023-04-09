@@ -18,6 +18,7 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlite(builder.Configuratio
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IExpense, ExpenseRepo>();
 builder.Services.AddScoped<IIncome, IncomeRepo>();
+builder.Services.AddScoped<IGoal, GoalRepo>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
 
 

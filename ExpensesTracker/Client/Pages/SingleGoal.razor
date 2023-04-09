@@ -1,0 +1,71 @@
+﻿@page "/goal"
+@page "/goal/{id:int}"
+@using ExpensesTracker.Client.Services.GoalService;
+@inject IGoalService GoalService
+@inject NavigationManager NavigationManager
+
+<h3>Goal</h3>
+
+<EditForm Model="GoalService.singleGoal" OnValidSubmit="@Submit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div>
+		<label for="title">Title</label>
+		<InputText id="title" @bind-Value="GoalService.singleGoal.Title"></InputText>
+	</div>
+	<div>
+		<label for="dueDate">Due Date</label>
+		<InputDate id="dueDate" @bind-Value="GoalService.singleGoal.DueDate"></InputDate>
+	</div>
+	<div>
+		<label for="desription"> Description</label>
+		<InputText id="description" @bind-Value="GoalService.singleGoal.Description"></InputText>
+	</div>
+	<br />
+	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-danger" @onclick="GoBack"> Cancel</button>
+</EditForm>
+
+@code {
+	[CascadingParameter]
+	public Error Error { get; set; }
+
+	[Parameter]
+	public int? Id { get; set; }
+
+	protected override async Task OnParametersSetAsync()
+	{
+		try
+		{
+			if (Id == null)
+			{
+				DateTime currentDate = DateTime.Now;
+			}
+			else
+			{
+				GoalService.singleGoal = await GoalService.GetSingleGoal((int)Id);
+			}
+		}
+		catch (System.Exception ex)
+		{
+			Error.ProcessError(ex);
+		}
+	}
+
+	public void GoBack()
+	{
+		NavigationManager.NavigateTo("/goals");
+	}
+
+	async Task Submit()
+	{
+		if (Id == null)
+		{
+			await GoalService.CreateGoal(GoalService.singleGoal);
+		}
+		else
+		{
+			await GoalService.UpdateGoal(GoalService.singleGoal);
+		}
+	}
+}
